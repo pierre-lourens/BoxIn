@@ -6,10 +6,12 @@ const taskSchema = new Schema(
     text: String,
     scheduledDate: String,
     status: String,
-    tags: Array,
     timeEstimate: String,
     actualTime: String,
     weight: String,
+    tags: [tagSchema],
+    projects: [{ type: Schema.Types.ObjectId, ref: "project" }],
+    userID: { type: Schema.Types.ObjectId, ref: "user" },
   },
   { timestamps: { createdAt: "createdAt", updatedAt: "updatedAt" } }
 );
