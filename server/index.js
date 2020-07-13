@@ -1,6 +1,8 @@
 const express = require("express");
 const http = require("http");
 const mongoose = require("mongoose");
+const cors = require("cors");
+const bodyParser = require("body-parser");
 
 const router = require("./router.js");
 const keys = require("./config/keys");
