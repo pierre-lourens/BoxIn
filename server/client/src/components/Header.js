@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import MainTaskAdder from "./MainTaskAdder";
+import Navigation from "./Navigation";
 
 const Wrapper = styled.div`
   display: grid;
@@ -26,10 +27,11 @@ const Logo = styled.h1`
   span {
     border: 2px solid white;
     padding: 3px 6px;
-    margin: 3px;
+    margin: 0 4px 0 0;
   }
   @media (max-width: 600px) {
     font-size: ${(props) => props.theme.fontSizes.xmedium};
+  }
 `;
 
 const Header = () => {
@@ -42,6 +44,7 @@ const Header = () => {
           </Logo>
         </StyledHeader>
         <MainTaskAdder />
+        <Navigation />
       </Wrapper>
     </React.Fragment>
   );

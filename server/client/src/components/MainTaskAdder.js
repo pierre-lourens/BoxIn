@@ -4,8 +4,14 @@ import styled from "styled-components";
 const StyledInputContainer = styled.div`
   grid-row: 1;
   grid-column: span 6;
-  height: 100%;
   background-color: ${(props) => props.theme.colors.darkBlue};
+  width: 100%;
+
+  input {
+    height: 30px;
+    padding: 5px 10px;
+    width: 90%;
+  }
 `;
 
 const Logo = styled.h1`
@@ -16,7 +22,11 @@ const Logo = styled.h1`
 `;
 
 const MainTaskAdder = () => {
-  return <StyledInputContainer>Hi</StyledInputContainer>;
+  return (
+    <StyledInputContainer>
+      <input placeholder='Add a task...'></input>
+    </StyledInputContainer>
+  );
 };
 
 export default MainTaskAdder;
