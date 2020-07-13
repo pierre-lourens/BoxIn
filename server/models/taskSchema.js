@@ -3,10 +3,6 @@ const Schema = mongoose.Schema;
 
 const tagSchema = new Schema({ text: String });
 const projectSchema = new Schema({ text: String });
-const timeEntrySchema = new Schema(
-  { elapsedTime: Number, active: Boolean },
-  { timestamps: true }
-);
 
 const taskSchema = new Schema(
   {
@@ -14,7 +10,7 @@ const taskSchema = new Schema(
     scheduledDate: String,
     status: String,
     tags: [tagSchema],
-    timeEntries: [timeEntrySchema],
+    timeEntries: [{ type: Schema.Types.ObjectId, ref: "timeEntry" }],
     projects: [projectSchema],
     estimatedTime: Number, // number of minutes & seconds
     actualTime: Number, // number of minutes & seconds
