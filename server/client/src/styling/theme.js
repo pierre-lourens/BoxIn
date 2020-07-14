@@ -13,7 +13,7 @@ const theme = {
   headingFonts: ["Helvetica", "sans-serif", "Roboto"],
   fontSizes: {
     small: "1em",
-    xmedium: "1.5em",
+    smallplus: "1.25em",
     medium: "2em",
     large: "3em",
   },

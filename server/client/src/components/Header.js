@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import MainTaskAdder from "./MainTaskAdder";
+import MainTaskAdder from "./QuickTaskForm";
 
 const AppBar = styled.div`
   display: grid;
@@ -33,7 +33,7 @@ const Logo = styled.h1`
     margin: 0 4px 0 0;
   }
   @media (max-width: 600px) {
-    font-size: ${(props) => props.theme.fontSizes.xmedium};
+    font-size: ${(props) => props.theme.fontSizes.small};
   }
 `;
 
@@ -47,8 +47,6 @@ const Header = () => {
           </Logo>
         </StyledHeader>
       </AppBar>
-
-      <MainTaskAdder />
     </React.Fragment>
   );
 };
