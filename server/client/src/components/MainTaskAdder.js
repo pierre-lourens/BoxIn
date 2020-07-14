@@ -14,13 +14,6 @@ const StyledInputContainer = styled.div`
   }
 `;
 
-const Logo = styled.h1`
-  font-family: ${(props) => props.theme.headingFonts.toString()};
-  padding: 0;
-  margin: 0;
-  color: ${(props) => props.theme.colors.lightBlue};
-`;
-
 const MainTaskAdder = () => {
   return (
     <StyledInputContainer>
