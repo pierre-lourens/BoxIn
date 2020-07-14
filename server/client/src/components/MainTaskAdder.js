@@ -2,32 +2,36 @@ import React from "react";
 import styled from "styled-components";
 
 const StyledInputContainer = styled.div`
-  grid-row: 2;
-  grid-column: span 6;
-  background-color: ${(props) => props.theme.colors.darkBlue};
-  width: 100%;
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: repeat(5, 1fr);
+`;
 
+const TaskFormContainer = styled.div`
+  grid-column: 2 / span 3;
+  border: 0;
+  border-radius: 3px;
+  background-color: white;
+  box-shadow: 0 4px 6px 0 rgba(100, 100, 100, 0.2);
+  padding: 10px;
+
+  form {
+    width: 100%;
+    height: 100%;
+  }
   input {
     height: 30px;
-    padding: 5px 10px;
-    margin: 0;
     width: 100%;
-    display: flex;
-
+    padding: 5px 10px;
+    border: 0;
+    margin-top: 10px;
     font-size: ${(props) => props.theme.fontSizes.small};
   }
-
-  #task-entry {
-    border: 0;
-  }
-
   .formVisible {
     display: block;
-    background-color: white;
   }
-
   .formHidden {
-    display: block;
+    display: none;
   }
 `;
 
@@ -62,16 +66,18 @@ class MainTaskAdder extends React.Component {
   render() {
     return (
       <StyledInputContainer>
-        <form>
-          <input
-            type='text'
-            placeholder='Add a task...'
-            onClick={this.handleFormClick}
-            id='task-entry'></input>
-          <div className={this.checkIfFormExpanded()}>
-            <input type='text' placeholder='Add a task...'></input>
-          </div>
-        </form>
+        <TaskFormContainer>
+          <form>
+            <input
+              type='text'
+              placeholder='Add a task...'
+              onClick={this.handleFormClick}
+              id='task-entry'></input>
+            <div className={this.checkIfFormExpanded()}>
+              <input type='text' placeholder='Add a task...'></input>
+            </div>
+          </form>
+        </TaskFormContainer>
       </StyledInputContainer>
     );
   }
