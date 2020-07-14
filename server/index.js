@@ -16,7 +16,12 @@ mongoose.connect(keys.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-app.use(cors());
+const corsOptions = {
+  origin: "http://localhost:3000",
+  credentials: true,
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+app.use(cors(corsOptions));
 
 app.use(
   cookieSession({
@@ -42,7 +47,7 @@ passport.use(
           // we already have a record with the given profile ID
           done(null, existingUser);
         } else {
-          // w  e don't have a user record with this ID, make a new record!
+          // we don't have a user record with this ID, make a new record!
           new User({
             googleId: profile.id,
             username: profile.displayName,

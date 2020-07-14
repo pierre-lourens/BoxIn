@@ -13,15 +13,13 @@ module.exports = function (router) {
   // will be used as middleware so that I can use multiple strategies
   function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
-      console.log(req);
       return next(null);
     }
     res.redirect("/error");
   }
 
   router.get("/api/current_user", ensureAuthenticated, (req, res) => {
-    // console.log(req.user);
-    console.log("hi'");
+    console.log(req.user);
     res.send(req.user);
   });
 

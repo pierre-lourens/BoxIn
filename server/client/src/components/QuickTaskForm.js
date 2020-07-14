@@ -112,14 +112,8 @@ class QuickTaskForm extends React.Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    auth: state.auth,
-  };
-}
-
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({ addTask }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(QuickTaskForm);
+export default connect(null, mapDispatchToProps)(QuickTaskForm);

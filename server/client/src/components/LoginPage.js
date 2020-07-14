@@ -3,7 +3,6 @@ import React from "react";
 // redux
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import { login } from "../actions/index";
 // style
 import styled from "styled-components";
 import googleButton from "../assets/googleButton.png";
@@ -28,18 +27,14 @@ const AuthButton = styled.button`
 class LoginPage extends React.Component {
   constructor() {
     super();
-    this.handleGoogleClick = this.handleGoogleClick.bind(this);
-  }
-
-  handleGoogleClick() {
-    this.props.login("GOOGLE");
   }
 
   render() {
     return (
       <div>
+        {/* react will replace hardcoded value here */}
         <a href='http://localhost:5000/api/auth/google/'>
-          <AuthButton onClick={this.handleGoogleClick}>
+          <AuthButton>
             <img src={googleButton} alt='login button for Google authentication' />
           </AuthButton>
         </a>
@@ -51,8 +46,4 @@ function mapStateToProps(state) {
   return { currentEvent: state.event };
 }
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ login }, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);
+export default connect(mapStateToProps)(LoginPage);
