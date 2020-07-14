@@ -15,7 +15,7 @@ module.exports = function (router) {
     if (req.isAuthenticated()) {
       return next(null);
     }
-    res.redirect("/error");
+    // res.redirect("http://localhost3000/error");
   }
 
   router.get("/api/current_user", ensureAuthenticated, (req, res) => {

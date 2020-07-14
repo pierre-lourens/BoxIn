@@ -15,15 +15,18 @@ export function checkForUser() {
   };
 }
 
-export function addTask(taskToAdd) {
+export function addTask(taskToAdd, userId) {
   const url = `${ROOT_URL}/api/me/task`;
+
+  console.log("taskToAdd is", taskToAdd);
 
   const request = axios({
     method: "post",
     url: url,
+    withCredentials: true,
     data: {
       text: taskToAdd.text,
-      userId: taskToAdd.userId,
+      userId,
     },
   });
 

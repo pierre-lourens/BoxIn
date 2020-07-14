@@ -18,13 +18,15 @@ class UserMain extends React.Component {
 
   render() {
     // render only if logged in
-    if (this.props.user || !this.props.user) {
+    if (this.props.user) {
       return (
         <React.Fragment>
           <Header />
           <QuickTaskForm />
         </React.Fragment>
       );
+    } else {
+      this.props.history.push("/");
     }
   }
 }

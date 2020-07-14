@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { addTask } from "../actions";
+import { addTask, checkForUser } from "../actions";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
@@ -80,14 +80,20 @@ class QuickTaskForm extends React.Component {
     this.handleFormChange = this.handleFormChange.bind(this);
   }
 
-  handleTaskSubmit() {
-    this.props.addTask(this.state.task);
+  handleTaskSubmit(event) {
+    this.props.addTask(this.state.task, this.props.userId);
+    this.setState({ task: { text: "Quick add a task..." } });
   }
 
   handleFormChange(event) {
-    this.setState({ task: { text: event.target.value } }, () =>
-      console.log("Task in state is", this.state.task.text)
-    );
+    if (event.charCode === 13) {
+      return this.props.handleTaskSubmit();
+    }
+
+    this.setState({ task: { text: event.target.value } }, () => {
+      console.log("Task in state is", this.state.task);
+      console.log("Props in state is", this.props);
+    });
   }
 
   render() {
@@ -101,8 +107,9 @@ class QuickTaskForm extends React.Component {
               placeholder='Quick add a task...'
               onSubmit={this.handleTaskSubmit}
               onChange={this.handleFormChange}
+              value={this.state.task.text}
               id='task-entry'></input>
-            <button type='submit' className='submitButton'>
+            <button type='submit' onClick={this.handleTaskSubmit}>
               <PlusCircleIcon />
             </button>
           </form>
@@ -112,8 +119,12 @@ class QuickTaskForm extends React.Component {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ addTask }, dispatch);
+function mapStateToProps(state) {
+  return { userId: state.user._id };
 }
 
-export default connect(null, mapDispatchToProps)(QuickTaskForm);
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({ addTask, checkForUser }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(QuickTaskForm);
