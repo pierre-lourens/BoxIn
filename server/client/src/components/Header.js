@@ -2,21 +2,24 @@ import React from "react";
 import styled from "styled-components";
 import MainTaskAdder from "./MainTaskAdder";
 
-const Wrapper = styled.div`
+const AppBar = styled.div`
   display: grid;
   grid-gap: 1rem;
-  grid-template-columns: repeat(8, 1fr);
-  grid-template-rows: 100px;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: 70px;
   background-color: ${(props) => props.theme.colors.darkBlue};
   box-shadow: 0 4px 6px 0 rgba(100, 100, 100, 0.2);
   justify-items: center;
   align-items: center;
+  margin-bottom: 30px;
+  @media (max-width: 600px) {
+    grid-template-rows: 50px;
+  }
 `;
 
 const StyledHeader = styled.header`
-  grid-column: span 2;
+  grid-column: span 12;
   grid-row: 1;
-  justify-self: end;
 `;
 
 const Logo = styled.h1`
@@ -37,15 +40,15 @@ const Logo = styled.h1`
 const Header = () => {
   return (
     <React.Fragment>
-      <Wrapper>
+      <AppBar>
         <StyledHeader>
           <Logo>
             <span>Box</span>Out
           </Logo>
         </StyledHeader>
+      </AppBar>
 
-        <MainTaskAdder />
-      </Wrapper>
+      <MainTaskAdder />
     </React.Fragment>
   );
 };
