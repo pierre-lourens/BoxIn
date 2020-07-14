@@ -6,13 +6,11 @@ import { checkForUser } from "../actions";
 
 import Header from "./Header";
 import QuickTaskForm from "./QuickTaskForm";
+import TaskList from "./TaskList";
 
 class UserMain extends React.Component {
   constructor(props) {
     super(props);
-  }
-
-  componentDidMount() {
     this.props.checkForUser();
   }
 
@@ -23,6 +21,7 @@ class UserMain extends React.Component {
         <React.Fragment>
           <Header />
           <QuickTaskForm />
+          <TaskList />
         </React.Fragment>
       );
     } else {

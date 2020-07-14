@@ -19,7 +19,6 @@ module.exports = function (router) {
   }
 
   router.get("/api/current_user", ensureAuthenticated, (req, res) => {
-    console.log(req.user);
     res.send(req.user);
   });
 
@@ -29,14 +28,14 @@ module.exports = function (router) {
   });
 
   // get all tasks for a user
-  router.get("/api/me/tasks", ensureAuthenticated, (req, res, next) => {
-    if (!mongoose.Types.ObjectId.isValid(req.body.userId)) {
+  router.get("/api/:userId/tasks", ensureAuthenticated, (req, res, next) => {
+    if (!mongoose.Types.ObjectId.isValid(req.params.userId)) {
       // if event id is not in the correct format, return an error
       res.writeHead(400, "Must send valid user Id in body");
       return res.end();
     }
 
-    User.findById(req.body.userId)
+    User.findById(req.params.userId)
       .populate("tasks")
       .populate("timeEntries")
       .exec((err, user) => {
@@ -85,16 +84,17 @@ module.exports = function (router) {
     task.user = req.body.userId;
 
     // need to save it to the right user
-    User.findById(req.body.userId).exec((err, user) => {
-      if (err) return res.send(err);
-      user.tasks.push(task);
+    User.findById(req.body.userId)
+      .populate("tasks")
+      .populate("timeEntries")
+      .exec((err, user) => {
+        if (err) return res.send(err);
+        user.tasks.push(task);
+        task.save();
 
-      user.save();
-    });
-
-    task.save();
-    // send back the added task
-    return res.send({ Status: "Successfully added", task });
+        user.save();
+        return res.send(user);
+      });
   });
 
   // post a new time entry if one doesn't already exist

@@ -2,6 +2,7 @@ import axios from "axios";
 
 export const CHECK_FOR_USER = "CHECK_FOR_USER";
 export const ADD_TASK = "ADD_TASK";
+export const GET_TASKS = "GET_TASKS";
 
 const ROOT_URL = "http://localhost:5000";
 
@@ -32,6 +33,23 @@ export function addTask(taskToAdd, userId) {
 
   return {
     type: ADD_TASK,
+    payload: request,
+  };
+}
+
+export function getTasks(userId) {
+  const url = `${ROOT_URL}/api/${userId}/tasks`;
+
+  console.log("userid being sent is", userId);
+
+  const request = axios({
+    method: "get",
+    url: url,
+    withCredentials: true,
+  });
+
+  return {
+    type: GET_TASKS,
     payload: request,
   };
 }

@@ -81,6 +81,7 @@ class QuickTaskForm extends React.Component {
   }
 
   handleTaskSubmit(event) {
+    event.preventDefault();
     this.props.addTask(this.state.task, this.props.userId);
     this.setState({ task: { text: "Quick add a task..." } });
   }
@@ -90,10 +91,7 @@ class QuickTaskForm extends React.Component {
       return this.props.handleTaskSubmit();
     }
 
-    this.setState({ task: { text: event.target.value } }, () => {
-      console.log("Task in state is", this.state.task);
-      console.log("Props in state is", this.props);
-    });
+    this.setState({ task: { text: event.target.value } });
   }
 
   render() {
