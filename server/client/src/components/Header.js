@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import MainTaskAdder from "./QuickTaskForm";
 
 const AppBar = styled.div`
   display: grid;

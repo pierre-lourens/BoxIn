@@ -42,7 +42,7 @@ passport.use(
           // we already have a record with the given profile ID
           done(null, existingUser);
         } else {
-          // we don't have a user record with this ID, make a new record!
+          // w  e don't have a user record with this ID, make a new record!
           new User({
             googleId: profile.id,
             username: profile.displayName,
@@ -55,6 +55,16 @@ passport.use(
     }
   )
 );
+
+const googleAuth = passport.authenticate("google", { scope: ["profile", "email"] });
+
+app.get("/api/auth/google", googleAuth);
+
+app.get("/api/auth/google/callback", googleAuth, (req, res) => {
+  console.log("Input validated via Google");
+
+  res.redirect("http://localhost:3000/me");
+});
 
 passport.serializeUser((user, done) => {
   done(null, user.id);

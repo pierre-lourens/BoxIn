@@ -9,23 +9,19 @@ const googleAuth = passport.authenticate("google", { scope: ["profile", "email"]
 
 module.exports = function (router) {
   // AUTHENTICATION
-  router.get("/api/auth/google", googleAuth);
-
-  router.get("/api/auth/google/callback", ensureAuthenticated, (req, res) => {
-    console.log("Input validated via Google");
-
-    res.redirect("http://localhost:3000/");
-  });
 
   // will be used as middleware so that I can use multiple strategies
   function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
+      console.log(req);
       return next(null);
     }
     res.redirect("/error");
   }
 
   router.get("/api/current_user", ensureAuthenticated, (req, res) => {
+    // console.log(req.user);
+    console.log("hi'");
     res.send(req.user);
   });
 

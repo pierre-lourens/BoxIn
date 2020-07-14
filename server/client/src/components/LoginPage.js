@@ -26,6 +26,15 @@ const AuthButton = styled.button`
 `;
 
 class LoginPage extends React.Component {
+  constructor() {
+    super();
+    this.handleGoogleClick = this.handleGoogleClick.bind(this);
+  }
+
+  handleGoogleClick() {
+    this.props.login("GOOGLE");
+  }
+
   render() {
     return (
       <div>
