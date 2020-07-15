@@ -118,9 +118,10 @@ module.exports = function (router) {
   // post a new time entry if one doesn't already exist
   router.post("/api/me/timeEntry", ensureAuthenticated, (req, res, next) => {
     // check that the body contains at least a task text
-    if (!req.body.taskId) {
-      res.writeHead(400, "Invalid format; task must contain a valid task id");
-      return res.send();
+    if (!mongoose.Types.ObjectId.isValid(req.body.taskId)) {
+      // if event id is not in the correct format, return an error
+      res.writeHead(400, "Must send valid task Id in body");
+      return res.end();
     }
 
     const timeEntry = new TimeEntry();
@@ -132,7 +133,7 @@ module.exports = function (router) {
       if (err) return res.send(err);
 
       console.log("task is found and is", task);
-      task.timeEntries.push(timeEntry);
+      task.timeEntries.push(timeEntry._id);
 
       task.save();
     });
@@ -142,7 +143,7 @@ module.exports = function (router) {
       if (err) return res.send(err);
 
       console.log("user is found and is", user);
-      user.timeEntries.push(timeEntry);
+      user.timeEntries.push(timeEntry._id);
 
       user.save();
     });
@@ -150,7 +151,6 @@ module.exports = function (router) {
     timeEntry.save();
     // send back the added task
     return res.send({
-      Status: "Successfully started time entry",
       timeEntry,
     });
   });
@@ -165,9 +165,26 @@ module.exports = function (router) {
       timeEntry.elapsedTime = elapsedTime;
       timeEntry.active = false;
       timeEntry.save();
-    });
 
-    return res.send("Stopped time entry");
+      User.findById(req.body.userId)
+        .populate("timeEntries")
+        .exec((err, user) => {
+          if (err) return res.send(err);
+
+          console.log("user is found and is", user);
+          // find the time entry within that user so that we can replace it with our new one
+          const timeEntryIndex = user.timeEntries.findIndex(
+            (entry) => entry._id === req.body.timeEntryId
+          );
+
+          // delete the old and insert the new
+          user.timeEntries.splice(timeEntryIndex, 1, timeEntry);
+
+          user.save();
+        });
+
+      return res.send(timeEntry);
+    });
   });
 
   // route for populating a user within a task

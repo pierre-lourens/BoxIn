@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { getTasks, editTask } from "../actions";
+import { getTasks, editTask, startTimer, stopTimer } from "../actions";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import PlayIcon from "../assets/PlayIcon";
@@ -111,11 +111,16 @@ class TaskList extends React.Component {
     this.state = { editingOpen: false };
     this.renderTaskCards = this.renderTaskCards.bind(this);
     this.handleTaskToggle = this.handleTaskToggle.bind(this);
-    this.RenderToggleCircle = this.RenderToggleCircle.bind(this);
+    this.renderToggleCircle = this.renderToggleCircle.bind(this);
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.userId !== prevProps.userId) {
+    if (
+      this.props.userId !== prevProps.userId ||
+      this.props.task !== prevProps.task ||
+      this.props.timer !== prevProps.timer
+    ) {
+      console.log("ComponentDidUpdate firing");
       this.props.getTasks(this.props.userId);
     }
   }
@@ -123,11 +128,9 @@ class TaskList extends React.Component {
   handleTaskToggle(taskId, status) {
     // use the taskId to send a post request via redux store
     this.props.editTask(taskId, { status });
-    // we'll have to get the tasks again
-    this.props.getTasks(this.props.userId);
   }
 
-  RenderToggleCircle(task) {
+  renderToggleCircle(task) {
     if (task.status != "complete" || !task.status) {
       return (
         <button
@@ -149,11 +152,52 @@ class TaskList extends React.Component {
     }
   }
 
-  RenderTaskText(task) {
+  renderTaskText(task) {
     if (task.status != "complete" || !task.status) {
       return <div className='text'>{task.text}</div>;
     } else {
       return <div className='text completed'>{task.text}</div>;
+    }
+  }
+
+  renderTimerButton(task) {
+    if (task.timeEntries.length === 0) {
+      return (
+        <button
+          onClick={(e) => {
+            this.props.startTimer(task._id, this.props.userId);
+          }}>
+          <PlayIcon />
+        </button>
+      );
+    }
+
+    // grab the latest task time entry to do our check
+    const mostRecent = task.timeEntries[task.timeEntries.length - 1];
+    // find the time entry that most recent entry
+    // don't use task, as there may be multiple entries per task
+    const timeEntry = this.props.userData.timeEntries.find((entry) => entry._id === mostRecent);
+    console.log("time entry is", timeEntry);
+    if (timeEntry.active) {
+      // if it's running
+      return (
+        <button
+          onClick={(e) => {
+            this.props.stopTimer(timeEntry._id, this.props.userId);
+          }}>
+          <PauseIcon />
+        </button>
+      );
+    } else {
+      // if it is inactive (not running)
+      return (
+        <button
+          onClick={(e) => {
+            this.props.startTimer(task._id, this.props.userId);
+          }}>
+          <PlayIcon />
+        </button>
+      );
     }
   }
 
@@ -162,12 +206,10 @@ class TaskList extends React.Component {
       return this.props.userData.tasks.map((task) => {
         return (
           <Task key={task._id}>
-            {this.RenderToggleCircle(task)}
-            {this.RenderTaskText(task)}
+            {this.renderToggleCircle(task)}
+            {this.renderTaskText(task)}
             <div className='options'>
-              <button>
-                <PlayIcon />
-              </button>
+              {this.renderTimerButton(task)}
               <button onClick={this.handleEditClick}>
                 <PencilAltIcon />
               </button>
@@ -185,11 +227,11 @@ class TaskList extends React.Component {
 
 function mapStateToProps(state) {
   console.log("state being mapped to props in tasklist is is", state);
-  return { userId: state.user._id, userData: state.userData };
+  return { userId: state.user._id, userData: state.userData, task: state.task, timer: state.timer };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ getTasks, editTask }, dispatch);
+  return bindActionCreators({ getTasks, editTask, startTimer, stopTimer }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TaskList);
