@@ -97,6 +97,24 @@ module.exports = function (router) {
       });
   });
 
+  // make changes to a task attribute
+  router.put("/api/tasks/:taskId", ensureAuthenticated, (req, res, next) => {
+    // there needs to be an associated user
+    if (!mongoose.Types.ObjectId.isValid(req.params.taskId)) {
+      // if event id is not in the correct format, return an error
+      res.writeHead(400, "Must send valid task Id in body");
+      return res.end();
+    }
+
+    // need to save it to the right user
+    Task.findById(req.params.taskId).exec((err, task) => {
+      if (err) return res.send(err);
+      task.status = req.body.status || task.status; // keep what was there if null
+      task.save();
+      return res.send(task);
+    });
+  });
+
   // post a new time entry if one doesn't already exist
   router.post("/api/me/timeEntry", ensureAuthenticated, (req, res, next) => {
     // check that the body contains at least a task text

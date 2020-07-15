@@ -2,7 +2,9 @@ import axios from "axios";
 
 export const CHECK_FOR_USER = "CHECK_FOR_USER";
 export const ADD_TASK = "ADD_TASK";
+export const EDIT_TASK = "EDIT_TASK";
 export const GET_TASKS = "GET_TASKS";
+export const SHOW_EDIT_MODAL = "SHOW_EDIT_MODAL";
 
 const ROOT_URL = "http://localhost:5000";
 
@@ -33,6 +35,25 @@ export function addTask(taskToAdd, userId) {
 
   return {
     type: ADD_TASK,
+    payload: request,
+  };
+}
+
+export function editTask(taskId, changesObject) {
+  const url = `${ROOT_URL}/api/tasks/${taskId}`;
+
+  const request = axios({
+    method: "put",
+    url: url,
+    withCredentials: true,
+    data: {
+      text: changesObject.text,
+      status: changesObject.status,
+    },
+  });
+
+  return {
+    type: EDIT_TASK,
     payload: request,
   };
 }

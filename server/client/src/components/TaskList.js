@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { getTasks } from "../actions";
+import { getTasks, editTask } from "../actions";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import PlayIcon from "../assets/PlayIcon";
@@ -8,6 +8,8 @@ import PauseIcon from "../assets/PauseIcon";
 import PencilAltIcon from "../assets/PencilAltIcon";
 import CheckCircleIcon from "../assets/CheckCircleIcon";
 import EmptyCircleIcon from "../assets/emptycircle.png";
+
+// import { Overlay } from "react-portal-overlay";
 
 const StyledTaskContainer = styled.div`
   grid-column: 5 / span 4;
@@ -37,6 +39,10 @@ const Task = styled.div`
     padding: 10px 0;
     color: gray;
     align-self: center;
+  }
+
+  .completed {
+    text-decoration: line-through;
   }
 
   button {
@@ -102,7 +108,10 @@ class TaskList extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = { editingOpen: false };
     this.renderTaskCards = this.renderTaskCards.bind(this);
+    this.handleTaskToggle = this.handleTaskToggle.bind(this);
+    this.RenderToggleCircle = this.RenderToggleCircle.bind(this);
   }
 
   componentDidUpdate(prevProps) {
@@ -111,20 +120,55 @@ class TaskList extends React.Component {
     }
   }
 
+  handleTaskToggle(taskId, status) {
+    // use the taskId to send a post request via redux store
+    this.props.editTask(taskId, { status });
+    // we'll have to get the tasks again
+    this.props.getTasks(this.props.userId);
+  }
+
+  RenderToggleCircle(task) {
+    if (task.status != "complete" || !task.status) {
+      return (
+        <button
+          onClick={(e) => {
+            this.handleTaskToggle(task._id, "complete");
+          }}>
+          <img src={EmptyCircleIcon} />
+        </button>
+      );
+    } else {
+      return (
+        <button
+          onClick={(e) => {
+            this.handleTaskToggle(task._id, "incomplete");
+          }}>
+          <CheckCircleIcon />
+        </button>
+      );
+    }
+  }
+
+  RenderTaskText(task) {
+    if (task.status != "complete" || !task.status) {
+      return <div className='text'>{task.text}</div>;
+    } else {
+      return <div className='text completed'>{task.text}</div>;
+    }
+  }
+
   renderTaskCards() {
     if (this.props.userData.tasks) {
       return this.props.userData.tasks.map((task) => {
         return (
           <Task key={task._id}>
-            <button>
-              <img src={EmptyCircleIcon} />
-            </button>
-            <div className='text'>{task.text}</div>
+            {this.RenderToggleCircle(task)}
+            {this.RenderTaskText(task)}
             <div className='options'>
               <button>
                 <PlayIcon />
               </button>
-              <button>
+              <button onClick={this.handleEditClick}>
                 <PencilAltIcon />
               </button>
             </div>
@@ -145,7 +189,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ getTasks }, dispatch);
+  return bindActionCreators({ getTasks, editTask }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TaskList);
