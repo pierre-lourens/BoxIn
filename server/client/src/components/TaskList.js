@@ -94,6 +94,14 @@ const Task = styled.div`
         }
       }
     }
+    .running {
+      svg {
+        color: ${(props) => props.theme.colors.primaryBlue};
+        &: hover {
+          color: lightgray;
+        }
+      }
+    }
   }
 `;
 
@@ -162,6 +170,7 @@ class TaskList extends React.Component {
       return (
         <button
           onClick={(e) => {
+            e.preventDefault();
             this.props.startTimer(task._id, this.props.userId);
           }}>
           <PlayIcon />
@@ -171,16 +180,21 @@ class TaskList extends React.Component {
 
     // grab the latest task time entry to do our check
     const mostRecent = task.timeEntries[task.timeEntries.length - 1];
+
+    console.log("mostRecent is", mostRecent);
     // find the time entry that most recent entry
     // don't use task, as there may be multiple entries per task
     const timeEntry = this.props.userData.timeEntries.find((entry) => entry._id === mostRecent);
+    // error handling, in case people are clicking too fast
     console.log("time entry is", timeEntry);
 
     if (timeEntry.active) {
       // if it's running
       return (
         <button
+          className='running'
           onClick={(e) => {
+            e.preventDefault();
             this.props.stopTimer(timeEntry._id, this.props.userId);
           }}>
           <PauseIcon />
@@ -191,6 +205,7 @@ class TaskList extends React.Component {
       return (
         <button
           onClick={(e) => {
+            e.preventDefault();
             this.props.startTimer(task._id, this.props.userId);
           }}>
           <PlayIcon />
