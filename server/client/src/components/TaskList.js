@@ -11,6 +11,13 @@ import EmptyCircleIcon from "../assets/emptycircle.png";
 
 // import { Overlay } from "react-portal-overlay";
 
+const StyledTaskContainer = styled.div`
+  grid-column: 7 / span 4;
+  @media (max-width: 800px) {
+    grid-column: 2 / span 10;
+  }
+`;
+
 const Task = styled.div`
   display: grid;
   grid-gap: 10px;
@@ -234,7 +241,7 @@ class TaskList extends React.Component {
   }
 
   render() {
-    return <React.Fragment>{this.renderTaskCards()}</React.Fragment>;
+    return <StyledTaskContainer>{this.renderTaskCards()}</StyledTaskContainer>;
   }
 }
 

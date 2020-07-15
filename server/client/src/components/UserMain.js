@@ -3,7 +3,6 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { checkForUser } from "../actions";
 import styled from "styled-components";
-// import styled from "styled-components";
 
 import Header from "./Header";
 import QuickTaskForm from "./QuickTaskForm";
@@ -16,8 +15,8 @@ const Wrapper = styled.div`
   margin-bottom: 30px;
 `;
 
-const StyledTaskContainer = styled.div`
-  grid-column: 7 / span 4;
+const StyledAgendaContainer = styled.div`
+  grid-column: 3 / span 4;
   @media (max-width: 800px) {
     grid-column: 2 / span 10;
   }
@@ -37,9 +36,7 @@ class UserMain extends React.Component {
           <Header />
           <QuickTaskForm />
           <Wrapper>
-            <StyledTaskContainer>
-              <TaskList />
-            </StyledTaskContainer>
+            <TaskList />
           </Wrapper>
         </React.Fragment>
       );
