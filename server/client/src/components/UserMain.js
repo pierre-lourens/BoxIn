@@ -16,6 +16,13 @@ const Wrapper = styled.div`
   margin-bottom: 30px;
 `;
 
+const StyledTaskContainer = styled.div`
+  grid-column: 7 / span 4;
+  @media (max-width: 800px) {
+    grid-column: 2 / span 10;
+  }
+`;
+
 class UserMain extends React.Component {
   constructor(props) {
     super(props);
@@ -30,7 +37,9 @@ class UserMain extends React.Component {
           <Header />
           <QuickTaskForm />
           <Wrapper>
-            <TaskList />
+            <StyledTaskContainer>
+              <TaskList />
+            </StyledTaskContainer>
           </Wrapper>
         </React.Fragment>
       );

@@ -11,13 +11,6 @@ import EmptyCircleIcon from "../assets/emptycircle.png";
 
 // import { Overlay } from "react-portal-overlay";
 
-const StyledTaskContainer = styled.div`
-  grid-column: 5 / span 4;
-  @media (max-width: 800px) {
-    grid-column: 2 / span 10;
-  }
-`;
-
 const Task = styled.div`
   display: grid;
   grid-gap: 10px;
@@ -161,6 +154,10 @@ class TaskList extends React.Component {
   }
 
   renderTimerButton(task) {
+    // edge cases
+    if (task.status === "complete") {
+      return <div> </div>; // need an empty div for css grid
+    }
     if (task.timeEntries.length === 0) {
       return (
         <button
@@ -178,6 +175,7 @@ class TaskList extends React.Component {
     // don't use task, as there may be multiple entries per task
     const timeEntry = this.props.userData.timeEntries.find((entry) => entry._id === mostRecent);
     console.log("time entry is", timeEntry);
+
     if (timeEntry.active) {
       // if it's running
       return (
@@ -221,7 +219,7 @@ class TaskList extends React.Component {
   }
 
   render() {
-    return <StyledTaskContainer>{this.renderTaskCards()}</StyledTaskContainer>;
+    return <React.Fragment>{this.renderTaskCards()}</React.Fragment>;
   }
 }
 
