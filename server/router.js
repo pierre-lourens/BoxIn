@@ -127,6 +127,7 @@ module.exports = function (router) {
     const timeEntry = new TimeEntry();
     timeEntry.active = true;
     timeEntry.task = req.body.taskId;
+    timeEntry.save();
 
     // need to save it to the right task
     Task.findById(req.body.taskId).exec((err, task) => {
@@ -148,11 +149,8 @@ module.exports = function (router) {
       user.save();
     });
 
-    timeEntry.save();
     // send back the added task
-    return res.send({
-      timeEntry,
-    });
+    return res.send(timeEntry);
   });
 
   // ending an already running time entry
@@ -164,24 +162,22 @@ module.exports = function (router) {
 
       timeEntry.elapsedTime = elapsedTime;
       timeEntry.active = false;
-      timeEntry.save();
 
-      User.findById(req.body.userId)
-        .populate("timeEntries")
-        .exec((err, user) => {
-          if (err) return res.send(err);
+      User.findById(req.body.userId).exec((err, user) => {
+        if (err) return res.send(err);
 
-          console.log("user is found and is", user);
-          // find the time entry within that user so that we can replace it with our new one
-          const timeEntryIndex = user.timeEntries.findIndex(
-            (entry) => entry._id === req.body.timeEntryId
-          );
-
-          // delete the old and insert the new
-          user.timeEntries.splice(timeEntryIndex, 1, timeEntry);
-
-          user.save();
+        console.log("user is found and is", user);
+        // find the time entry within that user so that we can replace it with our new one
+        const timeEntryIndex = user.timeEntries.findIndex((entry) => {
+          console.log(entry);
+          return entry == req.body.timeEntryId;
         });
+        // delete the old and insert the new
+        console.log("timeEntryIndex is", timeEntryIndex);
+        user.timeEntries.splice(timeEntryIndex, 1, timeEntry._id);
+        user.save();
+        timeEntry.save();
+      });
 
       return res.send(timeEntry);
     });
