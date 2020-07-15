@@ -2,11 +2,19 @@ import React from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { checkForUser } from "../actions";
+import styled from "styled-components";
 // import styled from "styled-components";
 
 import Header from "./Header";
 import QuickTaskForm from "./QuickTaskForm";
 import TaskList from "./TaskList";
+
+const Wrapper = styled.div`
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: repeat(12, 1fr);
+  margin-bottom: 30px;
+`;
 
 class UserMain extends React.Component {
   constructor(props) {
@@ -21,7 +29,9 @@ class UserMain extends React.Component {
         <React.Fragment>
           <Header />
           <QuickTaskForm />
-          <TaskList />
+          <Wrapper>
+            <TaskList />
+          </Wrapper>
         </React.Fragment>
       );
     } else {

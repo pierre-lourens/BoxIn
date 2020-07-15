@@ -19,6 +19,7 @@ const TaskFormContainer = styled.div`
   background-color: white;
   box-shadow: 0 4px 6px 0 rgba(100, 100, 100, 0.15);
   padding: 10px;
+  margin-bottom: 30px;
 
   @media (max-width: 600px) {
     grid-column: 2 / span 6;
@@ -83,7 +84,7 @@ class QuickTaskForm extends React.Component {
   handleTaskSubmit(event) {
     event.preventDefault();
     this.props.addTask(this.state.task, this.props.userId);
-    this.setState({ task: { text: "Quick add a task..." } });
+    this.setState({ task: { text: "" } });
   }
 
   handleFormChange(event) {
