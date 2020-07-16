@@ -10,6 +10,7 @@ export const STOP_TIMER = "STOP_TIMER";
 export const SEND_TASK_BOXES = "SEND_TASK_BOXES";
 export const ADD_TASK_TO_BOX = "ADD_TASK_TO_BOX";
 export const GET_TASK_BOXES = "GET_TASK_BOXES";
+export const ADD_BOX = "ADD_BOX";
 
 const ROOT_URL = "http://localhost:5000";
 
@@ -137,19 +138,17 @@ export function sendTaskBoxes(userId, boxes) {
 }
 
 export function addTaskToBox(task, boxName, userId) {
-  const url = `${ROOT_URL}/api/${userId}/boxes`;
-
-  const request = axios({
-    method: "post",
-    url: url,
-    withCredentials: true,
-    data: { taskId: task._id, boxName },
-  });
-
-  return {
-    type: ADD_TASK_TO_BOX,
-    payload: request,
-  };
+  // const url = `${ROOT_URL}/api/${userId}/boxes`;
+  // const request = axios({
+  //   method: "post",
+  //   url: url,
+  //   withCredentials: true,
+  //   data: { taskId: task._id, boxName },
+  // });
+  // return {
+  //   type: ADD_TASK_TO_BOX,
+  //   payload: request,
+  // };
 }
 
 export function getTaskBoxes(userId) {
@@ -163,6 +162,24 @@ export function getTaskBoxes(userId) {
 
   return {
     type: GET_TASK_BOXES,
+    payload: request,
+  };
+}
+
+export function addBox(userId, boxTitle) {
+  const url = `${ROOT_URL}/api/${userId}/boxes`;
+
+  const string = boxTitle.toString();
+
+  const request = axios({
+    method: "post",
+    url: url,
+    withCredentials: true,
+    data: { boxTitle: string },
+  });
+
+  return {
+    type: ADD_BOX,
     payload: request,
   };
 }

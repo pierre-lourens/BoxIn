@@ -1,8 +1,17 @@
 import React from "react";
 import styled from "styled-components";
-import { getTasks, editTask, startTimer, stopTimer, sendTaskBoxes, getTaskBoxes } from "../actions";
+import {
+  getTasks,
+  editTask,
+  startTimer,
+  stopTimer,
+  sendTaskBoxes,
+  getTaskBoxes,
+  addBox,
+} from "../actions";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
+import uuid from "react-uuid";
 import PlayIcon from "../assets/PlayIcon";
 import PauseIcon from "../assets/PauseIcon";
 import PencilAltIcon from "../assets/PencilAltIcon";
@@ -12,6 +21,38 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import _ from "lodash";
 
 // import { Overlay } from "react-portal-overlay";
+
+const Button = styled.button`
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  margin: 0.5rem;
+  padding: 0.5rem;
+  color: #000;
+  border: 1px solid #ddd;
+  background: #fff;
+  border-radius: 3px;
+  font-size: 1rem;
+  cursor: pointer;
+`;
+
+const ButtonText = styled.div`
+  margin: 0 1rem;
+`;
+
+const List = styled.div`
+  border: 1px ${(props) => (props.isDraggingOver ? "dashed #000" : "solid #ddd")};
+  background: #fff;
+  padding: 0.5rem 0.5rem 0;
+  border-radius: 3px;
+  flex: 0 0 150px;
+  font-family: sans-serif;
+`;
+const Container = styled(List)`
+  margin: 0.5rem 0.5rem 1.5rem;
+  background: #ccc;
+`;
 
 const StyledAgendaContainer = styled.div`
   grid-column: 3 / span 4;
@@ -137,22 +178,13 @@ class TaskList extends React.Component {
     this.renderToggleCircle = this.renderToggleCircle.bind(this);
   }
 
-  // called right before render
-  // we use this for getting the tasks into state for drag and drop
-  /* static getDerivedStateFromProps(props, state) {
-    if (props.userData.tasks) {
-      if (props.boxes != state.boxes) {
-        console.log("WELL, props.boxes are", props.boxes);
-        console.log("WELL, state.boxes are", state.boxes);
-        return {
-          boxes: props.boxes,
-          boxesMounted: true,
-        };
-      }
-    }
-    // if state hasn't changed
-    return null;
-  } */
+  addBox = (e) => {
+    // we need to modify the lists in userData
+    e.preventDefault();
+    console.log("clicked");
+    const randomTitle = uuid();
+    this.props.addBox(this.props.userId, randomTitle);
+  };
 
   componentDidUpdate(prevProps, prevState) {
     // make our boxes from our data store
@@ -271,7 +303,43 @@ class TaskList extends React.Component {
         }
 
         return (
-          <Draggable draggableId={task._id} index={index}>
+          <Draggable draggableId={task._id} key={task._id} index={index}>
+            {(provided) => (
+              <Task
+                key={task._id}
+                ref={provided.innerRef}
+                {...provided.draggableProps}
+                {...provided.dragHandleProps}>
+                {this.renderToggleCircle(task)}
+                {this.renderTaskText(task)}
+                <div className='options'>
+                  {this.renderTimerButton(task)}
+                  <button onClick={this.handleEditClick}>
+                    <PencilAltIcon />
+                  </button>
+                </div>
+              </Task>
+            )}
+          </Draggable>
+        );
+      });
+    }
+  }
+
+  renderAgendaBoxes() {
+    if (
+      this.state.boxes.hasOwnProperty("allTasks") &&
+      this.props.userData.hasOwnProperty("tasks")
+    ) {
+      return this.state.boxes.allTasks.taskIds.map((taskIdFromBox, index) => {
+        const task = this.props.userData.tasks.find((task) => taskIdFromBox === task._id);
+
+        if (!task) {
+          return null;
+        }
+
+        return (
+          <Draggable key={task._id} draggableId={task._id} index={index}>
             {(provided) => (
               <Task
                 key={task._id}
@@ -341,16 +409,66 @@ class TaskList extends React.Component {
   render() {
     console.log("Props upon render is", this.props);
     return (
-      <DragDropContext onDragEnd={this.onDragEnd}>
-        <Droppable droppableId={"allTasks"}>
-          {(provided) => (
-            <StyledAgendaContainer ref={provided.innerRef}>
-              {this.renderTaskCards()}
-              {provided.placeholder}
-            </StyledAgendaContainer>
-          )}
-        </Droppable>
-      </DragDropContext>
+      <React.Fragment>
+        <Button onClick={this.addBox}>
+          <svg width='24' height='24' viewBox='0 0 24 24'>
+            <path fill='currentColor' d='M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z' />
+          </svg>
+          <ButtonText>Add List</ButtonText>
+        </Button>
+        <DragDropContext onDragEnd={this.onDragEnd}>
+          <Droppable droppableId={"allTasks"}>
+            {(provided) => (
+              <StyledTaskContainer ref={provided.innerRef}>
+                {this.renderTaskCards()}
+                {provided.placeholder}
+              </StyledTaskContainer>
+            )}
+          </Droppable>
+          {/* filter the object to everything but allTasks before mapping*/}
+          {console.log("this.props.boxes is", this.props.boxes)}
+          {this.props.boxes.hasOwnProperty("allTasks") &&
+          this.props.userData.hasOwnProperty("tasks")
+            ? Object.keys(this.props.boxes)
+                .filter((box) => box != "allTasks")
+                .map((boxTitle, i) => {
+                  console.log("==> list", boxTitle);
+
+                  return (
+                    <Droppable key={boxTitle} droppableId={boxTitle}>
+                      {(provided) => (
+                        <Container ref={provided.innerRef}>
+                          {this.props.boxes[boxTitle].taskIds.length
+                            ? this.props[boxTitle].taskIds.map((task, index) => (
+                                <Draggable key={task._id} draggableId={task._id} index={index}>
+                                  {(provided) => (
+                                    <Task
+                                      key={task._id}
+                                      ref={provided.innerRef}
+                                      {...provided.draggableProps}
+                                      {...provided.dragHandleProps}>
+                                      {this.renderToggleCircle(task)}
+                                      {this.renderTaskText(task)}
+                                      <div className='options'>
+                                        {this.renderTimerButton(task)}
+                                        <button onClick={this.handleEditClick}>
+                                          <PencilAltIcon />
+                                        </button>
+                                      </div>
+                                    </Task>
+                                  )}
+                                </Draggable>
+                              ))
+                            : !provided.placeholder}
+                          {provided.placeholder}
+                        </Container>
+                      )}
+                    </Droppable>
+                  );
+                })
+            : console.log("hi")}
+        </DragDropContext>
+      </React.Fragment>
     );
   }
 }
@@ -368,7 +486,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
-    { getTasks, editTask, startTimer, stopTimer, sendTaskBoxes, getTaskBoxes },
+    { getTasks, editTask, startTimer, stopTimer, sendTaskBoxes, getTaskBoxes, addBox },
     dispatch
   );
 }
