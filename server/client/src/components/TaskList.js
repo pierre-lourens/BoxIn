@@ -128,6 +128,8 @@ class TaskList extends React.Component {
     this.state = {
       editingOpen: false,
       userData: null,
+      boxesMounted: false,
+      boxes: { allTasks: { taskIds: [] } },
     };
 
     this.renderTaskCards = this.renderTaskCards.bind(this);
@@ -137,19 +139,22 @@ class TaskList extends React.Component {
 
   // called right before render
   // we use this for getting the tasks into state for drag and drop
-  static getDerivedStateFromProps(props, state) {
+  /* static getDerivedStateFromProps(props, state) {
     if (props.userData.tasks) {
-      if (props.boxes !== state.boxes) {
+      if (props.boxes != state.boxes) {
+        console.log("WELL, props.boxes are", props.boxes);
+        console.log("WELL, state.boxes are", state.boxes);
         return {
           boxes: props.boxes,
+          boxesMounted: true,
         };
       }
     }
     // if state hasn't changed
     return null;
-  }
+  } */
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     // make our boxes from our data store
     console.log("this.props.task is", this.props.task);
     if (
@@ -160,6 +165,10 @@ class TaskList extends React.Component {
     ) {
       this.props.getTasks(this.props.userId);
       this.props.getTaskBoxes(this.props.userId);
+    }
+
+    if (prevProps.boxes !== this.props.boxes) {
+      this.setState({ boxes: this.props.boxes });
     }
   }
 
@@ -250,7 +259,10 @@ class TaskList extends React.Component {
   }
 
   renderTaskCards() {
-    if (this.props.boxes.hasOwnProperty("allTasks")) {
+    if (
+      this.props.boxes.hasOwnProperty("allTasks") &&
+      this.props.userData.hasOwnProperty("tasks")
+    ) {
       return this.state.boxes.allTasks.taskIds.map((taskIdFromBox, index) => {
         const task = this.props.userData.tasks.find((task) => taskIdFromBox === task._id);
 
@@ -278,7 +290,7 @@ class TaskList extends React.Component {
     }
   }
 
-  onDragEnd = (result) => {
+  onDragEnd = async (result) => {
     const { destination, source, draggableId } = result;
 
     // edge cases
@@ -311,10 +323,13 @@ class TaskList extends React.Component {
     };
     console.log("newState is", newState);
 
+    this.setState(newState);
+    console.log("starting 2s wait, the local state should render the drag and drop correctly");
+    await new Promise((resolve) => {
+      setTimeout(() => resolve(), 500);
+    });
+    console.log("done waiting");
     this.props.sendTaskBoxes(this.props.userId, newState.boxes);
-    // this.setState(newState, () => {
-    //   ;
-    // });
 
     // we need to call an endpoint to update the server that a reorder has occurred
   };

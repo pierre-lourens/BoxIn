@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { addTask, checkForUser, addTaskToBox } from "../actions";
+import { addTask, checkForUser, getTaskBoxes, getTasks } from "../actions";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
@@ -84,6 +84,8 @@ class QuickTaskForm extends React.Component {
   handleTaskSubmit(event) {
     event.preventDefault();
     this.props.addTask(this.state.task, this.props.userId);
+    this.props.getTasks(this.props.userId);
+    this.props.getTaskBoxes(this.props.userId);
     this.setState({ task: { text: "", box: "allTasks" } });
   }
 
@@ -122,7 +124,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ addTask, checkForUser, addTaskToBox }, dispatch);
+  return bindActionCreators({ addTask, checkForUser, getTaskBoxes, getTasks }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(QuickTaskForm);
