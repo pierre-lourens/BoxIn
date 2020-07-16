@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { getTasks, editTask, startTimer, stopTimer } from "../actions";
+import { getTasks, editTask, startTimer, stopTimer, sendTaskBoxes, getTaskBoxes } from "../actions";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import PlayIcon from "../assets/PlayIcon";
@@ -8,8 +8,17 @@ import PauseIcon from "../assets/PauseIcon";
 import PencilAltIcon from "../assets/PencilAltIcon";
 import CheckCircleIcon from "../assets/CheckCircleIcon";
 import EmptyCircleIcon from "../assets/emptycircle.png";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import _ from "lodash";
 
 // import { Overlay } from "react-portal-overlay";
+
+const StyledAgendaContainer = styled.div`
+  grid-column: 3 / span 4;
+  @media (max-width: 800px) {
+    grid-column: 2 / span 10;
+  }
+`;
 
 const StyledTaskContainer = styled.div`
   grid-column: 7 / span 4;
@@ -23,12 +32,12 @@ const Task = styled.div`
   grid-gap: 10px;
   cursor: grab;
   grid-template-columns: repeat(8, 1fr);
-  grid-template-rows: 45px auto;
+  grid-template-rows: 40px auto;
   background-color: white;
   margin-bottom: 5px;
   border: 0;
   border-radius: 4px;
-  min-height: 45px; // 20 pixels per 10 minutes, including padding
+  min-height: 40px; // 20 pixels per 10 minutes, including padding
   background-color: white;
   box-shadow: 0 4px 6px 0 rgba(100, 100, 100, 0.15);
   padding: 10px;
@@ -116,20 +125,57 @@ class TaskList extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { editingOpen: false };
+    this.state = {
+      editingOpen: false,
+      userData: null,
+    };
+
     this.renderTaskCards = this.renderTaskCards.bind(this);
     this.handleTaskToggle = this.handleTaskToggle.bind(this);
     this.renderToggleCircle = this.renderToggleCircle.bind(this);
   }
+  /*
+  // called right before render
+  // we use this for getting the tasks into state for drag and drop
+  static getDerivedStateFromProps(props, state) {
+    if (props.userData.tasks) {
+      if (props.boxes !== state.boxes) {
+        // do some normalizing of our user data to figure out boxes
+        const boxes = props.userData.tasks.reduce((boxes, task) => {
+          if (!boxes.hasOwnProperty(task.box)) {
+            boxes[task.box] = { id: task.box, taskIds: [] };
+          }
+
+          boxes[task.box].taskIds.push(task._id);
+          console.log(boxes);
+
+          return boxes;
+        }, {});
+
+        return {
+          boxes,
+        };
+
+        this.setState({ boxes });
+      }
+    }
+    // if state hasn't changed
+    return null;
+  }
+  */
 
   componentDidUpdate(prevProps) {
+    // make our boxes from our data store
     if (
       this.props.userId !== prevProps.userId ||
       this.props.task !== prevProps.task ||
-      this.props.timer !== prevProps.timer
+      this.props.timer !== prevProps.timer ||
+      this.props.boxes !== prevProps.boxes
     ) {
       console.log("ComponentDidUpdate firing");
+
       this.props.getTasks(this.props.userId);
+      this.props.getTaskBoxes(this.props.userId);
     }
   }
 
@@ -188,12 +234,10 @@ class TaskList extends React.Component {
     // grab the latest task time entry to do our check
     const mostRecent = task.timeEntries[task.timeEntries.length - 1];
 
-    console.log("mostRecent is", mostRecent);
     // find the time entry that most recent entry
     // don't use task, as there may be multiple entries per task
     const timeEntry = this.props.userData.timeEntries.find((entry) => entry._id === mostRecent);
     // error handling, in case people are clicking too fast
-    console.log("time entry is", timeEntry);
 
     if (timeEntry.active) {
       // if it's running
@@ -222,36 +266,103 @@ class TaskList extends React.Component {
   }
 
   renderTaskCards() {
-    if (this.props.userData.tasks) {
-      return this.props.userData.tasks.map((task) => {
+    if (this.props.userData.boxes) {
+      return this.props.userData.boxes.allTasks.taskIds.map((taskIdFromBox, index) => {
+        const task = this.props.userData.tasks.find((task) => taskIdFromBox === task._id);
+
         return (
-          <Task key={task._id}>
-            {this.renderToggleCircle(task)}
-            {this.renderTaskText(task)}
-            <div className='options'>
-              {this.renderTimerButton(task)}
-              <button onClick={this.handleEditClick}>
-                <PencilAltIcon />
-              </button>
-            </div>
-          </Task>
+          <Draggable draggableId={task._id} index={index}>
+            {(provided) => (
+              <Task
+                key={task._id}
+                ref={provided.innerRef}
+                {...provided.draggableProps}
+                {...provided.dragHandleProps}>
+                {this.renderToggleCircle(task)}
+                {this.renderTaskText(task)}
+                <div className='options'>
+                  {this.renderTimerButton(task)}
+                  <button onClick={this.handleEditClick}>
+                    <PencilAltIcon />
+                  </button>
+                </div>
+              </Task>
+            )}
+          </Draggable>
         );
       });
     }
   }
 
+  onDragEnd = (result) => {
+    const { destination, source, draggableId } = result;
+
+    // edge cases
+    if (!destination) {
+      return;
+    }
+
+    // in case the user dropped it back into its position
+    if (destination.droppableId === source.droppableId && destination.index === source.index) {
+      return;
+    }
+
+    console.log("source is ", source);
+    console.log("destination is ", destination);
+    console.log("draggableId is ", draggableId);
+    console.log("this.state.boxes is", this.state.boxes);
+    console.log("box is", this.state.boxes[source.droppableId]);
+
+    const box = _.cloneDeep(this.state.boxes[source.droppableId]);
+    const newTasks = Array.from(box.taskIds);
+    newTasks.splice(source.index, 1);
+    newTasks.splice(destination.index, 0, draggableId);
+    const newBox = { ...box, taskIds: newTasks };
+
+    const newState = {
+      ...this.state,
+      boxes: { ...this.state.boxes, [newBox.id]: newBox },
+    };
+
+    this.setState(newState);
+
+    // we need to call an endpoint to update the server that a reorder has occurred
+    this.props.sendTaskBoxes(this.props.userId, this.state.boxes);
+  };
+
   render() {
-    return <StyledTaskContainer>{this.renderTaskCards()}</StyledTaskContainer>;
+    console.log("Props upon render is", this.props);
+    return (
+      <DragDropContext onDragEnd={this.onDragEnd}>
+        <Droppable droppableId={"allTasks"}>
+          {(provided) => (
+            <StyledAgendaContainer ref={provided.innerRef}>
+              {this.renderTaskCards()}
+              {provided.placeholder}
+            </StyledAgendaContainer>
+          )}
+        </Droppable>
+      </DragDropContext>
+    );
   }
 }
 
 function mapStateToProps(state) {
   console.log("state being mapped to props in tasklist is is", state);
-  return { userId: state.user._id, userData: state.userData, task: state.task, timer: state.timer };
+  return {
+    userId: state.user._id,
+    userData: state.userData,
+    task: state.task,
+    timer: state.timer,
+    boxes: state.boxes,
+  };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ getTasks, editTask, startTimer, stopTimer }, dispatch);
+  return bindActionCreators(
+    { getTasks, editTask, startTimer, stopTimer, sendTaskBoxes, getTaskBoxes },
+    dispatch
+  );
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TaskList);

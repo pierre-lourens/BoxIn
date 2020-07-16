@@ -68,7 +68,7 @@ module.exports = function (router) {
   // post a new task
   router.post("/api/me/task", ensureAuthenticated, (req, res, next) => {
     // check that the body contains at least a task text
-    if (!req.body.text) {
+    if (!req.body.task.text) {
       res.writeHead(400, "Invalid format; task must contain a text property");
       return res.send();
     }
@@ -80,7 +80,8 @@ module.exports = function (router) {
     }
 
     const task = new Task();
-    task.text = req.body.text;
+    task.text = req.body.task.text;
+    task.box = req.body.task.box;
     task.user = req.body.userId;
 
     // need to save it to the right user
@@ -180,6 +181,37 @@ module.exports = function (router) {
       });
 
       return res.send(timeEntry);
+    });
+  });
+
+  router.put("/api/me/boxes", ensureAuthenticated, (req, res, next) => {
+    User.findById(req.params.userId)
+      .populate("boxes")
+      .exec((err, boxes) => {
+        if (err) return res.send(err);
+
+        user.boxes = req.body.boxes;
+
+        return res.send(boxes);
+      });
+  });
+
+  router.get("/api/:userId/boxes", ensureAuthenticated, (req, res, next) => {
+    Box.find({ user: req.params.userId }).exec((err, boxes) => {
+      if (err) return res.send(err);
+
+      return res.send(boxes);
+    });
+  });
+
+  router.post("/api/:userId/boxes", ensureAuthenticated, (req, res, next) => {
+    Box.find({ title: req.body.boxName }).exec((err, user) => {
+      if (err) return res.send(err);
+
+      box.taskIds.push(req.body.taskId);
+      box.user = req.params.userId;
+      box.save();
+      return res.send(box);
     });
   });
 

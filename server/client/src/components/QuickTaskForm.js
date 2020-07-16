@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { addTask, checkForUser } from "../actions";
+import { addTask, checkForUser, addTaskToBox } from "../actions";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
@@ -75,7 +75,7 @@ class QuickTaskForm extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { task: { text: "" } };
+    this.state = { task: { text: "", box: "allTasks" } };
 
     this.handleTaskSubmit = this.handleTaskSubmit.bind(this);
     this.handleFormChange = this.handleFormChange.bind(this);
@@ -83,20 +83,22 @@ class QuickTaskForm extends React.Component {
 
   handleTaskSubmit(event) {
     event.preventDefault();
+    console.log("this.state.task is", this.state.task);
     this.props.addTask(this.state.task, this.props.userId);
-    this.setState({ task: { text: "" } });
+    this.props.addTaskToBox(this.state.task, "allTasks", this.props.userId);
+    this.setState({ task: { text: "", box: "allTasks" } });
   }
 
   handleFormChange(event) {
     if (event.charCode === 13) {
-      return this.props.handleTaskSubmit();
+      this.handleTaskSubmit();
     }
 
-    this.setState({ task: { text: event.target.value } });
+    this.setState({ task: { text: event.target.value, box: "allTasks" } });
   }
 
   render() {
-    console.log("Inside render of quick task form, props are", this.props);
+    console.log("Inside render of quick task form, state is", this.state);
     return (
       <StyledInputContainer>
         <TaskFormContainer>
@@ -123,7 +125,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ addTask, checkForUser }, dispatch);
+  return bindActionCreators({ addTask, checkForUser, addTaskToBox }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(QuickTaskForm);
