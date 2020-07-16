@@ -81,20 +81,39 @@ module.exports = function (router) {
 
     const task = new Task();
     task.text = req.body.task.text;
-    task.box = req.body.task.box;
     task.user = req.body.userId;
+    task.save();
 
     // need to save it to the right user
     User.findById(req.body.userId)
       .populate("tasks")
-      .populate("timeEntries")
       .exec((err, user) => {
         if (err) return res.send(err);
         user.tasks.push(task);
-        task.save();
 
+        // by default, new tasks can be added to the 'allTasks' box
+        // find the 'alltasks' one
+
+        console.log("user is", user);
+
+        allTasksboxCheck = user.boxes.find((box) => (box.title = "allTasks"));
+        console.log("boxes check is is", allTasksboxCheck);
+
+        // if there isn't one yet, make one
+        if (!allTasksboxCheck) {
+          // new default box to add
+          const allTasksBox = { title: "allTasks", taskIds: [] };
+          user.boxes.push(allTasksBox);
+          console.log("now user is", user);
+        }
+
+        console.log("since it's true, user boxes is", user.boxes);
+
+        const allTasksIndex = user.boxes.findIndex((box) => box.title === "allTasks");
+        user.boxes[allTasksIndex].taskIds.push(task._id);
         user.save();
-        return res.send(user);
+
+        return res.send(task);
       });
   });
 
@@ -184,37 +203,39 @@ module.exports = function (router) {
     });
   });
 
+  // when the boxes change shape in state, the whole set is sent here
   router.put("/api/me/boxes", ensureAuthenticated, (req, res, next) => {
-    User.findById(req.params.userId)
-      .populate("boxes")
-      .exec((err, boxes) => {
-        if (err) return res.send(err);
+    User.findById(req.body.userId).exec((err, user) => {
+      if (err) return res.send(err);
 
-        user.boxes = req.body.boxes;
+      user.boxes = req.body.boxes;
+      user.save();
 
-        return res.send(boxes);
-      });
+      return res.send(user.boxes);
+    });
   });
 
   router.get("/api/:userId/boxes", ensureAuthenticated, (req, res, next) => {
-    Box.find({ user: req.params.userId }).exec((err, boxes) => {
+    User.findById(req.params.userId).exec((err, user) => {
       if (err) return res.send(err);
 
-      return res.send(boxes);
+      return res.send(user.boxes);
     });
   });
-
+  /* 
+  // posting a new task to the user's box
+  // to do: see if this route is even necessary given put above
+  // and the fact that new tasks are always going to be in allTasks
   router.post("/api/:userId/boxes", ensureAuthenticated, (req, res, next) => {
-    Box.find({ title: req.body.boxName }).exec((err, user) => {
-      if (err) return res.send(err);
+    User.update({ id: req.params.userId }, { $push: { boxes: req.body.boxes } }).exec(
+      (err, user) => {
+        if (err) return res.send(err);
 
-      box.taskIds.push(req.body.taskId);
-      box.user = req.params.userId;
-      box.save();
-      return res.send(box);
-    });
+        return res.send(user.boxes);
+      }
+    );
   });
-
+ */
   // route for populating a user within a task
   router.get("/api/me/tasks/:taskId", ensureAuthenticated, (req, res, next) => {
     Task.findById(req.params.taskId)

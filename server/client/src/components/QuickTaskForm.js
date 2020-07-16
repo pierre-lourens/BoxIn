@@ -83,9 +83,7 @@ class QuickTaskForm extends React.Component {
 
   handleTaskSubmit(event) {
     event.preventDefault();
-    console.log("this.state.task is", this.state.task);
     this.props.addTask(this.state.task, this.props.userId);
-    this.props.addTaskToBox(this.state.task, "allTasks", this.props.userId);
     this.setState({ task: { text: "", box: "allTasks" } });
   }
 
@@ -98,7 +96,6 @@ class QuickTaskForm extends React.Component {
   }
 
   render() {
-    console.log("Inside render of quick task form, state is", this.state);
     return (
       <StyledInputContainer>
         <TaskFormContainer>

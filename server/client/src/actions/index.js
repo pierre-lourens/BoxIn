@@ -118,11 +118,16 @@ export function getTasks(userId) {
 export function sendTaskBoxes(userId, boxes) {
   const url = `${ROOT_URL}/api/me/boxes`;
 
+  console.log("BOXES BEING SENT ARE", boxes);
+
+  // let's get it back in the format that we store in the db
+  const boxesObject = Object.values(boxes);
+
   const request = axios({
     method: "put",
     url: url,
     withCredentials: true,
-    data: { userId, boxes },
+    data: { userId, boxes: boxesObject },
   });
 
   return {

@@ -134,46 +134,30 @@ class TaskList extends React.Component {
     this.handleTaskToggle = this.handleTaskToggle.bind(this);
     this.renderToggleCircle = this.renderToggleCircle.bind(this);
   }
-  /*
+
   // called right before render
   // we use this for getting the tasks into state for drag and drop
   static getDerivedStateFromProps(props, state) {
     if (props.userData.tasks) {
       if (props.boxes !== state.boxes) {
-        // do some normalizing of our user data to figure out boxes
-        const boxes = props.userData.tasks.reduce((boxes, task) => {
-          if (!boxes.hasOwnProperty(task.box)) {
-            boxes[task.box] = { id: task.box, taskIds: [] };
-          }
-
-          boxes[task.box].taskIds.push(task._id);
-          console.log(boxes);
-
-          return boxes;
-        }, {});
-
         return {
-          boxes,
+          boxes: props.boxes,
         };
-
-        this.setState({ boxes });
       }
     }
     // if state hasn't changed
     return null;
   }
-  */
 
   componentDidUpdate(prevProps) {
     // make our boxes from our data store
+    console.log("this.props.task is", this.props.task);
     if (
       this.props.userId !== prevProps.userId ||
       this.props.task !== prevProps.task ||
-      this.props.timer !== prevProps.timer ||
-      this.props.boxes !== prevProps.boxes
+      this.props.timer !== prevProps.timer
+      // this.props.userData.tasks !== prevProps.userData.tasks
     ) {
-      console.log("ComponentDidUpdate firing");
-
       this.props.getTasks(this.props.userId);
       this.props.getTaskBoxes(this.props.userId);
     }
@@ -266,8 +250,8 @@ class TaskList extends React.Component {
   }
 
   renderTaskCards() {
-    if (this.props.userData.boxes) {
-      return this.props.userData.boxes.allTasks.taskIds.map((taskIdFromBox, index) => {
+    if (this.props.boxes.hasOwnProperty("allTasks")) {
+      return this.state.boxes.allTasks.taskIds.map((taskIdFromBox, index) => {
         const task = this.props.userData.tasks.find((task) => taskIdFromBox === task._id);
 
         return (
@@ -319,15 +303,20 @@ class TaskList extends React.Component {
     newTasks.splice(destination.index, 0, draggableId);
     const newBox = { ...box, taskIds: newTasks };
 
+    console.log("newBox is", newBox);
+
     const newState = {
       ...this.state,
-      boxes: { ...this.state.boxes, [newBox.id]: newBox },
+      boxes: { ...this.state.boxes, [newBox.title]: newBox },
     };
+    console.log("newState is", newState);
 
-    this.setState(newState);
+    this.props.sendTaskBoxes(this.props.userId, newState.boxes);
+    // this.setState(newState, () => {
+    //   ;
+    // });
 
     // we need to call an endpoint to update the server that a reorder has occurred
-    this.props.sendTaskBoxes(this.props.userId, this.state.boxes);
   };
 
   render() {
