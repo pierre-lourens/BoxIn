@@ -404,20 +404,30 @@ class TaskList extends React.Component {
           [newDestination.title]: newDestination,
         },
       };
+
+      this.setState(newState);
+    } else {
+      const box = _.cloneDeep(this.state.boxes[source.droppableId]);
+      const newTasks = Array.from(box.taskIds);
+      newTasks.splice(source.index, 1);
+      newTasks.splice(destination.index, 0, draggableId);
+      const newBox = { ...box, taskIds: newTasks };
+
+      console.log("newBox is", newBox);
+
+      const newState = {
+        ...this.state,
+        boxes: { ...this.state.boxes, [newBox.title]: newBox },
+      };
+      this.setState(newState);
     }
 
-    console.log("newState is", newState);
-    console.log("newSourceBox is", newSourceBox);
-    console.log("destination is", newDestination);
-    console.log("--------------------------------------------");
-
-    this.setState(newState);
     console.log("starting 2s wait, the local state should render the drag and drop correctly");
     await new Promise((resolve) => {
       setTimeout(() => resolve(), 500);
     });
     console.log("done waiting");
-    this.props.sendTaskBoxes(this.props.userId, newState.boxes);
+    this.props.sendTaskBoxes(this.props.userId, this.state.boxes);
 
     // we need to call an endpoint to update the server that a reorder has occurred
   };
@@ -435,10 +445,10 @@ class TaskList extends React.Component {
         <DragDropContext onDragEnd={this.onDragEnd}>
           <Droppable droppableId={"allTasks"}>
             {(provided) => (
-              <StyledTaskContainer ref={provided.innerRef}>
+              <StyledAgendaContainer ref={provided.innerRef}>
                 {this.renderTaskCards()}
                 {provided.placeholder}
-              </StyledTaskContainer>
+              </StyledAgendaContainer>
             )}
           </Droppable>
           {/* filter the object to everything but allTasks before mapping*/}
@@ -450,7 +460,7 @@ class TaskList extends React.Component {
                     <Droppable key={boxTitle} droppableId={boxTitle}>
                       {(provided) => (
                         <Container ref={provided.innerRef}>
-                          {this.state.boxes[boxTitle].taskIds.length &&
+                          {this.props.boxes[boxTitle].taskIds.length &&
                           this.props.userData.hasOwnProperty("tasks")
                             ? this.state.boxes[boxTitle].taskIds.map((taskIdFromBox, index) => {
                                 const task = this.props.userData.tasks.find(
