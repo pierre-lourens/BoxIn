@@ -30,7 +30,7 @@ const StyledTaskContainer = styled.div`
 const Task = styled.div`
   display: grid;
   grid-gap: 10px;
-  cursor: grab;
+
   grid-template-columns: repeat(8, 1fr);
   grid-template-rows: 40px auto;
   background-color: white;
@@ -260,11 +260,15 @@ class TaskList extends React.Component {
 
   renderTaskCards() {
     if (
-      this.props.boxes.hasOwnProperty("allTasks") &&
+      this.state.boxes.hasOwnProperty("allTasks") &&
       this.props.userData.hasOwnProperty("tasks")
     ) {
       return this.state.boxes.allTasks.taskIds.map((taskIdFromBox, index) => {
         const task = this.props.userData.tasks.find((task) => taskIdFromBox === task._id);
+
+        if (!task) {
+          return null;
+        }
 
         return (
           <Draggable draggableId={task._id} index={index}>

@@ -84,8 +84,8 @@ class QuickTaskForm extends React.Component {
   handleTaskSubmit(event) {
     event.preventDefault();
     this.props.addTask(this.state.task, this.props.userId);
-    this.props.getTasks(this.props.userId);
-    this.props.getTaskBoxes(this.props.userId);
+    // this.props.getTasks(this.props.userId);
+    // this.props.getTaskBoxes(this.props.userId);
     this.setState({ task: { text: "", box: "allTasks" } });
   }
 
