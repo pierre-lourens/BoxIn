@@ -176,6 +176,7 @@ class TaskList extends React.Component {
     this.renderTaskCards = this.renderTaskCards.bind(this);
     this.handleTaskToggle = this.handleTaskToggle.bind(this);
     this.renderToggleCircle = this.renderToggleCircle.bind(this);
+    this.addBox = this.addBox.bind(this);
   }
 
   addBox = (e) => {
@@ -375,25 +376,40 @@ class TaskList extends React.Component {
       return;
     }
 
+    console.log("--------------------------------------------");
     console.log("source is ", source);
     console.log("destination is ", destination);
     console.log("draggableId is ", draggableId);
     console.log("this.state.boxes is", this.state.boxes);
     console.log("box is", this.state.boxes[source.droppableId]);
 
-    const box = _.cloneDeep(this.state.boxes[source.droppableId]);
-    const newTasks = Array.from(box.taskIds);
-    newTasks.splice(source.index, 1);
-    newTasks.splice(destination.index, 0, draggableId);
-    const newBox = { ...box, taskIds: newTasks };
+    if (source.droppableId != destination.droppableId) {
+      const sourceBox = _.cloneDeep(this.state.boxes[source.droppableId]);
+      const destinationBox = _.cloneDeep(this.state.boxes[destination.droppableId]);
 
-    console.log("newBox is", newBox);
+      const newSourceTasks = Array.from(sourceBox.taskIds);
+      newSourceTasks.splice(source.index, 1);
 
-    const newState = {
-      ...this.state,
-      boxes: { ...this.state.boxes, [newBox.title]: newBox },
-    };
+      const newDestinationTasks = Array.from(destinationBox.taskIds);
+      newDestinationTasks.splice(destination.index, 0, draggableId);
+
+      const newSourceBox = { ...sourceBox, taskIds: newSourceTasks };
+      const newDestination = { ...destinationBox, taskIds: newDestinationTasks };
+
+      const newState = {
+        ...this.state,
+        boxes: {
+          ...this.state.boxes,
+          [newSourceBox.title]: newSourceBox,
+          [newDestination.title]: newDestination,
+        },
+      };
+    }
+
     console.log("newState is", newState);
+    console.log("newSourceBox is", newSourceBox);
+    console.log("destination is", newDestination);
+    console.log("--------------------------------------------");
 
     this.setState(newState);
     console.log("starting 2s wait, the local state should render the drag and drop correctly");
@@ -426,39 +442,41 @@ class TaskList extends React.Component {
             )}
           </Droppable>
           {/* filter the object to everything but allTasks before mapping*/}
-          {console.log("this.props.boxes is", this.props.boxes)}
-          {this.props.boxes.hasOwnProperty("allTasks") &&
-          this.props.userData.hasOwnProperty("tasks")
+          {Object.keys(this.state.boxes).length > 1
             ? Object.keys(this.props.boxes)
                 .filter((box) => box != "allTasks")
                 .map((boxTitle, i) => {
-                  console.log("==> list", boxTitle);
-
                   return (
                     <Droppable key={boxTitle} droppableId={boxTitle}>
                       {(provided) => (
                         <Container ref={provided.innerRef}>
-                          {this.props.boxes[boxTitle].taskIds.length
-                            ? this.props[boxTitle].taskIds.map((task, index) => (
-                                <Draggable key={task._id} draggableId={task._id} index={index}>
-                                  {(provided) => (
-                                    <Task
-                                      key={task._id}
-                                      ref={provided.innerRef}
-                                      {...provided.draggableProps}
-                                      {...provided.dragHandleProps}>
-                                      {this.renderToggleCircle(task)}
-                                      {this.renderTaskText(task)}
-                                      <div className='options'>
-                                        {this.renderTimerButton(task)}
-                                        <button onClick={this.handleEditClick}>
-                                          <PencilAltIcon />
-                                        </button>
-                                      </div>
-                                    </Task>
-                                  )}
-                                </Draggable>
-                              ))
+                          {this.state.boxes[boxTitle].taskIds.length &&
+                          this.props.userData.hasOwnProperty("tasks")
+                            ? this.state.boxes[boxTitle].taskIds.map((taskIdFromBox, index) => {
+                                const task = this.props.userData.tasks.find(
+                                  (task) => taskIdFromBox === task._id
+                                );
+                                return (
+                                  <Draggable key={task._id} draggableId={task._id} index={index}>
+                                    {(provided) => (
+                                      <Task
+                                        key={task._id}
+                                        ref={provided.innerRef}
+                                        {...provided.draggableProps}
+                                        {...provided.dragHandleProps}>
+                                        {this.renderToggleCircle(task)}
+                                        {this.renderTaskText(task)}
+                                        <div className='options'>
+                                          {this.renderTimerButton(task)}
+                                          <button onClick={this.handleEditClick}>
+                                            <PencilAltIcon />
+                                          </button>
+                                        </div>
+                                      </Task>
+                                    )}
+                                  </Draggable>
+                                );
+                              })
                             : !provided.placeholder}
                           {provided.placeholder}
                         </Container>
