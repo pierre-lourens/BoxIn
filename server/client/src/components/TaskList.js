@@ -101,11 +101,19 @@ const Task = styled.div`
   margin-bottom: 5px;
   border: 0;
   border-radius: 4px;
-  min-height: 30px; // 20 pixels per 10 minutes, including padding
   background: ${(props) =>
     props.unscheduled ? (props) => props.theme.colors.evenWhiterThanOffWhite : "white"};
   box-shadow: 0 4px 6px 0 rgba(100, 100, 100, 0.15);
   padding: 10px;
+  height: ${(props) => {
+    console.log("HEIGHT HEIGHT ", props);
+    if (props.height) {
+      let str = props.height.toString();
+      str += "px";
+      return str;
+    }
+    return "55px";
+  }};
 
   .text {
     grid-column: 2 / span 6;
@@ -327,6 +335,14 @@ class TaskList extends React.Component {
           return null;
         }
 
+        let pixels = 55;
+
+        if (task.estimatedTime) {
+          // the design calls for 2.5 pixels per minute
+          console.log("I FOUND A TASK WITH ESTIMATED TIME AND ITS NAME IS", task);
+          pixels = Math.ceil(task.estimatedTime * 2.5);
+        }
+
         return (
           <Draggable draggableId={task._id} key={task._id} index={index}>
             {(provided) => (
@@ -334,6 +350,7 @@ class TaskList extends React.Component {
                 key={task._id}
                 ref={provided.innerRef}
                 unscheduled
+                height={pixels}
                 {...provided.draggableProps}
                 {...provided.dragHandleProps}>
                 {this.renderToggleCircle(task)}
@@ -448,12 +465,22 @@ class TaskList extends React.Component {
                                   const task = this.props.userData.tasks.find(
                                     (task) => taskIdFromBox === task._id
                                   );
+                                  let pixels = 55;
+                                  if (task.estimatedTime) {
+                                    // the design calls for 2.5 pixels per minute
+                                    console.log(
+                                      "I FOUND A TASK WITH ESTIMATED TIME AND ITS NAME IS",
+                                      task
+                                    );
+                                    pixels = Math.ceil(task.estimatedTime * 2.5);
+                                  }
                                   return (
                                     <Draggable key={task._id} draggableId={task._id} index={index}>
                                       {(provided) => (
                                         <Task
                                           key={task._id}
                                           ref={provided.innerRef}
+                                          height={pixels}
                                           {...provided.draggableProps}
                                           {...provided.dragHandleProps}>
                                           {this.renderToggleCircle(task)}
