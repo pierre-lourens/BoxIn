@@ -4,7 +4,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   height: 100%;
   box-sizing: border-box;
-  background-color: #f5faff;
+  background-color: #f0f5fa;
 }
 * {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,

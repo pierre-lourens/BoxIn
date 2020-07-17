@@ -12,7 +12,7 @@ const theme = {
     darkGray: "#303954",
     mediumGray: "#919499",
     offWhite: "#E9EDF5",
-    evenWhiterThanOffWhite: "#F2F6FC",
+    evenWhiterThanOffWhite: "#F6FBFF",
   },
   fonts: ["sans-serif", "Roboto"],
   headingFonts: ["Helvetica", "sans-serif", "Roboto"],

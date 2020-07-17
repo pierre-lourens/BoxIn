@@ -47,7 +47,7 @@ const Box = styled.div`
   margin-right: 10px;
   border-radius: 4px;
   background-color: ${(props) => props.theme.colors.offWhite};
-  box-shadow: 0 4px 6px 0 rgba(100, 100, 100, 0.15);
+  box-shadow: 0 4px 6px 0 rgba(100, 100, 100, 0.2);
 
   h2 {
     padding: 0;
@@ -74,7 +74,7 @@ const AllTasksBox = styled.div`
 `;
 
 const StyledAgendaContainer = styled.div`
-  grid-column: 3 / span 4;
+  grid-column: 2 / span 5;
   grid-row: 2;
   border-right: 1px solid rgba(100, 100, 100, 0.1);
   @media (max-width: 800px) {
@@ -85,7 +85,7 @@ const StyledAgendaContainer = styled.div`
 `;
 
 const StyledTaskContainer = styled.div`
-  grid-column: 7 / span 4;
+  grid-column: 7 / span 5;
   grid-row: 2;
   @media (max-width: 800px) {
     grid-column: 2 / span 10;
@@ -101,8 +101,16 @@ const Task = styled.div`
   margin-bottom: 5px;
   border: 0;
   border-radius: 4px;
-  background: ${(props) =>
-    props.unscheduled ? (props) => props.theme.colors.evenWhiterThanOffWhite : "white"};
+  background: ${(props) => {
+    if (props.status === "complete") {
+      return props.theme.colors.offWhite;
+    }
+    if (props.unscheduled) {
+      return "#FCFEFF";
+    } else {
+      return "#FCFEFF";
+    }
+  }};
   box-shadow: 0 4px 6px 0 rgba(100, 100, 100, 0.15);
   padding: 10px;
   height: ${(props) => {
@@ -119,7 +127,13 @@ const Task = styled.div`
     grid-column: 2 / span 6;
     margin-left: -10px;
     padding: 10px 0;
-    color: gray;
+    color: ${(props) => {
+      if (props.status === "complete") {
+        return props.theme.colors.mediumGray;
+      } else {
+        return props.theme.colors.mediumGray;
+      }
+    }};
     align-self: center;
   }
 
@@ -149,7 +163,13 @@ const Task = styled.div`
     svg {
       height: 25px;
       width: 100%;
-      color: lightgray;
+      color: ${(props) => {
+        if (props.status === "complete") {
+          return props.theme.colors.mediumGray;
+        } else {
+          return props.theme.colors.mediumGray;
+        }
+      }};
       &: hover {
         color: ${(props) => props.theme.colors.primaryBlue};
       }
@@ -177,7 +197,13 @@ const Task = styled.div`
       svg {
         height: 25px;
         width: 100%;
-        color: lightgray;
+        color: ${(props) => {
+          if (props.status === "complete") {
+            return props.theme.colors.mediumGray;
+          } else {
+            return props.theme.colors.mediumGray;
+          }
+        }};
         &: hover {
           color: ${(props) => props.theme.colors.primaryBlue};
         }
@@ -187,7 +213,7 @@ const Task = styled.div`
       svg {
         color: ${(props) => props.theme.colors.primaryBlue};
         &: hover {
-          color: lightgray;
+          color: ${(props) => props.theme.colors.darkBlue};
         }
       }
     }
@@ -350,6 +376,7 @@ class TaskList extends React.Component {
                 key={task._id}
                 ref={provided.innerRef}
                 unscheduled
+                status={task.status}
                 height={pixels}
                 {...provided.draggableProps}
                 {...provided.dragHandleProps}>
@@ -481,6 +508,7 @@ class TaskList extends React.Component {
                                           key={task._id}
                                           ref={provided.innerRef}
                                           height={pixels}
+                                          status={task.status}
                                           {...provided.draggableProps}
                                           {...provided.dragHandleProps}>
                                           {this.renderToggleCircle(task)}
