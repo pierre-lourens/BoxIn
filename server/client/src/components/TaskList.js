@@ -23,7 +23,6 @@ import _ from "lodash";
 // import { Overlay } from "react-portal-overlay";
 
 const Button = styled.button`
-  display: flex;
   align-items: center;
   align-content: center;
   justify-content: center;
@@ -41,28 +40,32 @@ const ButtonText = styled.div`
   margin: 0 1rem;
 `;
 
-const List = styled.div`
-  border: 1px ${(props) => (props.isDraggingOver ? "dashed #000" : "solid #ddd")};
+const Box = styled.div`
   background: #fff;
-  padding: 0.5rem 0.5rem 0;
-  border-radius: 3px;
-  flex: 0 0 150px;
-  font-family: sans-serif;
-`;
-const Container = styled(List)`
-  margin: 0.5rem 0.5rem 1.5rem;
-  background: #ccc;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+  background-color: ${(props) => props.theme.colors.lightGray};
+  box-shadow: 0 4px 6px 0 rgba(100, 100, 100, 0.15);
+
+  h2 {
+    padding: 0;
+    margin: 0;
+  }
 `;
 
 const StyledAgendaContainer = styled.div`
   grid-column: 3 / span 4;
+  grid-row: 2;
   @media (max-width: 800px) {
     grid-column: 2 / span 10;
+    grid-row: 3;
   }
 `;
 
 const StyledTaskContainer = styled.div`
   grid-column: 7 / span 4;
+  grid-row: 2;
   @media (max-width: 800px) {
     grid-column: 2 / span 10;
   }
@@ -78,7 +81,7 @@ const Task = styled.div`
   margin-bottom: 5px;
   border: 0;
   border-radius: 4px;
-  min-height: 40px; // 20 pixels per 10 minutes, including padding
+  min-height: 30px; // 20 pixels per 10 minutes, including padding
   background-color: white;
   box-shadow: 0 4px 6px 0 rgba(100, 100, 100, 0.15);
   padding: 10px;
@@ -440,61 +443,64 @@ class TaskList extends React.Component {
           <svg width='24' height='24' viewBox='0 0 24 24'>
             <path fill='currentColor' d='M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z' />
           </svg>
-          <ButtonText>Add List</ButtonText>
+          <ButtonText>Add A Box</ButtonText>
         </Button>
         <DragDropContext onDragEnd={this.onDragEnd}>
+          <StyledAgendaContainer>
+            {Object.keys(this.state.boxes).length > 1
+              ? Object.keys(this.props.boxes)
+                  .filter((box) => box != "allTasks")
+                  .map((boxTitle, i) => {
+                    return (
+                      <Droppable key={boxTitle} droppableId={boxTitle}>
+                        {(provided) => (
+                          <Box ref={provided.innerRef}>
+                            <h2>{boxTitle}</h2>
+                            {this.props.boxes[boxTitle].taskIds.length &&
+                            this.props.userData.hasOwnProperty("tasks")
+                              ? this.state.boxes[boxTitle].taskIds.map((taskIdFromBox, index) => {
+                                  const task = this.props.userData.tasks.find(
+                                    (task) => taskIdFromBox === task._id
+                                  );
+                                  return (
+                                    <Draggable key={task._id} draggableId={task._id} index={index}>
+                                      {(provided) => (
+                                        <Task
+                                          key={task._id}
+                                          ref={provided.innerRef}
+                                          {...provided.draggableProps}
+                                          {...provided.dragHandleProps}>
+                                          {this.renderToggleCircle(task)}
+                                          {this.renderTaskText(task)}
+                                          <div className='options'>
+                                            {this.renderTimerButton(task)}
+                                            <button onClick={this.handleEditClick}>
+                                              <PencilAltIcon />
+                                            </button>
+                                          </div>
+                                        </Task>
+                                      )}
+                                    </Draggable>
+                                  );
+                                })
+                              : !provided.placeholder}
+                            {provided.placeholder}
+                          </Box>
+                        )}
+                      </Droppable>
+                    );
+                  })
+              : console.log("hi")}
+          </StyledAgendaContainer>
           <Droppable droppableId={"allTasks"}>
             {(provided) => (
-              <StyledAgendaContainer ref={provided.innerRef}>
+              <StyledTaskContainer ref={provided.innerRef}>
                 {this.renderTaskCards()}
                 {provided.placeholder}
-              </StyledAgendaContainer>
+              </StyledTaskContainer>
             )}
           </Droppable>
           {/* filter the object to everything but allTasks before mapping*/}
-          {Object.keys(this.state.boxes).length > 1
-            ? Object.keys(this.props.boxes)
-                .filter((box) => box != "allTasks")
-                .map((boxTitle, i) => {
-                  return (
-                    <Droppable key={boxTitle} droppableId={boxTitle}>
-                      {(provided) => (
-                        <Container ref={provided.innerRef}>
-                          {this.props.boxes[boxTitle].taskIds.length &&
-                          this.props.userData.hasOwnProperty("tasks")
-                            ? this.state.boxes[boxTitle].taskIds.map((taskIdFromBox, index) => {
-                                const task = this.props.userData.tasks.find(
-                                  (task) => taskIdFromBox === task._id
-                                );
-                                return (
-                                  <Draggable key={task._id} draggableId={task._id} index={index}>
-                                    {(provided) => (
-                                      <Task
-                                        key={task._id}
-                                        ref={provided.innerRef}
-                                        {...provided.draggableProps}
-                                        {...provided.dragHandleProps}>
-                                        {this.renderToggleCircle(task)}
-                                        {this.renderTaskText(task)}
-                                        <div className='options'>
-                                          {this.renderTimerButton(task)}
-                                          <button onClick={this.handleEditClick}>
-                                            <PencilAltIcon />
-                                          </button>
-                                        </div>
-                                      </Task>
-                                    )}
-                                  </Draggable>
-                                );
-                              })
-                            : !provided.placeholder}
-                          {provided.placeholder}
-                        </Container>
-                      )}
-                    </Droppable>
-                  );
-                })
-            : console.log("hi")}
         </DragDropContext>
       </React.Fragment>
     );

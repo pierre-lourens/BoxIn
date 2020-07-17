@@ -8,6 +8,7 @@ const theme = {
     darkBlue: "#152B4F",
     darkBrown: "#4F3A0D",
     lightBrown: "#9C7C3A",
+    lightGray: "#DADEE6",
   },
   fonts: ["sans-serif", "Roboto"],
   headingFonts: ["Helvetica", "sans-serif", "Roboto"],

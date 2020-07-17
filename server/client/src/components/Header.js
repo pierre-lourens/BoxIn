@@ -42,7 +42,7 @@ const Header = () => {
       <AppBar>
         <StyledHeader>
           <Logo>
-            <span>Box</span>Out
+            <span>Box</span>In
           </Logo>
         </StyledHeader>
       </AppBar>

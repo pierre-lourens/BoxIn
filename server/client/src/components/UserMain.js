@@ -12,14 +12,8 @@ const Wrapper = styled.div`
   display: grid;
   grid-gap: 1rem;
   grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: 30px;
   margin-bottom: 30px;
-`;
-
-const StyledAgendaContainer = styled.div`
-  grid-column: 3 / span 4;
-  @media (max-width: 800px) {
-    grid-column: 2 / span 10;
-  }
 `;
 
 class UserMain extends React.Component {
