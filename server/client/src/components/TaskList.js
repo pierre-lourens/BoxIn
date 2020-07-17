@@ -44,22 +44,43 @@ const Box = styled.div`
   background: #fff;
   padding: 10px;
   margin-bottom: 15px;
+  margin-right: 10px;
   border-radius: 4px;
-  background-color: ${(props) => props.theme.colors.lightGray};
+  background-color: ${(props) => props.theme.colors.offWhite};
   box-shadow: 0 4px 6px 0 rgba(100, 100, 100, 0.15);
 
   h2 {
     padding: 0;
-    margin: 0;
+    margin: 0 5px 10px 0;
+    color: ${(props) => props.theme.colors.darkBlue};
+  }
+`;
+
+const AllTasksBox = styled.div`
+  background: #fff;
+  padding: 10px;
+  margin-bottom: 15px;
+  margin-left: -5px;
+  border-radius: 4px;
+  // background-color: ${(props) => props.theme.colors.offWhite};
+  background-color: inherit;
+  // box-shadow: 0 4px 6px 0 rgba(100, 100, 100, 0.15);
+
+  h2 {
+    padding: 0;
+    margin: 0 5px 10px 0;
+    color: ${(props) => props.theme.colors.mediumGray};
   }
 `;
 
 const StyledAgendaContainer = styled.div`
   grid-column: 3 / span 4;
   grid-row: 2;
+  border-right: 1px solid rgba(100, 100, 100, 0.1);
   @media (max-width: 800px) {
     grid-column: 2 / span 10;
     grid-row: 3;
+    border: 0;
   }
 `;
 
@@ -77,12 +98,12 @@ const Task = styled.div`
 
   grid-template-columns: repeat(8, 1fr);
   grid-template-rows: 40px auto;
-  background-color: white;
   margin-bottom: 5px;
   border: 0;
   border-radius: 4px;
   min-height: 30px; // 20 pixels per 10 minutes, including padding
-  background-color: white;
+  background: ${(props) =>
+    props.unscheduled ? (props) => props.theme.colors.evenWhiterThanOffWhite : "white"};
   box-shadow: 0 4px 6px 0 rgba(100, 100, 100, 0.15);
   padding: 10px;
 
@@ -312,42 +333,7 @@ class TaskList extends React.Component {
               <Task
                 key={task._id}
                 ref={provided.innerRef}
-                {...provided.draggableProps}
-                {...provided.dragHandleProps}>
-                {this.renderToggleCircle(task)}
-                {this.renderTaskText(task)}
-                <div className='options'>
-                  {this.renderTimerButton(task)}
-                  <button onClick={this.handleEditClick}>
-                    <PencilAltIcon />
-                  </button>
-                </div>
-              </Task>
-            )}
-          </Draggable>
-        );
-      });
-    }
-  }
-
-  renderAgendaBoxes() {
-    if (
-      this.state.boxes.hasOwnProperty("allTasks") &&
-      this.props.userData.hasOwnProperty("tasks")
-    ) {
-      return this.state.boxes.allTasks.taskIds.map((taskIdFromBox, index) => {
-        const task = this.props.userData.tasks.find((task) => taskIdFromBox === task._id);
-
-        if (!task) {
-          return null;
-        }
-
-        return (
-          <Draggable key={task._id} draggableId={task._id} index={index}>
-            {(provided) => (
-              <Task
-                key={task._id}
-                ref={provided.innerRef}
+                unscheduled
                 {...provided.draggableProps}
                 {...provided.dragHandleProps}>
                 {this.renderToggleCircle(task)}
@@ -455,7 +441,7 @@ class TaskList extends React.Component {
                       <Droppable key={boxTitle} droppableId={boxTitle}>
                         {(provided) => (
                           <Box ref={provided.innerRef}>
-                            <h2>{boxTitle}</h2>
+                            <h2>Box Title Goes Here</h2>
                             {this.props.boxes[boxTitle].taskIds.length &&
                             this.props.userData.hasOwnProperty("tasks")
                               ? this.state.boxes[boxTitle].taskIds.map((taskIdFromBox, index) => {
@@ -495,11 +481,15 @@ class TaskList extends React.Component {
           <Droppable droppableId={"allTasks"}>
             {(provided) => (
               <StyledTaskContainer ref={provided.innerRef}>
-                {this.renderTaskCards()}
-                {provided.placeholder}
+                <AllTasksBox>
+                  <h2>Tasks to Box</h2>
+                  {this.renderTaskCards()}
+                  {/* {provided.placeholder} */}
+                </AllTasksBox>
               </StyledTaskContainer>
             )}
           </Droppable>
+
           {/* filter the object to everything but allTasks before mapping*/}
         </DragDropContext>
       </React.Fragment>
