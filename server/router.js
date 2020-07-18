@@ -261,7 +261,12 @@ module.exports = function (router) {
       const taskId = user.boxes[boxIndex].taskIds.find(
         (taskId) => taskId == req.body.taskId
       );
-      user.boxes.splice(boxIndex, 1, taskId);
+
+      const taskIdIndex = user.boxes[boxIndex].taskIds.findIndex(
+        (taskId) => taskId == req.body.taskId
+      );
+
+      user.boxes[boxIndex].taskIds.splice(taskIdIndex, 1);
       console.log(user.boxes);
       user.save();
       return res.send(user.boxes);
