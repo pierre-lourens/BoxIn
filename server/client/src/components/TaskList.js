@@ -13,13 +13,15 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import uuid from "react-uuid";
 import PlayIcon from "../assets/PlayIcon";
-import PauseIcon from "../assets/PauseIcon";
+
 import PencilAltIcon from "../assets/PencilAltIcon";
 import CheckCircleIcon from "../assets/CheckCircleIcon";
 import EmptyCircleIcon from "../assets/emptycircle.png";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import _ from "lodash";
 import { parseISO, differenceInSeconds } from "date-fns";
+import ActiveTimerButton from "./Buttons/ActiveTimerButton";
+import InactiveTimerButton from "./Buttons/InactiveTimerButton";
 
 // import { Overlay } from "react-portal-overlay";
 
@@ -356,49 +358,20 @@ class TaskList extends React.Component {
       return <div> </div>; // need an empty div for css grid
     }
     if (task.timeEntries.length === 0) {
-      return (
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            this.props.startTimer(task._id, this.props.userId);
-          }}>
-          <PlayIcon />
-        </button>
-      );
+      return <InactiveTimerButton task={task} />;
     }
 
-    // grab the latest task time entry to do our check
+    // grab the latest task time entry from the task and find its corresponding
+    // entry in timeEntries
     const mostRecent = task.timeEntries[task.timeEntries.length - 1];
-
-    // find the time entry that most recent entry
-    // don't use task, as there may be multiple entries per task
     const timeEntry = this.props.userData.timeEntries.find(
       (entry) => entry._id === mostRecent
     );
 
-    if (timeEntry.active) {
-      // if it's running
-      return (
-        <button
-          className='running'
-          onClick={(e) => {
-            e.preventDefault();
-            this.props.stopTimer(timeEntry._id, this.props.userId);
-          }}>
-          <PauseIcon />
-        </button>
-      );
+    if (timeEntry.active === true) {
+      return <ActiveTimerButton timeEntry={timeEntry} />;
     } else {
-      // if it is inactive (not running)
-      return (
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            this.props.startTimer(task._id, this.props.userId);
-          }}>
-          <PlayIcon />
-        </button>
-      );
+      return <InactiveTimerButton task={task} timeEntry={timeEntry} />;
     }
   }
 
