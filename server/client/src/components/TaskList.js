@@ -15,13 +15,14 @@ import uuid from "react-uuid";
 import PlayIcon from "../assets/PlayIcon";
 
 import PencilAltIcon from "../assets/PencilAltIcon";
-import CheckCircleIcon from "../assets/CheckCircleIcon";
-import EmptyCircleIcon from "../assets/emptycircle.png";
+
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import _ from "lodash";
 import { parseISO, differenceInSeconds } from "date-fns";
 import ActiveTimerButton from "./Buttons/ActiveTimerButton";
 import InactiveTimerButton from "./Buttons/InactiveTimerButton";
+import EmptyCircle from "./Buttons/EmptyCircle";
+import CheckCircle from "./Buttons/CheckCircle";
 
 // import { Overlay } from "react-portal-overlay";
 
@@ -164,39 +165,11 @@ const Task = styled.div`
     text-decoration: line-through;
   }
 
-  button {
+  .toggleButtonWrapper {
     grid-column: span 1;
-    padding: 0;
-    margin: 0;
-    background-color: inherit;
-    border: 0;
-    outline: none;
-    cursor: pointer;
     height: 25px;
+    justify-self: center;
     align-self: center;
-
-    img {
-      height: 100%;
-      opacity: 0.1;
-
-      &: hover {
-        opacity: 0.5;
-      }
-    }
-    svg {
-      height: 25px;
-      width: 100%;
-      color: ${(props) => {
-        if (props.status === "complete") {
-          return props.theme.colors.mediumGray;
-        } else {
-          return props.theme.colors.mediumGray;
-        }
-      }};
-      &: hover {
-        color: ${(props) => props.theme.colors.primaryBlue};
-      }
-    }
   }
 
   .options {
@@ -247,10 +220,8 @@ class TaskList extends React.Component {
   constructor(props) {
     super(props);
 
+    // we store the boxes in state so that react-beautiful-dnd is faster
     this.state = {
-      editingOpen: false,
-      userData: null,
-      boxesMounted: false,
       boxes: { allTasks: { taskIds: [] } },
     };
 
@@ -268,7 +239,7 @@ class TaskList extends React.Component {
     this.props.addBox(this.props.userId, randomTitle);
   };
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     // make our boxes from our data store
     console.log("this.props.task is", this.props.task);
     if (
@@ -286,30 +257,16 @@ class TaskList extends React.Component {
     }
   }
 
-  handleTaskToggle(taskId, status) {
+  handleTaskToggle = (taskId, status) => {
     // use the taskId to send a post request via redux store
     this.props.editTask(taskId, { status });
-  }
+  };
 
   renderToggleCircle(task) {
     if (task.status != "complete" || !task.status) {
-      return (
-        <button
-          onClick={(e) => {
-            this.handleTaskToggle(task._id, "complete");
-          }}>
-          <img src={EmptyCircleIcon} />
-        </button>
-      );
+      return <EmptyCircle task={task} />;
     } else {
-      return (
-        <button
-          onClick={(e) => {
-            this.handleTaskToggle(task._id, "incomplete");
-          }}>
-          <CheckCircleIcon />
-        </button>
-      );
+      return <CheckCircle task={task} />;
     }
   }
 
@@ -411,7 +368,9 @@ class TaskList extends React.Component {
                 height={pixels}
                 {...provided.draggableProps}
                 {...provided.dragHandleProps}>
-                {this.renderToggleCircle(task)}
+                <div className='toggleButtonWrapper'>
+                  {this.renderToggleCircle(task)}
+                </div>
                 {this.renderTaskText(task)}
                 <div className='options'>
                   {this.renderTimerButton(task)}
@@ -561,7 +520,9 @@ class TaskList extends React.Component {
                                             status={task.status}
                                             {...provided.draggableProps}
                                             {...provided.dragHandleProps}>
-                                            {this.renderToggleCircle(task)}
+                                            <div className='toggleButtonWrapper'>
+                                              {this.renderToggleCircle(task)}
+                                            </div>
                                             {this.renderTaskText(task)}
                                             <div className='options'>
                                               {this.renderTimerButton(task)}
