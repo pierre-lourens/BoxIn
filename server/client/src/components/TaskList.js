@@ -313,7 +313,9 @@ class TaskList extends React.Component {
 
   renderTaskText(task) {
     const mostRecent = task.timeEntries[task.timeEntries.length - 1];
-    const timeEntry = this.props.userData.timeEntries.find((entry) => entry._id === mostRecent) || {
+    const timeEntry = this.props.userData.timeEntries.find(
+      (entry) => entry._id === mostRecent
+    ) || {
       active: false,
     };
 
@@ -370,7 +372,9 @@ class TaskList extends React.Component {
 
     // find the time entry that most recent entry
     // don't use task, as there may be multiple entries per task
-    const timeEntry = this.props.userData.timeEntries.find((entry) => entry._id === mostRecent);
+    const timeEntry = this.props.userData.timeEntries.find(
+      (entry) => entry._id === mostRecent
+    );
 
     if (timeEntry.active) {
       // if it's running
@@ -404,7 +408,9 @@ class TaskList extends React.Component {
       this.props.userData.hasOwnProperty("tasks")
     ) {
       return this.state.boxes.allTasks.taskIds.map((taskIdFromBox, index) => {
-        const task = this.props.userData.tasks.find((task) => taskIdFromBox === task._id);
+        const task = this.props.userData.tasks.find(
+          (task) => taskIdFromBox === task._id
+        );
 
         if (!task) {
           return null;
@@ -414,7 +420,10 @@ class TaskList extends React.Component {
 
         if (task.estimatedTime) {
           // the design calls for 2.5 pixels per minute
-          console.log("I FOUND A TASK WITH ESTIMATED TIME AND ITS NAME IS", task);
+          console.log(
+            "I FOUND A TASK WITH ESTIMATED TIME AND ITS NAME IS",
+            task
+          );
           pixels = Math.ceil(task.estimatedTime * 2.5);
         }
 
@@ -454,7 +463,10 @@ class TaskList extends React.Component {
     }
 
     // in case the user dropped it back into its position
-    if (destination.droppableId === source.droppableId && destination.index === source.index) {
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
       return;
     }
 
@@ -467,7 +479,9 @@ class TaskList extends React.Component {
 
     if (source.droppableId != destination.droppableId) {
       const sourceBox = _.cloneDeep(this.state.boxes[source.droppableId]);
-      const destinationBox = _.cloneDeep(this.state.boxes[destination.droppableId]);
+      const destinationBox = _.cloneDeep(
+        this.state.boxes[destination.droppableId]
+      );
 
       const newSourceTasks = Array.from(sourceBox.taskIds);
       newSourceTasks.splice(source.index, 1);
@@ -476,7 +490,10 @@ class TaskList extends React.Component {
       newDestinationTasks.splice(destination.index, 0, draggableId);
 
       const newSourceBox = { ...sourceBox, taskIds: newSourceTasks };
-      const newDestination = { ...destinationBox, taskIds: newDestinationTasks };
+      const newDestination = {
+        ...destinationBox,
+        taskIds: newDestinationTasks,
+      };
 
       const newState = {
         ...this.state,
@@ -504,7 +521,9 @@ class TaskList extends React.Component {
       this.setState(newState);
     }
 
-    console.log("starting 2s wait, the local state should render the drag and drop correctly");
+    console.log(
+      "starting 2s wait, the local state should render the drag and drop correctly"
+    );
     await new Promise((resolve) => {
       setTimeout(() => resolve(), 500);
     });
@@ -520,7 +539,10 @@ class TaskList extends React.Component {
       <React.Fragment>
         <Button onClick={this.addBox}>
           <svg width='24' height='24' viewBox='0 0 24 24'>
-            <path fill='currentColor' d='M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z' />
+            <path
+              fill='currentColor'
+              d='M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z'
+            />
           </svg>
           <ButtonText>Add A Box</ButtonText>
         </Button>
@@ -537,42 +559,50 @@ class TaskList extends React.Component {
                             <h2>Box Title Goes Here</h2>
                             {this.props.boxes[boxTitle].taskIds.length &&
                             this.props.userData.hasOwnProperty("tasks")
-                              ? this.state.boxes[boxTitle].taskIds.map((taskIdFromBox, index) => {
-                                  const task = this.props.userData.tasks.find(
-                                    (task) => taskIdFromBox === task._id
-                                  );
-                                  let pixels = 55;
-                                  if (task.estimatedTime) {
-                                    // the design calls for 2.5 pixels per minute
-                                    console.log(
-                                      "I FOUND A TASK WITH ESTIMATED TIME AND ITS NAME IS",
-                                      task
+                              ? this.state.boxes[boxTitle].taskIds.map(
+                                  (taskIdFromBox, index) => {
+                                    const task = this.props.userData.tasks.find(
+                                      (task) => taskIdFromBox === task._id
                                     );
-                                    pixels = Math.ceil(task.estimatedTime * 2.5);
+                                    let pixels = 55;
+                                    if (task.estimatedTime) {
+                                      // the design calls for 2.5 pixels per minute
+                                      console.log(
+                                        "I FOUND A TASK WITH ESTIMATED TIME AND ITS NAME IS",
+                                        task
+                                      );
+                                      pixels = Math.ceil(
+                                        task.estimatedTime * 2.5
+                                      );
+                                    }
+                                    return (
+                                      <Draggable
+                                        key={task._id}
+                                        draggableId={task._id}
+                                        index={index}>
+                                        {(provided) => (
+                                          <Task
+                                            key={task._id}
+                                            ref={provided.innerRef}
+                                            height={pixels}
+                                            status={task.status}
+                                            {...provided.draggableProps}
+                                            {...provided.dragHandleProps}>
+                                            {this.renderToggleCircle(task)}
+                                            {this.renderTaskText(task)}
+                                            <div className='options'>
+                                              {this.renderTimerButton(task)}
+                                              <button
+                                                onClick={this.handleEditClick}>
+                                                <PencilAltIcon />
+                                              </button>
+                                            </div>
+                                          </Task>
+                                        )}
+                                      </Draggable>
+                                    );
                                   }
-                                  return (
-                                    <Draggable key={task._id} draggableId={task._id} index={index}>
-                                      {(provided) => (
-                                        <Task
-                                          key={task._id}
-                                          ref={provided.innerRef}
-                                          height={pixels}
-                                          status={task.status}
-                                          {...provided.draggableProps}
-                                          {...provided.dragHandleProps}>
-                                          {this.renderToggleCircle(task)}
-                                          {this.renderTaskText(task)}
-                                          <div className='options'>
-                                            {this.renderTimerButton(task)}
-                                            <button onClick={this.handleEditClick}>
-                                              <PencilAltIcon />
-                                            </button>
-                                          </div>
-                                        </Task>
-                                      )}
-                                    </Draggable>
-                                  );
-                                })
+                                )
                               : !provided.placeholder}
                             {provided.placeholder}
                           </Box>
@@ -614,7 +644,15 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators(
-    { getTasks, editTask, startTimer, stopTimer, sendTaskBoxes, getTaskBoxes, addBox },
+    {
+      getTasks,
+      editTask,
+      startTimer,
+      stopTimer,
+      sendTaskBoxes,
+      getTaskBoxes,
+      addBox,
+    },
     dispatch
   );
 }
