@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import NavLinks from "./NavLinks.js";
 
 const AppBar = styled.div`
   display: grid;
@@ -13,17 +14,25 @@ const AppBar = styled.div`
   margin-bottom: 30px;
   @media (max-width: 600px) {
     grid-template-rows: 50px;
+    position: absolute;
+    top: 0;
+    width: 100%;
   }
 `;
 
 const StyledHeader = styled.header`
-  grid-column: span 12;
+  grid-column: 2 / span 6;
   grid-row: 1;
+  justify-self: start;
+  @media (max-width: 840px) {
+    grid-column: 2 / span 3;
+  }
 `;
 
 const Logo = styled.h1`
   font-family: ${(props) => props.theme.headingFonts.toString()};
   padding: 0;
+
   margin: 0px;
   color: white;
   span {
@@ -45,6 +54,7 @@ const Header = () => {
             <span>Box</span>In
           </Logo>
         </StyledHeader>
+        <NavLinks />
       </AppBar>
     </React.Fragment>
   );

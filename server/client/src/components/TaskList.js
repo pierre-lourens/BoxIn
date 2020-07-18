@@ -19,6 +19,7 @@ import CheckCircleIcon from "../assets/CheckCircleIcon";
 import EmptyCircleIcon from "../assets/emptycircle.png";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import _ from "lodash";
+import { parseISO, differenceInSeconds } from "date-fns";
 
 // import { Overlay } from "react-portal-overlay";
 
@@ -34,6 +35,7 @@ const Button = styled.button`
   border-radius: 3px;
   font-size: 1rem;
   cursor: pointer;
+  grid-row: 1;
 `;
 
 const ButtonText = styled.div`
@@ -42,12 +44,13 @@ const ButtonText = styled.div`
 
 const Box = styled.div`
   background: #fff;
+  grid-row: 2;
   padding: 10px;
   margin-bottom: 15px;
   margin-right: 10px;
   border-radius: 4px;
   background-color: ${(props) => props.theme.colors.offWhite};
-  box-shadow: 0 4px 6px 0 rgba(100, 100, 100, 0.2);
+  box-shadow: 0 4px 5px 0 rgba(100, 100, 100, 0.15);
 
   h2 {
     padding: 0;
@@ -59,6 +62,7 @@ const Box = styled.div`
 const AllTasksBox = styled.div`
   background: #fff;
   padding: 10px;
+  grid-row: 2;
   margin-bottom: 15px;
   margin-left: -5px;
   border-radius: 4px;
@@ -98,12 +102,12 @@ const Task = styled.div`
 
   grid-template-columns: repeat(8, 1fr);
   grid-template-rows: 40px auto;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
   border: 0;
   border-radius: 4px;
   background: ${(props) => {
     if (props.status === "complete") {
-      return props.theme.colors.offWhite;
+      return props.theme.colors.offWhiteComplete;
     }
     if (props.unscheduled) {
       return "#FCFEFF";
@@ -111,7 +115,14 @@ const Task = styled.div`
       return "#FCFEFF";
     }
   }};
-  box-shadow: 0 4px 6px 0 rgba(100, 100, 100, 0.15);
+  // box-shadow: 1px 4px 6px 0 rgba(100, 100, 100, 0.12);
+  box-shadow: ${(props) => {
+    if (props.status === "complete") {
+      return "0 2px 5px 0 rgba(100, 100, 100, 0.15) inset;";
+    } else {
+      return "0 4px 5px 0 rgba(100, 100, 100, 0.15);";
+    }
+  }};
   padding: 10px;
   height: ${(props) => {
     console.log("HEIGHT HEIGHT ", props);
@@ -125,16 +136,26 @@ const Task = styled.div`
 
   .text {
     grid-column: 2 / span 6;
+    display: grid;
+    grid-template-columns: repeat (3, 1fr);
     margin-left: -10px;
     padding: 10px 0;
-    color: ${(props) => {
-      if (props.status === "complete") {
-        return props.theme.colors.mediumGray;
-      } else {
-        return props.theme.colors.mediumGray;
-      }
-    }};
     align-self: center;
+
+    .task-title {
+      grid-row: 1;
+      // grid-columns: span 2;
+      margin: 5px 0;
+      color: ${(props) => props.theme.colors.darkGray};
+      font-size: ${(props) => props.theme.fontSizes.small};
+    }
+
+    .time {
+      grid-row: 2;
+      grid-columns: span 1;
+      color: ${(props) => props.theme.colors.darkGray};
+      font-size: ${(props) => props.theme.fontSizes.xsmall};
+    }
   }
 
   .completed {
@@ -211,7 +232,7 @@ const Task = styled.div`
     }
     .running {
       svg {
-        color: ${(props) => props.theme.colors.primaryBlue};
+        color: ${(props) => "red"};
         &: hover {
           color: ${(props) => props.theme.colors.darkBlue};
         }
@@ -291,8 +312,37 @@ class TaskList extends React.Component {
   }
 
   renderTaskText(task) {
+    const mostRecent = task.timeEntries[task.timeEntries.length - 1];
+    const timeEntry = this.props.userData.timeEntries.find((entry) => entry._id === mostRecent) || {
+      active: false,
+    };
+
+    let secondsElapsed = "";
+    if ("elapsedTime" in timeEntry) {
+      secondsElapsed = timeEntry.elapsedTime.toString();
+    }
+
+    console.log("TIME ENTRY IS", timeEntry, "FOR TASK", task.text);
+    // use created at to figure out time elapsed
+
+    console.log("Time entry created_at is", timeEntry.elapsedTime);
+    console.log("secondsElapsed is", secondsElapsed);
+    console.log("Time entry active is ", timeEntry.active);
+
     if (task.status != "complete" || !task.status) {
-      return <div className='text'>{task.text}</div>;
+      return (
+        <React.Fragment>
+          <div className='text'>
+            <div className='task-title'>{task.text}</div>
+            {timeEntry.active ? (
+              <React.Fragment>
+                <div className='time'>Estimated Time :</div>
+                <div className='time'>Time So Far: {secondsElapsed}</div>
+              </React.Fragment>
+            ) : null}
+          </div>
+        </React.Fragment>
+      );
     } else {
       return <div className='text completed'>{task.text}</div>;
     }
@@ -321,7 +371,6 @@ class TaskList extends React.Component {
     // find the time entry that most recent entry
     // don't use task, as there may be multiple entries per task
     const timeEntry = this.props.userData.timeEntries.find((entry) => entry._id === mostRecent);
-    // error handling, in case people are clicking too fast
 
     if (timeEntry.active) {
       // if it's running
