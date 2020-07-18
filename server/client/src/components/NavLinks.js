@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { withRouter } from "react-router";
 
 const NavBar = styled.div`
   grid-column: 8 / span 4;
@@ -24,27 +25,21 @@ const StyledButton = styled.button`
   a {
     text-decoration: none;
   }
+  
+  .current {
+    font-weight: 800;
+    color: white;
+  }
+
   span {
-    color: ${(props) => {
-      if (props.current === true) {
-        return "white";
-      } else {
-        return props.theme.colors.offWhite;
-      }
-    }}};
-    font-size: ${(props) => props.theme.fontSizes.small};
-    font-weight: ${(props) => {
-      if (props.current === true) {
-        return "800";
-      } else {
-        return "400";
-      }
-    }}};
+    color: ${(props) => props.theme.colors.offWhite};
+    font-size: ${(props) => props.theme.fontSizes.smallplus};
+    font-weight: 400;
     text-decoration: none;
     border-bottom: 3px solid ${(props) => props.theme.colors.darkBlue};
     &: hover {
       border-bottom: ${(props) => {
-        if (props.current != true) {
+        if (props.current !== true) {
           return `3px solid ${props.theme.colors.offWhite}`;
         }
       }}};
@@ -52,28 +47,35 @@ const StyledButton = styled.button`
   }
 `;
 
-const NavLinks = () => {
+const NavLinks = (props) => {
+  const determineIfCurrentPage = (path) => {
+    const pathFromRouter = props.location.pathname;
+    if (path === pathFromRouter) {
+      return "current";
+    }
+  };
+
   return (
     <NavBar>
-      <StyledButton current={true}>
+      <StyledButton>
         <Link to={"/me"}>
-          <span>Tasks</span>
+          <span className={determineIfCurrentPage("/me")}>Tasks</span>
         </Link>
       </StyledButton>
 
       <StyledButton>
         <Link to={"/review"}>
-          <span>Review</span>
+          <span className={determineIfCurrentPage("/review")}>Review</span>
         </Link>
       </StyledButton>
 
       <StyledButton>
         <Link to={"/login"}>
-          <span>Sign Out</span>
+          <span className={determineIfCurrentPage("/login")}>Sign Out</span>
         </Link>
       </StyledButton>
     </NavBar>
   );
 };
 
-export default NavLinks;
+export default withRouter(NavLinks);

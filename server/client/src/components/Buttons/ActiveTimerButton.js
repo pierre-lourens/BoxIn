@@ -5,21 +5,6 @@ import { stopTimer } from "../../actions";
 import PauseIcon from "../../assets/PauseIcon";
 import styled from "styled-components";
 
-const StyledDiv = styled.div`
-  margin: 0;
-  padding: 0;
-  running {
-    svg {
-      height: 25px;
-      width: 100%;
-      color: red;
-      &: hover {
-        color: ${(props) => props.theme.colors.primaryBlue};
-      }
-    }
-  }
-`;
-
 class ActiveTimerButton extends React.Component {
   constructor(props) {
     super(props);
@@ -47,5 +32,20 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({ stopTimer }, dispatch);
 }
+
+const StyledDiv = styled.div`
+  margin: 0;
+  padding: 0;
+  running {
+    svg {
+      height: 25px;
+      width: 100%;
+      color: red;
+      &: hover {
+        color: ${(props) => props.theme.colors.primaryBlue};
+      }
+    }
+  }
+`;
 
 export default connect(mapStateToProps, mapDispatchToProps)(ActiveTimerButton);

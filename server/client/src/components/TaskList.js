@@ -12,13 +12,13 @@ import {
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import uuid from "react-uuid";
-import PlayIcon from "../assets/PlayIcon";
 
 import PencilAltIcon from "../assets/PencilAltIcon";
 
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import _ from "lodash";
 import { parseISO, differenceInSeconds } from "date-fns";
+
 import ActiveTimerButton from "./Buttons/ActiveTimerButton";
 import InactiveTimerButton from "./Buttons/InactiveTimerButton";
 import EmptyCircle from "./Buttons/EmptyCircle";
@@ -226,9 +226,7 @@ class TaskList extends React.Component {
     };
 
     this.renderTaskCards = this.renderTaskCards.bind(this);
-    this.handleTaskToggle = this.handleTaskToggle.bind(this);
     this.renderToggleCircle = this.renderToggleCircle.bind(this);
-    this.addBox = this.addBox.bind(this);
   }
 
   addBox = (e) => {
@@ -270,8 +268,9 @@ class TaskList extends React.Component {
     }
   }
 
-  renderTaskText(task) {
-    const mostRecent = task.timeEntries[task.timeEntries.length - 1];
+  renderTaskText = (task) => {
+    const mostRecent = determineMostRecentTimeEntry(task);
+
     const timeEntry = this.props.userData.timeEntries.find(
       (entry) => entry._id === mostRecent
     ) || {
@@ -307,7 +306,7 @@ class TaskList extends React.Component {
     } else {
       return <div className='text completed'>{task.text}</div>;
     }
-  }
+  };
 
   renderTimerButton(task) {
     // edge cases
@@ -402,13 +401,6 @@ class TaskList extends React.Component {
       return;
     }
 
-    console.log("--------------------------------------------");
-    console.log("source is ", source);
-    console.log("destination is ", destination);
-    console.log("draggableId is ", draggableId);
-    console.log("this.state.boxes is", this.state.boxes);
-    console.log("box is", this.state.boxes[source.droppableId]);
-
     if (source.droppableId != destination.droppableId) {
       const sourceBox = _.cloneDeep(this.state.boxes[source.droppableId]);
       const destinationBox = _.cloneDeep(
@@ -444,8 +436,6 @@ class TaskList extends React.Component {
       newTasks.splice(destination.index, 0, draggableId);
       const newBox = { ...box, taskIds: newTasks };
 
-      console.log("newBox is", newBox);
-
       const newState = {
         ...this.state,
         boxes: { ...this.state.boxes, [newBox.title]: newBox },
@@ -466,7 +456,7 @@ class TaskList extends React.Component {
   };
 
   render() {
-    console.log("Props upon render is", this.props);
+    console.log("Props upon render of taskList is", this.props);
     return (
       <React.Fragment>
         <Button onClick={this.addBox}>
@@ -563,6 +553,10 @@ class TaskList extends React.Component {
       </React.Fragment>
     );
   }
+}
+
+function determineMostRecentTimeEntry(task) {
+  return task.timeEntries[task.timeEntries.length - 1];
 }
 
 function mapStateToProps(state) {
