@@ -133,10 +133,11 @@ module.exports = function (router) {
     // need to save it to the right user
     Task.findById(req.params.taskId).exec((err, task) => {
       if (err) return res.send(err);
-      const { status, estimatedTime } = req.body.task;
+      const { status, estimatedTime, text } = req.body.task;
 
       task.status = status;
       task.estimatedTime = estimatedTime;
+      task.text = text;
 
       task.save();
       return res.send(task);

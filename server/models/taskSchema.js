@@ -17,6 +17,7 @@ const taskSchema = new Schema(
     actualTime: Number, // number of minutes & seconds
     weight: String,
     user: { type: Schema.Types.ObjectId, ref: "user" },
+    visibility: String,
   },
   { timestamps: true }
 );

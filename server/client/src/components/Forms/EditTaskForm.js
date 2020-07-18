@@ -10,7 +10,15 @@ class EditTaskForm extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { task: {} };
+    // get the initial values from props
+    const { estimatedTime, text } = this.props.task;
+
+    this.state = {
+      task: {
+        estimatedTime,
+        text,
+      },
+    };
 
     this.handleInputChange = this.handleInputChange.bind(this);
   }
@@ -24,9 +32,15 @@ class EditTaskForm extends React.Component {
   // within a session, actual end time
   // weight
   handleInputChange(attributeOfTask, event) {
-    this.setState({ task: { [attributeOfTask]: event.target.value } }, () => {
-      console.log("in task form, state is now", this.state);
-    });
+    this.setState(
+      {
+        ...this.state,
+        task: { ...this.state.task, [attributeOfTask]: event.target.value },
+      },
+      () => {
+        console.log("in task form, state is now", this.state);
+      }
+    );
   }
 
   renderEstimatedTimeInput = () => {
@@ -37,10 +51,25 @@ class EditTaskForm extends React.Component {
         </label>
         <input
           type='number'
-          placeholder='30'
+          placeholder={this.props.task.estimatedTime}
           min='30'
           onChange={(event) => {
             this.handleInputChange("estimatedTime", event);
+          }}></input>
+      </React.Fragment>
+    );
+  };
+
+  renderTaskTitleInput = () => {
+    return (
+      <React.Fragment>
+        <label>Task title:</label>
+        <input
+          type='text'
+          placeholder={`${this.props.task.text}`}
+          maxlength='80'
+          onChange={(event) => {
+            this.handleInputChange("text", event);
           }}></input>
       </React.Fragment>
     );
@@ -55,6 +84,7 @@ class EditTaskForm extends React.Component {
     return (
       <EditTaskFormContainer>
         <form className='form-inline'>
+          {this.renderTaskTitleInput()}
           {this.renderEstimatedTimeInput()}
           <button type='submit' onClick={this.handleTaskSubmit}>
             Submit
