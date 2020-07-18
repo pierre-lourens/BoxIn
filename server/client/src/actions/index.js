@@ -11,6 +11,7 @@ export const SEND_TASK_BOXES = "SEND_TASK_BOXES";
 export const ADD_TASK_TO_BOX = "ADD_TASK_TO_BOX";
 export const GET_TASK_BOXES = "GET_TASK_BOXES";
 export const ADD_BOX = "ADD_BOX";
+export const REMOVE_TASK_FROM_BOX = "REMOVE_TASK_FROM_BOX";
 
 const ROOT_URL = "http://localhost:5000";
 
@@ -179,6 +180,22 @@ export function addBox(userId, boxTitle) {
 
   return {
     type: ADD_BOX,
+    payload: request,
+  };
+}
+
+export function removeTaskFromBox(userId, boxTitle, taskId) {
+  const url = `${ROOT_URL}/api/${userId}/boxes`;
+
+  const request = axios({
+    method: "delete",
+    url: url,
+    withCredentials: true,
+    data: { title: boxTitle, taskId },
+  });
+
+  return {
+    type: REMOVE_TASK_FROM_BOX,
     payload: request,
   };
 }

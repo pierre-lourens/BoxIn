@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { editTask } from "../../actions";
+import { editTask, removeTaskFromBox } from "../../actions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 
@@ -11,12 +11,13 @@ class EditTaskForm extends React.Component {
     super(props);
 
     // get the initial values from props
-    const { estimatedTime, text } = this.props.task;
+    const { estimatedTime, text, visibility } = this.props.task;
 
     this.state = {
       task: {
         estimatedTime,
         text,
+        visibility,
       },
     };
 
@@ -67,7 +68,7 @@ class EditTaskForm extends React.Component {
         <input
           type='text'
           placeholder={`${this.props.task.text}`}
-          maxlength='80'
+          maxLength='80'
           onChange={(event) => {
             this.handleInputChange("text", event);
           }}></input>
@@ -75,6 +76,35 @@ class EditTaskForm extends React.Component {
     );
   };
 
+  handleDeleteTask = async () => {
+    // construct an event object so that we don't have to do another handler
+    const event = { target: { value: "disabled" } };
+
+    await new Promise((resolve) => {
+      // this.handleInputChange("visibility", event);
+
+      // we also need to update our boxes so that it doesn't try to render it
+      // find which box the task is in
+      let boxTitle = "";
+      for (const box in this.props.boxes) {
+        let found = this.props.boxes[box].taskIds.find(
+          (taskId) => taskId === this.props.task._id
+        );
+        if (found) {
+          boxTitle = this.props.boxes[box].title;
+        }
+      }
+
+      this.props.removeTaskFromBox(
+        this.props.userId,
+        boxTitle,
+        this.props.task._id
+      );
+      resolve();
+    });
+
+    this.handleTaskSubmit();
+  };
   handleTaskSubmit = () => {
     this.props.editTask(this.props.task._id, this.state.task);
     this.props.hideModal();
@@ -86,6 +116,13 @@ class EditTaskForm extends React.Component {
         <form className='form-inline'>
           {this.renderTaskTitleInput()}
           {this.renderEstimatedTimeInput()}
+          <button
+            type='button'
+            onClick={(event) => {
+              this.handleDeleteTask(event);
+            }}>
+            Delete task
+          </button>
           <button type='submit' onClick={this.handleTaskSubmit}>
             Submit
           </button>
@@ -96,10 +133,10 @@ class EditTaskForm extends React.Component {
 }
 
 function mapStateToProps(state) {
-  return { userId: state.user._id };
+  return { userId: state.user._id, boxes: state.boxes };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ editTask }, dispatch);
+  return bindActionCreators({ editTask, removeTaskFromBox }, dispatch);
 }
 export default connect(mapStateToProps, mapDispatchToProps)(EditTaskForm);

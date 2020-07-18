@@ -38,7 +38,7 @@ module.exports = function (router) {
     }
 
     User.findById(req.params.userId)
-      .populate("tasks")
+      .populate({ path: "tasks", match: { visibility: { $ne: "disabled" } } })
       .populate("timeEntries")
       .exec((err, user) => {
         if (err) return res.send(error.message);
@@ -133,11 +133,12 @@ module.exports = function (router) {
     // need to save it to the right user
     Task.findById(req.params.taskId).exec((err, task) => {
       if (err) return res.send(err);
-      const { status, estimatedTime, text } = req.body.task;
+      const { status, estimatedTime, text, visibility } = req.body.task;
 
       task.status = status;
       task.estimatedTime = estimatedTime;
       task.text = text;
+      task.visibility = visibility;
 
       task.save();
       return res.send(task);
@@ -244,6 +245,25 @@ module.exports = function (router) {
       user.save();
       console.log("POST IS HAPPENING. USER'S BOXES ARE", user.boxes);
 
+      return res.send(user.boxes);
+    });
+  });
+
+  router.delete("/api/:userId/boxes", ensureAuthenticated, (req, res, next) => {
+    User.findById(req.params.userId).exec((err, user) => {
+      if (err) return res.send(err);
+
+      // find the box in the array in order to delete the right task Id
+      const boxIndex = user.boxes.findIndex(
+        (box) => box.title == req.body.title
+      );
+
+      const taskId = user.boxes[boxIndex].taskIds.find(
+        (taskId) => taskId == req.body.taskId
+      );
+      user.boxes.splice(boxIndex, 1, taskId);
+      console.log(user.boxes);
+      user.save();
       return res.send(user.boxes);
     });
   });

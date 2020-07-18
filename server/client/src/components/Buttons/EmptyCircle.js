@@ -30,7 +30,10 @@ const EmptyCircle = (props) => {
   return (
     <Button
       onClick={(e) => {
-        props.editTask(props.task._id, { status: "complete" });
+        props.editTask(props.task._id, {
+          ...props.task,
+          status: "complete",
+        });
       }}>
       <img src={EmptyCircleIcon} />
     </Button>
