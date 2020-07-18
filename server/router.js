@@ -133,12 +133,23 @@ module.exports = function (router) {
     // need to save it to the right user
     Task.findById(req.params.taskId).exec((err, task) => {
       if (err) return res.send(err);
-      const { status, estimatedTime, text, visibility } = req.body.task;
+      const {
+        status,
+        estimatedTime,
+        text,
+        visibility,
+        weight,
+        tags,
+        dueDate,
+      } = req.body.task;
 
       task.status = status;
       task.estimatedTime = estimatedTime;
       task.text = text;
       task.visibility = visibility;
+      task.weight = weight;
+      task.tags = tags;
+      task.dueDate = dueDate;
 
       task.save();
       return res.send(task);
@@ -182,6 +193,58 @@ module.exports = function (router) {
     // send back the added task
     return res.send(timeEntry);
   });
+
+  // post a new time entry if one doesn't already exist
+  router.post(
+    "/api/me/timeEntrySession",
+    ensureAuthenticated,
+    (req, res, next) => {
+      // check that the body contains at least a task text
+      if (!mongoose.Types.ObjectId.isValid(req.body.taskId)) {
+        // if event id is not in the correct format, return an error
+        res.writeHead(400, "Must send valid task Id in body");
+        return res.end();
+      }
+
+      console.log("req.body is", req.body);
+
+      const { startDate, endDate, taskId } = req.body;
+
+      const timeEntry = new TimeEntry();
+      timeEntry.active = false;
+      timeEntry.startDate = startDate;
+      timeEntry.endDate = endDate;
+      timeEntry.task = taskId;
+      const elapsedTime = timeEntry.endDate - timeEntry.startDate;
+      timeEntry.elapsedTime = elapsedTime;
+      console.log("timeEntry is", timeEntry);
+
+      timeEntry.save();
+
+      // need to save it to the right task
+      Task.findById(req.body.taskId).exec((err, task) => {
+        if (err) return res.send(err);
+
+        console.log("task is found and is", task);
+        task.timeEntries.push(timeEntry._id);
+
+        task.save();
+      });
+
+      // need to save it to the right user
+      User.findById(req.body.userId).exec((err, user) => {
+        if (err) return res.send(err);
+
+        console.log("user is found and is", user);
+        user.timeEntries.push(timeEntry._id);
+
+        user.save();
+      });
+
+      // send back the added task
+      return res.send(timeEntry);
+    }
+  );
 
   // ending an already running time entry
   router.put("/api/me/timeEntry", ensureAuthenticated, (req, res, next) => {

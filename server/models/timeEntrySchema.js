@@ -5,6 +5,8 @@ const timeEntrySchema = new Schema(
   {
     elapsedTime: Number,
     active: Boolean,
+    startDate: Date,
+    endDate: Date,
     task: { type: Schema.Types.ObjectId, ref: "task" },
   },
   { timestamps: true }

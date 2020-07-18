@@ -9,6 +9,7 @@ const theme = {
     darkBrown: "#4F3A0D",
     lightBrown: "#9C7C3A",
     lightGray: "#DADEE6",
+    darkestGray: "#3A404D",
     darkGray: "#545C6E",
     mediumGray: "#919499",
     offWhiteComplete: "#E6EAF2",
@@ -26,6 +27,8 @@ const theme = {
   },
 };
 
-const Theme = ({ children }) => <ThemeProvider theme={theme}>{children}</ThemeProvider>;
+const Theme = ({ children }) => (
+  <ThemeProvider theme={theme}>{children}</ThemeProvider>
+);
 
 export default Theme;

@@ -24,20 +24,21 @@ const Backdrop = styled("div")`
   left: 0;
   right: 0;
   background-color: #000;
-  opacity: 0.8;
+  opacity: 0.5;
 `;
 
 const FormModal = styled(Modal)`
   position: fixed;
-  width: 600px;
+  outline: none;
+  width: 330px;
   z-index: 1040;
-  top: 50%;
+  top: 5%;
   left: 50%;
   transform: translate(-50%, 0);
-  border: 1px solid #e5e5e5;
-  background-color: white;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-  padding: 20px;
+  border: 0;
+  border-radius: 4px;
+  background-color: ${(props) => props.theme.colors.evenWhiterThanOffWhite};
+  box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.4);
 `;
 
 const EditTaskButton = ({ task }) => {

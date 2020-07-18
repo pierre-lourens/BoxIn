@@ -339,15 +339,15 @@ class TaskList extends React.Component {
           return null;
         }
 
-        let pixels = 55;
+        let pixels = 60;
 
         if (task.estimatedTime) {
-          // the design calls for 2.5 pixels per minute
+          // the design calls for 2 pixels per minute
           console.log(
             "I FOUND A TASK WITH ESTIMATED TIME AND ITS NAME IS",
             task
           );
-          pixels = Math.ceil(task.estimatedTime * 2.5);
+          pixels = Math.ceil(task.estimatedTime * 2);
         }
 
         return (
@@ -486,7 +486,7 @@ class TaskList extends React.Component {
                                         task
                                       );
                                       pixels = Math.ceil(
-                                        task.estimatedTime * 2.5
+                                        task.estimatedTime * 2
                                       );
                                     }
                                     return (

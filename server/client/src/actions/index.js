@@ -7,6 +7,7 @@ export const GET_TASKS = "GET_TASKS";
 export const SHOW_EDIT_MODAL = "SHOW_EDIT_MODAL";
 export const START_TIMER = "START_TIMER";
 export const STOP_TIMER = "STOP_TIMER";
+export const SEND_SESSION = "SEND_SESSION";
 export const SEND_TASK_BOXES = "SEND_TASK_BOXES";
 export const ADD_TASK_TO_BOX = "ADD_TASK_TO_BOX";
 export const GET_TASK_BOXES = "GET_TASK_BOXES";
@@ -48,6 +49,8 @@ export function addTask(task, userId) {
 
 export function editTask(taskId, changesObject) {
   const url = `${ROOT_URL}/api/tasks/${taskId}`;
+
+  console.log("CHANGES OBJECT IS", changesObject);
 
   const request = axios({
     method: "put",
@@ -95,6 +98,22 @@ export function stopTimer(timeEntryId, userId) {
 
   return {
     type: STOP_TIMER,
+    payload: request,
+  };
+}
+
+export function sendSession(taskId, userId, startDate, endDate) {
+  const url = `${ROOT_URL}/api/me/timeEntrySession`;
+
+  const request = axios({
+    method: "post",
+    url: url,
+    withCredentials: true,
+    data: { taskId, userId, startDate, endDate },
+  });
+
+  return {
+    type: SEND_SESSION,
     payload: request,
   };
 }

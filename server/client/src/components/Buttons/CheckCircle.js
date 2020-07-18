@@ -36,7 +36,7 @@ const CheckCircle = (props) => {
       onClick={(e) => {
         props.editTask(props.task._id, {
           ...props.task,
-          status: "complete",
+          status: "incomplete",
         });
       }}>
       <CheckCircleIcon />
