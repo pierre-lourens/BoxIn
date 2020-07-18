@@ -53,8 +53,7 @@ export function editTask(taskId, changesObject) {
     url: url,
     withCredentials: true,
     data: {
-      text: changesObject.text,
-      status: changesObject.status,
+      task: changesObject,
     },
   });
 

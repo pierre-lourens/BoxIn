@@ -1,10 +1,9 @@
-import React from "react";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import { editTask } from "../../actions";
+import React, { useState } from "react";
 
 import PencilAltIcon from "../../assets/PencilAltIcon";
 import styled from "styled-components";
+import Modal from "react-overlays/Modal";
+import EditTaskForm from "../Forms/EditTaskForm";
 
 const Button = styled.button`
   svg {
@@ -17,16 +16,52 @@ const Button = styled.button`
   }
 `;
 
-const EditTaskButton = (props) => {
+const Backdrop = styled("div")`
+  position: fixed;
+  z-index: 1040;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #000;
+  opacity: 0.8;
+`;
+
+const FormModal = styled(Modal)`
+  position: fixed;
+  width: 600px;
+  z-index: 1040;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  border: 1px solid #e5e5e5;
+  background-color: white;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  padding: 20px;
+`;
+
+const EditTaskButton = ({ task }) => {
+  const [show, setShow] = useState(false);
+
+  const renderBackdrop = (props) => <Backdrop {...props} />;
+
+  const hideModal = () => setShow(false);
+
   return (
-    <Button>
-      <PencilAltIcon />
-    </Button>
+    <React.Fragment>
+      <Button onClick={() => setShow(true)}>
+        <PencilAltIcon />
+      </Button>
+
+      <FormModal
+        show={show}
+        onHide={() => setShow(false)}
+        renderBackdrop={renderBackdrop}
+        aria-labelledby='modal-label'>
+        <EditTaskForm task={task} hideModal={hideModal} />
+      </FormModal>
+    </React.Fragment>
   );
 };
 
-function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ editTask }, dispatch);
-}
-
-export default connect(null, mapDispatchToProps)(EditTaskButton);
+export default EditTaskButton;

@@ -8,6 +8,7 @@ const taskSchema = new Schema(
   {
     text: String,
     scheduledDate: String,
+    dueDate: String,
     status: String,
     tags: [tagSchema],
     timeEntries: [{ type: Schema.Types.ObjectId, ref: "timeEntry" }],

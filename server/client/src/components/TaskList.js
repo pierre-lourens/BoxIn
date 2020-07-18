@@ -254,11 +254,6 @@ class TaskList extends React.Component {
     }
   }
 
-  handleTaskToggle = (taskId, status) => {
-    // use the taskId to send a post request via redux store
-    this.props.editTask(taskId, { status });
-  };
-
   renderToggleCircle(task) {
     if (task.status !== "complete" || !task.status) {
       return <EmptyCircle task={task} />;
@@ -372,7 +367,7 @@ class TaskList extends React.Component {
                 {this.renderTaskText(task)}
                 <div className='options'>
                   {this.renderTimerButton(task)}
-                  <EditTaskButton />
+                  <EditTaskButton task={task} />
                 </div>
               </Task>
             )}
@@ -513,7 +508,7 @@ class TaskList extends React.Component {
                                             {this.renderTaskText(task)}
                                             <div className='options'>
                                               {this.renderTimerButton(task)}
-                                              <EditTaskButton />
+                                              <EditTaskButton task={task} />
                                             </div>
                                           </Task>
                                         )}

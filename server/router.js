@@ -5,7 +5,9 @@ const passport = require("passport");
 const User = require("./models/userSchema");
 const TimeEntry = require("./models/timeEntrySchema");
 
-const googleAuth = passport.authenticate("google", { scope: ["profile", "email"] });
+const googleAuth = passport.authenticate("google", {
+  scope: ["profile", "email"],
+});
 
 module.exports = function (router) {
   // AUTHENTICATION
@@ -109,7 +111,9 @@ module.exports = function (router) {
 
         console.log("since it's true, user boxes is", user.boxes);
 
-        const allTasksIndex = user.boxes.findIndex((box) => box.title === "allTasks");
+        const allTasksIndex = user.boxes.findIndex(
+          (box) => box.title === "allTasks"
+        );
         user.boxes[allTasksIndex].taskIds.push(task._id);
         user.save();
 
@@ -129,7 +133,11 @@ module.exports = function (router) {
     // need to save it to the right user
     Task.findById(req.params.taskId).exec((err, task) => {
       if (err) return res.send(err);
-      task.status = req.body.status || task.status; // keep what was there if null
+      const { status, estimatedTime } = req.body.task;
+
+      task.status = status;
+      task.estimatedTime = estimatedTime;
+
       task.save();
       return res.send(task);
     });
