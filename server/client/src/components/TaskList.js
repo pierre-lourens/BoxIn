@@ -22,27 +22,9 @@ import InactiveTimerButton from "./Buttons/InactiveTimerButton";
 import EmptyCircle from "./Buttons/EmptyCircle";
 import CheckCircle from "./Buttons/CheckCircle";
 import EditTaskButton from "./Buttons/EditTaskButton";
+import NewFormButton from "./Buttons/NewFormButton";
 
 // import { Overlay } from "react-portal-overlay";
-
-const Button = styled.button`
-  align-items: center;
-  align-content: center;
-  justify-content: center;
-  margin: 0.5rem;
-  padding: 0.5rem;
-  color: #000;
-  border: 1px solid #ddd;
-  background: #fff;
-  border-radius: 3px;
-  font-size: 1rem;
-  cursor: pointer;
-  grid-row: 1;
-`;
-
-const ButtonText = styled.div`
-  margin: 0 1rem;
-`;
 
 const Box = styled.div`
   background: #fff;
@@ -451,15 +433,7 @@ class TaskList extends React.Component {
     console.log("Props upon render of taskList is", this.props);
     return (
       <React.Fragment>
-        <Button onClick={this.addBox}>
-          <svg width='24' height='24' viewBox='0 0 24 24'>
-            <path
-              fill='currentColor'
-              d='M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z'
-            />
-          </svg>
-          <ButtonText>Add A Box</ButtonText>
-        </Button>
+        <NewFormButton />
         <DragDropContext onDragEnd={this.onDragEnd}>
           <StyledAgendaContainer>
             {Object.keys(this.state.boxes).length > 1

@@ -18,6 +18,7 @@ const TaskFormContainer = styled.div`
   border-radius: 3px;
   background-color: white;
   box-shadow: 0 4px 6px 0 rgba(100, 100, 100, 0.15);
+
   padding: 10px;
   margin-bottom: 30px;
 
@@ -130,7 +131,10 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ addTask, checkForUser, getTaskBoxes, getTasks }, dispatch);
+  return bindActionCreators(
+    { addTask, checkForUser, getTaskBoxes, getTasks },
+    dispatch
+  );
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(QuickTaskForm);

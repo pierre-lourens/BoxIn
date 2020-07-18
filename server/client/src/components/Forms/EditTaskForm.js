@@ -46,8 +46,8 @@ const StyledInputDiv = styled.div`
   input {
     padding: 5px;
     margin: 0 5px;
-    border: 0;
-    box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.1);
+    border: 1px solid ${(props) => props.theme.colors.lightGray};
+    box-shadow: 0 2px 5px 0 rgba(100, 100, 100, 0.15) inset;
     border-radius: 4px;
     font-size: ${(props) => props.theme.fontSizes.smallplus};
     background-color: white;
@@ -267,7 +267,7 @@ class EditTaskForm extends React.Component {
         <form className='form'>
           <Wrapper>
             <h1>
-              Edit <span>{this.props.task.text}</span>
+              Edit <span>"{this.props.task.text}"</span>
             </h1>
             <StyledInputDiv>{this.renderTaskTitleInput()}</StyledInputDiv>
             <StyledInputDiv>{this.renderEstimatedTimeInput()}</StyledInputDiv>

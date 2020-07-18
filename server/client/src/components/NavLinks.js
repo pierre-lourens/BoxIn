@@ -65,7 +65,7 @@ const NavLinks = (props) => {
 
       <StyledButton>
         <Link to={"/review"}>
-          <span className={determineIfCurrentPage("/review")}>Review</span>
+          <span className={determineIfCurrentPage("/reports")}>Reports</span>
         </Link>
       </StyledButton>
 
