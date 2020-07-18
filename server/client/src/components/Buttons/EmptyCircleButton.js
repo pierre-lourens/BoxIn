@@ -39,7 +39,7 @@ const EmptyCircle = (props) => {
         (timeEntry) => timeEntry._id == last
       );
 
-      if (foundTimer.active) {
+      if (foundTimer && foundTimer.active) {
         // stop the timer
         props.stopTimer(foundTimer._id, props.userId);
       }
