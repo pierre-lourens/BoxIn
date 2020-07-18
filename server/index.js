@@ -37,7 +37,8 @@ passport.use(
   "google",
   new GoogleStrategy(
     {
-      clientID: "619348585502-7d3rn7ts232500ikjis32r9iol71ng72.apps.googleusercontent.com",
+      clientID:
+        "619348585502-7d3rn7ts232500ikjis32r9iol71ng72.apps.googleusercontent.com",
       clientSecret: "VMfIwZnG8QMNlfnin1ZuoaCI",
       callbackURL: "/api/auth/google/callback",
     },
@@ -61,7 +62,9 @@ passport.use(
   )
 );
 
-const googleAuth = passport.authenticate("google", { scope: ["profile", "email"] });
+const googleAuth = passport.authenticate("google", {
+  scope: ["profile", "email"],
+});
 
 app.get("/api/auth/google", googleAuth);
 

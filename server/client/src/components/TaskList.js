@@ -13,8 +13,6 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import uuid from "react-uuid";
 
-import PencilAltIcon from "../assets/PencilAltIcon";
-
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import _ from "lodash";
 import { parseISO, differenceInSeconds } from "date-fns";
@@ -23,6 +21,7 @@ import ActiveTimerButton from "./Buttons/ActiveTimerButton";
 import InactiveTimerButton from "./Buttons/InactiveTimerButton";
 import EmptyCircle from "./Buttons/EmptyCircle";
 import CheckCircle from "./Buttons/CheckCircle";
+import EditTaskButton from "./Buttons/EditTaskButton";
 
 // import { Overlay } from "react-portal-overlay";
 
@@ -261,7 +260,7 @@ class TaskList extends React.Component {
   };
 
   renderToggleCircle(task) {
-    if (task.status != "complete" || !task.status) {
+    if (task.status !== "complete" || !task.status) {
       return <EmptyCircle task={task} />;
     } else {
       return <CheckCircle task={task} />;
@@ -289,7 +288,7 @@ class TaskList extends React.Component {
     console.log("secondsElapsed is", secondsElapsed);
     console.log("Time entry active is ", timeEntry.active);
 
-    if (task.status != "complete" || !task.status) {
+    if (task.status !== "complete" || !task.status) {
       return (
         <React.Fragment>
           <div className='text'>
@@ -373,9 +372,7 @@ class TaskList extends React.Component {
                 {this.renderTaskText(task)}
                 <div className='options'>
                   {this.renderTimerButton(task)}
-                  <button onClick={this.handleEditClick}>
-                    <PencilAltIcon />
-                  </button>
+                  <EditTaskButton />
                 </div>
               </Task>
             )}
@@ -401,7 +398,7 @@ class TaskList extends React.Component {
       return;
     }
 
-    if (source.droppableId != destination.droppableId) {
+    if (source.droppableId !== destination.droppableId) {
       const sourceBox = _.cloneDeep(this.state.boxes[source.droppableId]);
       const destinationBox = _.cloneDeep(
         this.state.boxes[destination.droppableId]
@@ -472,7 +469,7 @@ class TaskList extends React.Component {
           <StyledAgendaContainer>
             {Object.keys(this.state.boxes).length > 1
               ? Object.keys(this.props.boxes)
-                  .filter((box) => box != "allTasks")
+                  .filter((box) => box !== "allTasks")
                   .map((boxTitle, i) => {
                     return (
                       <Droppable key={boxTitle} droppableId={boxTitle}>
@@ -516,10 +513,7 @@ class TaskList extends React.Component {
                                             {this.renderTaskText(task)}
                                             <div className='options'>
                                               {this.renderTimerButton(task)}
-                                              <button
-                                                onClick={this.handleEditClick}>
-                                                <PencilAltIcon />
-                                              </button>
+                                              <EditTaskButton />
                                             </div>
                                           </Task>
                                         )}
