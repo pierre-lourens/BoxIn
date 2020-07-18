@@ -19,7 +19,7 @@ import { parseISO, differenceInSeconds } from "date-fns";
 
 import ActiveTimerButton from "./Buttons/ActiveTimerButton";
 import InactiveTimerButton from "./Buttons/InactiveTimerButton";
-import EmptyCircle from "./Buttons/EmptyCircle";
+import EmptyCircle from "./Buttons/EmptyCircleButton";
 import CheckCircle from "./Buttons/CheckCircle";
 import EditTaskButton from "./Buttons/EditTaskButton";
 import NewFormButton from "./Buttons/NewFormButton";
