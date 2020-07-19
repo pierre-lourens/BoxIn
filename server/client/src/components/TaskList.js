@@ -210,14 +210,6 @@ class TaskList extends React.Component {
     this.renderToggleCircle = this.renderToggleCircle.bind(this);
   }
 
-  addBox = (e) => {
-    // we need to modify the lists in userData
-    e.preventDefault();
-    console.log("clicked");
-    const randomTitle = uuid();
-    this.props.addBox(this.props.userId, randomTitle);
-  };
-
   componentDidUpdate(prevProps) {
     // make our boxes from our data store
     console.log("this.props.task is", this.props.task);
@@ -444,7 +436,7 @@ class TaskList extends React.Component {
                       <Droppable key={boxTitle} droppableId={boxTitle}>
                         {(provided) => (
                           <Box ref={provided.innerRef}>
-                            <h2>Box Title Goes Here</h2>
+                            <h2>{boxTitle}</h2>
                             {this.props.boxes[boxTitle].taskIds.length &&
                             this.props.userData.hasOwnProperty("tasks")
                               ? this.state.boxes[boxTitle].taskIds.map(
@@ -542,7 +534,6 @@ function mapDispatchToProps(dispatch) {
       stopTimer,
       sendTaskBoxes,
       getTaskBoxes,
-      addBox,
     },
     dispatch
   );

@@ -296,17 +296,14 @@ module.exports = function (router) {
     });
   });
 
-  // when the boxes change shape in state, the whole set is sent here
   router.post("/api/:userId/boxes", ensureAuthenticated, (req, res, next) => {
     User.findById(req.params.userId).exec((err, user) => {
       if (err) return res.send(err);
 
       const newBox = { title: req.body.boxTitle, taskIds: [] };
 
-      console.log("POST IS HAPPENING. NEW BOX IS", newBox);
       user.boxes.push(newBox);
       user.save();
-      console.log("POST IS HAPPENING. USER'S BOXES ARE", user.boxes);
 
       return res.send(user.boxes);
     });

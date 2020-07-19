@@ -1,12 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-import { editTask, removeTaskFromBox, sendSession } from "../../actions";
+import { addBox } from "../../actions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import DateTimePicker from "react-datetime-picker";
-import { parseISO } from "date-fns";
 
-const EditTaskFormContainer = styled.div`
+const AddBoxFormContainer = styled.div`
   display: block;
   h2,
   h1 {
@@ -64,7 +62,7 @@ const StyledButtonGroup = styled.div`
   margin: 0 auto;
   border-radius: 4px;
 
-  .delete {
+  .cancel {
     border: 0;
     box-shadow: 0 0 0 0;
     background: inherit;
@@ -95,27 +93,87 @@ const StyledButtonGroup = styled.div`
 class NewBoxForm extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = { box: { boxTitle: "", boxTime: "" } };
   }
 
   render() {
     return (
-      <EditTaskFormContainer>
+      <AddBoxFormContainer>
+        <form>
+          <Wrapper>
+            <h1>Add Box</h1>
+            <StyledInputDiv>{this.renderBoxTitleInput()}</StyledInputDiv>
+          </Wrapper>
+        </form>
         <StyledButtonGroup>
           <button
             type='button'
-            class='delete'
+            className='cancel'
             onClick={(event) => {
               this.props.hideModal();
             }}>
             Cancel
           </button>
-          <button type='submit' onClick={this.handleTaskSubmit}>
+          <button type='submit' onClick={this.handleFormSubmit}>
             Submit
           </button>
         </StyledButtonGroup>
-      </EditTaskFormContainer>
+      </AddBoxFormContainer>
     );
   }
+
+  renderBoxTitleInput = () => {
+    return (
+      <React.Fragment>
+        <label>Box Title:</label>
+        <input
+          type='text'
+          className='wide'
+          placeholder='e.g. "morning" or "1-2 pm"'
+          maxLength='80'
+          onChange={(event) => {
+            this.handleInputChange("boxTitle", event);
+          }}></input>
+      </React.Fragment>
+    );
+  };
+
+  handleInputChange(attributeOfTask, event) {
+    this.setState(
+      {
+        ...this.state,
+        box: { ...this.state.box, [attributeOfTask]: event.target.value },
+      },
+      () => {
+        console.log("in new box form, state is now", this.state);
+      }
+    );
+  }
+
+  checkTitle = () => {
+    // look through this.props.boxes to make sure the title isn't taken
+    if (Object.keys(this.props.boxes).includes(this.state.box.boxTitle)) {
+      return false;
+    }
+    return true;
+  };
+
+  handleFormSubmit = async () => {
+    const titleIsUnique = this.checkTitle();
+
+    if (!this.state.box.boxTitle || !titleIsUnique) {
+      alert("You have to enter a unique box title");
+    }
+
+    await new Promise((resolve) => {
+      this.props.addBox(this.props.userId, this.state.box.boxTitle);
+
+      resolve();
+    });
+
+    this.props.hideModal();
+  };
 }
 
 function mapStateToProps(state) {
@@ -123,6 +181,6 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({}, dispatch);
+  return bindActionCreators({ addBox }, dispatch);
 }
 export default connect(mapStateToProps, mapDispatchToProps)(NewBoxForm);
