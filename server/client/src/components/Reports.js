@@ -1,19 +1,34 @@
 import React, { Component } from "react";
 import styled from "styled-components";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import { getTasks, checkForUser } from "../actions";
 
 import LineGraph from "./Charts/LineGraph";
-import { managerData, yearLabels } from "./MockData";
+import {
+  managerData,
+  fourteenDayLabels,
+  nationalAverageData,
+} from "./MockData";
 import Header from "./Header";
 import ReportsNav from "./ReportsNav";
 import ReportDescription from "./ReportDescription";
 
-export default class Reports extends Component {
+class Reports extends Component {
   constructor(props) {
     super(props);
     this.state = {
       data: managerData,
-      labels: yearLabels,
+      labels: fourteenDayLabels,
+      average: nationalAverageData,
     };
+    this.props.checkForUser();
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.userId !== prevProps.userId) {
+      this.props.getTasks(this.props.userId);
+    }
   }
 
   showChosenGraph = (chosenGraph) => {
@@ -25,7 +40,7 @@ export default class Reports extends Component {
               {/* <img src={chartIcon} alt='bar chart icon' /> */}
               <h1>Tasks Over Time</h1>
             </header>
-            <LineGraph data={this.state.data} labels={this.state.labels} />
+            <LineGraph data={this.props.userData} labels={this.state.labels} />
           </React.Fragment>
         );
       default:
@@ -35,13 +50,14 @@ export default class Reports extends Component {
               {/* <img src={chartIcon} alt='bar chart icon' /> */}
               <h1>Tasks Over Time</h1>
             </header>
-            <LineGraph data={this.state.data} labels={this.state.labels} />
+            <LineGraph data={this.props.userData} labels={this.state.labels} />
           </React.Fragment>
         );
     }
   };
 
   render() {
+    console.log("props on render of reports is", this.props);
     const { data, labels } = this.state;
     return (
       <React.Fragment>
@@ -136,7 +152,7 @@ const StyledReportSwitcherContainer = styled.div`
     &:hover {
       background-color: ${(props) => props.theme.colors.lightGray};
       color: ${(props) => props.theme.colors.primaryBlue};
-      font-weight: 800;
+      font-weight: 600;
     }
   }
 `;
@@ -155,3 +171,13 @@ const StyledBackgroundWrapper = styled.div`
     z-index: 22;
   }
 `;
+
+function mapStateToProps(state) {
+  return { userId: state.user._id, userData: state.userData };
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({ getTasks, checkForUser }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Reports);

@@ -7,7 +7,7 @@ const ReportsNav = () => {
       <h3>Browse Reports</h3>
       <ul>
         <li>Box Score</li>
-        <li>Tasks Over Time</li>
+        <li>Tasks Made & Completed (Last 14 Days)</li>
         <li>Time Trends</li>
         <li>Types of Tasks</li>
       </ul>

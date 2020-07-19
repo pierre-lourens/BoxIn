@@ -11,7 +11,11 @@ export const managerData = [
   3211,
   3354,
   3904,
+  3904,
+  3904,
 ];
+
+export const fourteenDayLabels = [13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
 
 export const nationalAverageData = [
   4010,
@@ -23,6 +27,9 @@ export const nationalAverageData = [
   3000,
   3500,
   4000,
+  3700,
+  3550,
+  3800,
   3700,
   3550,
   3800,

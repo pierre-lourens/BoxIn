@@ -4,9 +4,12 @@ const ReportDescription = () => {
   return (
     <React.Fragment>
       <h3>
-        About <span>Tasks Over Time</span>
+        About <span>Tasks Made & Completed</span>
       </h3>
-      <p>This report shows how many tasks you have completed over time.</p>
+      <p>
+        This report plots how many tasks you have added and completed over the
+        past 14 days, including today.
+      </p>
     </React.Fragment>
   );
 };
