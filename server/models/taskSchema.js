@@ -9,7 +9,7 @@ const taskSchema = new Schema(
     text: String,
     scheduledDate: String,
     dueDate: String,
-    status: String,
+    status: { type: String, default: "incomplete" },
     tags: [tagSchema],
     timeEntries: [{ type: Schema.Types.ObjectId, ref: "timeEntry" }],
     projects: [projectSchema],

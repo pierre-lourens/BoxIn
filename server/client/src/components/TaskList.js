@@ -46,7 +46,7 @@ const Box = styled.div`
   }};
   overflow: ${(props) => {
     if (props.height) {
-      return "hidden";
+      return "auto";
     }
     return null;
   }};
@@ -86,7 +86,7 @@ const StyledAgendaContainer = styled.div`
   grid-column: 2 / span 5;
   grid-row: 1;
   padding: 10px;
-  @media (max-width: 800px) {
+  @media (max-width: 900px) {
     grid-column: 1 / span 12;
     grid-row: 3;
     border: 0;
@@ -103,7 +103,7 @@ const StyledTaskContainer = styled.div`
   grid-column: 7 / span 5;
   grid-row: 1;
   min-height: 600px;
-  @media (max-width: 800px) {
+  @media (max-width: 900px) {
     grid-column: 1 / span 12;
     grid-row: 2;
     min-height: 50px;
@@ -154,24 +154,28 @@ const Task = styled.div`
     margin-left: -10px;
     padding: 10px 0;
     align-self: center;
-
     .task-title {
       grid-row: 1;
-      // grid-columns: span 2;
+      grid-column: 1 / span 2;
       margin: 5px 0;
       color: ${(props) => props.theme.colors.darkGray};
       font-size: ${(props) => props.theme.fontSizes.small};
+      overflow: hidden;
+      height: 18px;
     }
 
     .time {
       grid-row: 2;
       grid-columns: span 1;
+      padding-top: 10px;
       color: ${(props) => props.theme.colors.darkGray};
       font-size: ${(props) => props.theme.fontSizes.xsmall};
+      justify-self: center;
 
       strong {
         font-weight: 600;
       }
+
       .red {
         color: red;
       }
@@ -279,11 +283,19 @@ class TaskList extends React.Component {
       (entry) => entry._id === mostRecent
     );
 
-    const milliSecondsElapsed = task.actualTime * 1000;
-    let actualHours = Math.floor(task.actualTime / 3600);
-    let actualMinutes = Math.floor(task.actualTime / 60 - actualHours * 60);
-    let actualSeconds =
-      task.actualTime - actualMinutes * 60 - actualHours * 3600;
+    // initial values
+    let milliSecondsElapsed = 0;
+    let actualHours = 0;
+    let actualMinutes = 0;
+    let actualSeconds = 0;
+
+    if (mostRecent && timeEntry && task.actualTime > 0) {
+      milliSecondsElapsed = task.actualTime * 1000;
+      actualHours = Math.floor(task.actualTime / 3600);
+      actualMinutes = Math.floor(task.actualTime / 60 - actualHours * 60);
+      actualSeconds = task.actualTime - actualMinutes * 60 - actualHours * 3600;
+    }
+
     if (actualHours.toString().length < 2) {
       actualHours = "0" + actualHours;
     }
@@ -294,7 +306,7 @@ class TaskList extends React.Component {
       actualSeconds = "0" + actualSeconds;
     }
 
-    if (task.status) {
+    if (task.status !== "complete") {
       return (
         <React.Fragment>
           <div className='text'>
@@ -318,7 +330,30 @@ class TaskList extends React.Component {
         </React.Fragment>
       );
     } else {
-      return <div className='text completed'>{task.text}</div>;
+      return (
+        <React.Fragment>
+          <div className='text'>
+            <div className='task-title'>
+              <div class='completed'>{task.text}</div>
+            </div>
+            <div className='time'>
+              Estimated: <strong>{task.estimatedTime} minutes</strong>
+            </div>
+            <div className='time'>
+              Measured:{" "}
+              <strong>
+                {this.renderActualTime(
+                  timeEntry,
+                  actualHours,
+                  actualMinutes,
+                  actualSeconds,
+                  milliSecondsElapsed
+                )}
+              </strong>
+            </div>
+          </div>
+        </React.Fragment>
+      );
     }
   };
 
@@ -329,10 +364,28 @@ class TaskList extends React.Component {
     actualSeconds,
     milliSecondsElapsed
   ) => {
-    if (timeEntry.active) {
+    console.log("milliSecondsElapsed is", milliSecondsElapsed);
+    if (timeEntry && timeEntry.active && milliSecondsElapsed === 0) {
       return (
         <strong>
-          <span class='red'>
+          <span className='red'>
+            <Timer
+              formatValue={(value) => `${value < 10 ? `0${value}` : value}`}>
+              {({ timerState }) => (
+                <React.Fragment>
+                  <Timer.Hours />:
+                  <Timer.Minutes />:
+                  <Timer.Seconds />
+                </React.Fragment>
+              )}
+            </Timer>
+          </span>
+        </strong>
+      );
+    } else if (timeEntry && timeEntry.active) {
+      return (
+        <strong>
+          <span className='red'>
             <Timer
               initialTime={milliSecondsElapsed}
               formatValue={(value) => `${value < 10 ? `0${value}` : value}`}>
@@ -518,7 +571,7 @@ class TaskList extends React.Component {
                           if (this.props.boxes[boxTitle].time) {
                             // the design calls for 2 pixels per minute
                             pixels = Math.ceil(
-                              this.props.boxes[boxTitle].time * 2.7
+                              this.props.boxes[boxTitle].time * 3.25
                             );
                           }
                           return (
