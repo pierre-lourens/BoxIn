@@ -3,7 +3,6 @@ const Schema = mongoose.Schema;
 
 const timeEntrySchema = new Schema(
   {
-    elapsedTime: Number,
     active: Boolean,
     startDate: Date,
     endDate: Date,

@@ -4,6 +4,8 @@ const Task = require("./models/taskSchema");
 const passport = require("passport");
 const User = require("./models/userSchema");
 const TimeEntry = require("./models/timeEntrySchema");
+const differenceInSeconds = require("date-fns/differenceInSeconds");
+var parse = require("date-fns/parse");
 
 const googleAuth = passport.authenticate("google", {
   scope: ["profile", "email"],
@@ -168,27 +170,30 @@ module.exports = function (router) {
     const timeEntry = new TimeEntry();
     timeEntry.active = true;
     timeEntry.task = req.body.taskId;
-    timeEntry.save();
+    timeEntry.startDate = new Date();
 
     // need to save it to the right task
-    Task.findById(req.body.taskId).exec((err, task) => {
+    Task.findByIdAndUpdate(
+      { _id: req.body.taskId },
+      { $push: { timeEntries: timeEntry._id } }
+    ).exec((err, task) => {
       if (err) return res.send(err);
-
-      console.log("task is found and is", task);
-      task.timeEntries.push(timeEntry._id);
 
       task.save();
     });
 
     // need to save it to the right user
-    User.findById(req.body.userId).exec((err, user) => {
+    User.findByIdAndUpdate(
+      { _id: req.body.userId },
+      { $push: { timeEntries: timeEntry._id } }
+    ).exec((err, user) => {
       if (err) return res.send(err);
-
-      console.log("user is found and is", user);
-      user.timeEntries.push(timeEntry._id);
 
       user.save();
     });
+
+    console.log("HIIII");
+    timeEntry.save();
 
     // send back the added task
     return res.send(timeEntry);
@@ -215,19 +220,30 @@ module.exports = function (router) {
       timeEntry.startDate = startDate;
       timeEntry.endDate = endDate;
       timeEntry.task = taskId;
-      const elapsedTime = timeEntry.endDate - timeEntry.startDate;
-      timeEntry.elapsedTime = elapsedTime;
+
       console.log("timeEntry is", timeEntry);
 
       timeEntry.save();
 
+      const elapsedTime = differenceInSeconds(
+        timeEntry.endDate,
+        timeEntry.startDate
+      );
       // need to save it to the right task
-      Task.findById(req.body.taskId).exec((err, task) => {
+      Task.findByIdAndUpdate(
+        { _id: req.body.taskId },
+        { $inc: { actualTime: elapsedTime } }
+      ).exec((err, task) => {
         if (err) return res.send(err);
 
-        console.log("task is found and is", task);
         task.timeEntries.push(timeEntry._id);
+      });
 
+      Task.findByIdAndUpdate(
+        { _id: req.body.taskId },
+        { $push: { timeEntries: timeEntry._id } }
+      ).exec((err, task) => {
+        if (err) return res.send(err);
         task.save();
       });
 
@@ -250,28 +266,39 @@ module.exports = function (router) {
   router.put("/api/me/timeEntry", ensureAuthenticated, (req, res, next) => {
     TimeEntry.findById(req.body.timeEntryId).exec((err, timeEntry) => {
       if (err) return res.send(error);
-      // calculate the elapsed time since the last time it was true
-      const elapsedTime = new Date() - timeEntry.createdAt;
-
-      timeEntry.elapsedTime = elapsedTime;
+      console.log("the time entry is", timeEntry);
       timeEntry.active = false;
+      timeEntry.endDate = new Date();
+      console.log("the time entry is", timeEntry);
 
       User.findById(req.body.userId).exec((err, user) => {
         if (err) return res.send(err);
-
-        console.log("user is found and is", user);
         // find the time entry within that user so that we can replace it with our new one
         const timeEntryIndex = user.timeEntries.findIndex((entry) => {
-          console.log(entry);
           return entry == req.body.timeEntryId;
         });
+
         // delete the old and insert the new
-        console.log("timeEntryIndex is", timeEntryIndex);
         user.timeEntries.splice(timeEntryIndex, 1, timeEntry._id);
+
         user.save();
-        timeEntry.save();
       });
 
+      const elapsedTime = differenceInSeconds(
+        timeEntry.endDate,
+        timeEntry.startDate
+      );
+
+      Task.findByIdAndUpdate(
+        { _id: req.body.taskId },
+        { $inc: { actualTime: elapsedTime } }
+      ).exec((err, task) => {
+        if (err) return res.send(err);
+        console.log("TASK IS", task);
+        task.save();
+      });
+
+      timeEntry.save();
       return res.send(timeEntry);
     });
   });

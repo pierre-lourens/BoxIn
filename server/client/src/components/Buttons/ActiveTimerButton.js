@@ -16,7 +16,11 @@ class ActiveTimerButton extends React.Component {
           className={"running"}
           onClick={(e) => {
             e.preventDefault();
-            this.props.stopTimer(this.props.timeEntry._id, this.props.userId);
+            this.props.stopTimer(
+              this.props.timeEntry._id,
+              this.props.userId,
+              this.props.task._id
+            );
           }}>
           <PauseIcon />
         </button>

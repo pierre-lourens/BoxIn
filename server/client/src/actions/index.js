@@ -86,14 +86,14 @@ export function startTimer(taskId, userId) {
   };
 }
 
-export function stopTimer(timeEntryId, userId) {
+export function stopTimer(timeEntryId, userId, taskId) {
   const url = `${ROOT_URL}/api/me/timeEntry`;
 
   const request = axios({
     method: "put",
     url: url,
     withCredentials: true,
-    data: { timeEntryId, userId },
+    data: { timeEntryId, userId, taskId },
   });
 
   return {

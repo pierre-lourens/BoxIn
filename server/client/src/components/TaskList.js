@@ -23,6 +23,7 @@ import EmptyCircle from "./Buttons/EmptyCircleButton";
 import CheckCircle from "./Buttons/CheckCircle";
 import EditTaskButton from "./Buttons/EditTaskButton";
 import NewFormButton from "./Buttons/NewFormButton";
+import Timer from "react-compound-timer";
 
 // import { Overlay } from "react-portal-overlay";
 
@@ -45,7 +46,7 @@ const Box = styled.div`
   }};
   overflow: ${(props) => {
     if (props.height) {
-      return "none";
+      return "hidden";
     }
     return null;
   }};
@@ -57,13 +58,18 @@ const Box = styled.div`
   }
 `;
 
+const NewFormButtonStyle = styled.div`
+  display: flex;
+  justify-content: center;
+  align-content: center;
+`;
+
 const AllTasksBox = styled.div`
-  background: #fff;
   padding: 10px;
   grid-row: 2;
   margin-bottom: 15px;
-  margin-left: -5px;
   border-radius: 4px;
+  
   // background-color: ${(props) => props.theme.colors.offWhite};
   background-color: inherit;
   // box-shadow: 0 4px 6px 0 rgba(100, 100, 100, 0.15);
@@ -78,10 +84,10 @@ const AllTasksBox = styled.div`
 
 const StyledAgendaContainer = styled.div`
   grid-column: 2 / span 5;
-  grid-row: 2;
-  border-right: 1px solid rgba(100, 100, 100, 0.1);
+  grid-row: 1;
+  padding: 10px;
   @media (max-width: 800px) {
-    grid-column: 2 / span 10;
+    grid-column: 1 / span 12;
     grid-row: 3;
     border: 0;
   }
@@ -89,15 +95,18 @@ const StyledAgendaContainer = styled.div`
     padding: 0;
     margin: 0 5px 10px 0;
     text-align: center;
-    color: ${(props) => props.theme.colors.darkGray};
+    color: ${(props) => props.theme.colors.mediumGray};
   }
 `;
 
 const StyledTaskContainer = styled.div`
   grid-column: 7 / span 5;
-  grid-row: 2;
+  grid-row: 1;
+  min-height: 600px;
   @media (max-width: 800px) {
-    grid-column: 2 / span 10;
+    grid-column: 1 / span 12;
+    grid-row: 2;
+    min-height: 50px;
   }
 `;
 
@@ -261,38 +270,74 @@ class TaskList extends React.Component {
 
     const timeEntry = this.props.userData.timeEntries.find(
       (entry) => entry._id === mostRecent
-    ) || {
-      active: false,
-    };
+    );
 
-    let secondsElapsed = "";
-    if ("elapsedTime" in timeEntry) {
-      secondsElapsed = timeEntry.elapsedTime.toString();
+    const milliSecondsElapsed = task.actualTime * 1000;
+    let actualHours = Math.floor(task.actualTime / 3600);
+    let actualMinutes = Math.floor(task.actualTime / 60 - actualHours * 60);
+    let actualSeconds = Math.floor(
+      task.actualTime - actualMinutes * 60 - actualHours * 3600
+    );
+
+    if (actualHours.toString().length < 2) {
+      actualHours = "0" + actualHours;
+    }
+    if (actualMinutes.toString().length < 2) {
+      actualMinutes = "0" + actualMinutes;
+    }
+    if (actualSeconds.toString().length < 2) {
+      actualSeconds = "0" + actualMinutes;
     }
 
-    console.log("TIME ENTRY IS", timeEntry, "FOR TASK", task.text);
-    // use created at to figure out time elapsed
-
-    console.log("Time entry created_at is", timeEntry.elapsedTime);
-    console.log("secondsElapsed is", secondsElapsed);
-    console.log("Time entry active is ", timeEntry.active);
-
-    if (task.status !== "complete" || !task.status) {
+    if (task.status !== "complete") {
       return (
         <React.Fragment>
           <div className='text'>
             <div className='task-title'>{task.text}</div>
-            {timeEntry.active ? (
-              <React.Fragment>
-                <div className='time'>Estimated Time :</div>
-                <div className='time'>Time So Far: {secondsElapsed}</div>
-              </React.Fragment>
-            ) : null}
+            <div className='time'>
+              Estimated Time: {task.estimatedTime} minutes.
+            </div>
+            <div className='time'>
+              Actual Time:{" "}
+              {this.renderActualTime(
+                timeEntry,
+                actualHours,
+                actualMinutes,
+                actualSeconds,
+                milliSecondsElapsed
+              )}
+            </div>
           </div>
         </React.Fragment>
       );
     } else {
       return <div className='text completed'>{task.text}</div>;
+    }
+  };
+
+  renderActualTime = (
+    timeEntry,
+    actualHours,
+    actualMinutes,
+    actualSeconds,
+    milliSecondsElapsed
+  ) => {
+    if (timeEntry.active) {
+      return (
+        <Timer
+          initialTime={milliSecondsElapsed}
+          formatValue={(value) => `${value < 10 ? `0${value}` : value}`}>
+          {({ start, resume, pause, stop, reset, timerState }) => (
+            <React.Fragment>
+              <Timer.Hours />:
+              <Timer.Minutes />:
+              <Timer.Seconds />
+            </React.Fragment>
+          )}
+        </Timer>
+      );
+    } else {
+      return `${actualHours}:${actualMinutes}:${actualSeconds}`;
     }
   };
 
@@ -312,8 +357,8 @@ class TaskList extends React.Component {
       (entry) => entry._id === mostRecent
     );
 
-    if (timeEntry.active === true) {
-      return <ActiveTimerButton timeEntry={timeEntry} />;
+    if (timeEntry && timeEntry.active === true) {
+      return <ActiveTimerButton timeEntry={timeEntry} task={task} />;
     } else {
       return <InactiveTimerButton task={task} timeEntry={timeEntry} />;
     }
@@ -445,10 +490,10 @@ class TaskList extends React.Component {
     console.log("Props upon render of taskList is", this.props);
     return (
       <React.Fragment>
-        <NewFormButton />
         <DragDropContext onDragEnd={this.onDragEnd}>
           <StyledAgendaContainer>
             <h2>Your Boxes</h2>
+
             {Object.keys(this.state.boxes).length > 1
               ? Object.keys(this.props.boxes)
                   .filter((box) => box !== "allTasks")
@@ -522,12 +567,16 @@ class TaskList extends React.Component {
                     );
                   })
               : console.log("hi")}
+            <NewFormButtonStyle>
+              <NewFormButton />
+            </NewFormButtonStyle>
           </StyledAgendaContainer>
           <Droppable droppableId={"allTasks"}>
             {(provided) => (
               <StyledTaskContainer ref={provided.innerRef}>
                 <AllTasksBox>
                   <h2>Tasks to Box</h2>
+
                   {this.renderTaskCards()}
                   {/* {provided.placeholder} */}
                 </AllTasksBox>

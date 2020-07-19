@@ -24,12 +24,7 @@ const TaskFormContainer = styled.div`
 
   @media (max-width: 600px) {
     grid-column: 2 / span 6;
-    margin-top: 60px;
-    position: absolute;
-    margin-bottom: 0;
     width: 100%;
-    bottom: 0;
-    grid-row: 4;
   }
 
   .form-inline {

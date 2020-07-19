@@ -14,8 +14,6 @@ const AppBar = styled.div`
   margin-bottom: 30px;
   @media (max-width: 600px) {
     grid-template-rows: 50px;
-    position: absolute;
-    top: 0;
     width: 100%;
   }
 `;
