@@ -18,21 +18,27 @@ const AddBoxFormContainer = styled.div`
       font-weight: 800;
     }
   }
+  h2 {
+    font-size: ${(props) => props.theme.fontSizes.smallplus};
+    font-weight: 500;
+  }
 `;
 
 const Wrapper = styled.div`
   padding: 20px;
+  background: white;
+`;
+
+const TimeWrapper = styled.div`
+  padding: 20px;
+  background: ${(props) => props.theme.colors.evenWhiterThanOffWhite};
 `;
 
 const StyledInputDiv = styled.div`
-  display: block;
   margin-bottom: 20px;
-  input,
-  label {
-    display: block;
-  }
 
   label {
+    display: block;
     font-size: ${(props) => props.theme.fontSizes.small};
     margin: 10px 5px;
     color: ${(props) => props.theme.colors.darkGray};
@@ -41,6 +47,7 @@ const StyledInputDiv = styled.div`
   .wide {
     width: 250px;
   }
+
   input {
     padding: 5px;
     margin: 0 5px;
@@ -94,7 +101,10 @@ class NewBoxForm extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { box: { boxTitle: "", boxTime: "" } };
+    this.state = {
+      box: { boxTitle: "" },
+      time: { hours: null, minutes: null },
+    };
   }
 
   render() {
@@ -105,6 +115,11 @@ class NewBoxForm extends React.Component {
             <h1>Add Box</h1>
             <StyledInputDiv>{this.renderBoxTitleInput()}</StyledInputDiv>
           </Wrapper>
+          <TimeWrapper>
+            <StyledInputDiv timeInput={true}>
+              {this.renderTimeInput()}
+            </StyledInputDiv>
+          </TimeWrapper>
         </form>
         <StyledButtonGroup>
           <button
@@ -139,6 +154,44 @@ class NewBoxForm extends React.Component {
     );
   };
 
+  renderTimeInput = () => {
+    return (
+      <React.Fragment>
+        <h2>Optionally set a time limit for your box</h2>
+        <label>Hours:</label>
+        <input
+          type='number'
+          placeholder='0'
+          min='0'
+          onChange={(event) => {
+            this.handleTimeInput(event, "hours");
+          }}></input>
+        <label>Minutes:</label>
+        <input
+          type='number'
+          placeholder='0'
+          min='0'
+          onChange={(event) => {
+            this.handleTimeInput(event, "minutes");
+          }}></input>
+      </React.Fragment>
+    );
+  };
+
+  handleTimeInput = (event, type) => {
+    // we need to store the time input and calculate # of minutes upon form submit
+    this.setState({
+      ...this.state,
+      time: { ...this.state.time, [type]: event.target.value },
+    });
+  };
+
+  calculateTimeAsMinutes = () => {
+    return (
+      Number(this.state.time.minutes) + Math.ceil(this.state.time.hours * 60)
+    );
+  };
+
   handleInputChange(attributeOfTask, event) {
     this.setState(
       {
@@ -166,8 +219,10 @@ class NewBoxForm extends React.Component {
       alert("You have to enter a unique box title");
     }
 
+    const boxTime = this.calculateTimeAsMinutes();
+
     await new Promise((resolve) => {
-      this.props.addBox(this.props.userId, this.state.box.boxTitle);
+      this.props.addBox(this.props.userId, this.state.box.boxTitle, boxTime);
 
       resolve();
     });

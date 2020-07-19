@@ -185,14 +185,16 @@ export function getTaskBoxes(userId) {
   };
 }
 
-export function addBox(userId, boxTitle) {
+export function addBox(userId, boxTitle, time) {
   const url = `${ROOT_URL}/api/${userId}/boxes`;
+
+  console.log("ADD BOX", userId, boxTitle, time);
 
   const request = axios({
     method: "post",
     url: url,
     withCredentials: true,
-    data: { boxTitle },
+    data: { boxTitle, time },
   });
 
   return {

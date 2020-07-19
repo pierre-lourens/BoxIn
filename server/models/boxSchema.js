@@ -6,6 +6,7 @@ const Schema = mongoose.Schema;
 const boxSchema = new Schema({
   title: String,
   taskIds: [{ type: Schema.Types.ObjectId, ref: "task" }],
+  time: Number,
 });
 
 module.exports = boxSchema;

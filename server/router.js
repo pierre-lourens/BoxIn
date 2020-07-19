@@ -300,7 +300,12 @@ module.exports = function (router) {
     User.findById(req.params.userId).exec((err, user) => {
       if (err) return res.send(err);
 
-      const newBox = { title: req.body.boxTitle, taskIds: [] };
+      console.log("REQ.BODY is", req.body);
+      const newBox = {
+        title: req.body.boxTitle,
+        taskIds: [],
+        time: req.body.time,
+      };
 
       user.boxes.push(newBox);
       user.save();

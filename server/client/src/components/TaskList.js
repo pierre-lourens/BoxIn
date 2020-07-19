@@ -35,11 +35,25 @@ const Box = styled.div`
   border-radius: 4px;
   background-color: ${(props) => props.theme.colors.offWhite};
   box-shadow: 0 4px 5px 0 rgba(100, 100, 100, 0.15);
-
-  h2 {
+  height: ${(props) => {
+    if (props.height) {
+      let str = props.height.toString();
+      str += "px";
+      return str;
+    }
+    return null;
+  }};
+  overflow: ${(props) => {
+    if (props.height) {
+      return "none";
+    }
+    return null;
+  }};
+  h3 {
     padding: 0;
     margin: 0 5px 10px 0;
     color: ${(props) => props.theme.colors.darkBlue};
+    font-size: ${(props) => props.theme.fontSizes.small};
   }
 `;
 
@@ -57,6 +71,7 @@ const AllTasksBox = styled.div`
   h2 {
     padding: 0;
     margin: 0 5px 10px 0;
+    text-align: center;
     color: ${(props) => props.theme.colors.mediumGray};
   }
 `;
@@ -69,6 +84,12 @@ const StyledAgendaContainer = styled.div`
     grid-column: 2 / span 10;
     grid-row: 3;
     border: 0;
+  }
+  h2 {
+    padding: 0;
+    margin: 0 5px 10px 0;
+    text-align: center;
+    color: ${(props) => props.theme.colors.darkGray};
   }
 `;
 
@@ -109,7 +130,6 @@ const Task = styled.div`
   }};
   padding: 10px;
   height: ${(props) => {
-    console.log("HEIGHT HEIGHT ", props);
     if (props.height) {
       let str = props.height.toString();
       str += "px";
@@ -428,64 +448,76 @@ class TaskList extends React.Component {
         <NewFormButton />
         <DragDropContext onDragEnd={this.onDragEnd}>
           <StyledAgendaContainer>
+            <h2>Your Boxes</h2>
             {Object.keys(this.state.boxes).length > 1
               ? Object.keys(this.props.boxes)
                   .filter((box) => box !== "allTasks")
                   .map((boxTitle, i) => {
                     return (
                       <Droppable key={boxTitle} droppableId={boxTitle}>
-                        {(provided) => (
-                          <Box ref={provided.innerRef}>
-                            <h2>{boxTitle}</h2>
-                            {this.props.boxes[boxTitle].taskIds.length &&
-                            this.props.userData.hasOwnProperty("tasks")
-                              ? this.state.boxes[boxTitle].taskIds.map(
-                                  (taskIdFromBox, index) => {
-                                    const task = this.props.userData.tasks.find(
-                                      (task) => taskIdFromBox === task._id
-                                    );
-                                    let pixels = 55;
-                                    if (task.estimatedTime) {
-                                      // the design calls for 2.5 pixels per minute
-                                      console.log(
-                                        "I FOUND A TASK WITH ESTIMATED TIME AND ITS NAME IS",
-                                        task
+                        {(provided) => {
+                          // check for estimated time in box to calculate height
+
+                          let pixels = null;
+                          if (this.props.boxes[boxTitle].time) {
+                            // the design calls for 2 pixels per minute
+                            pixels = Math.ceil(
+                              this.props.boxes[boxTitle].time * 2.7
+                            );
+                          }
+                          return (
+                            <Box height={pixels} ref={provided.innerRef}>
+                              <h3>{boxTitle}</h3>
+                              {this.props.boxes[boxTitle].taskIds.length &&
+                              this.props.userData.hasOwnProperty("tasks")
+                                ? this.state.boxes[boxTitle].taskIds.map(
+                                    (taskIdFromBox, index) => {
+                                      const task = this.props.userData.tasks.find(
+                                        (task) => taskIdFromBox === task._id
                                       );
-                                      pixels = Math.ceil(
-                                        task.estimatedTime * 2
+                                      let pixels = 55;
+                                      if (task.estimatedTime) {
+                                        // the design calls for 2.5 pixels per minute
+                                        console.log(
+                                          "I FOUND A TASK WITH ESTIMATED TIME AND ITS NAME IS",
+                                          task
+                                        );
+                                        pixels = Math.ceil(
+                                          task.estimatedTime * 2
+                                        );
+                                      }
+                                      return (
+                                        <Draggable
+                                          key={task._id}
+                                          draggableId={task._id}
+                                          index={index}>
+                                          {(provided) => (
+                                            <Task
+                                              key={task._id}
+                                              ref={provided.innerRef}
+                                              height={pixels}
+                                              status={task.status}
+                                              {...provided.draggableProps}
+                                              {...provided.dragHandleProps}>
+                                              <div className='toggleButtonWrapper'>
+                                                {this.renderToggleCircle(task)}
+                                              </div>
+                                              {this.renderTaskText(task)}
+                                              <div className='options'>
+                                                {this.renderTimerButton(task)}
+                                                <EditTaskButton task={task} />
+                                              </div>
+                                            </Task>
+                                          )}
+                                        </Draggable>
                                       );
                                     }
-                                    return (
-                                      <Draggable
-                                        key={task._id}
-                                        draggableId={task._id}
-                                        index={index}>
-                                        {(provided) => (
-                                          <Task
-                                            key={task._id}
-                                            ref={provided.innerRef}
-                                            height={pixels}
-                                            status={task.status}
-                                            {...provided.draggableProps}
-                                            {...provided.dragHandleProps}>
-                                            <div className='toggleButtonWrapper'>
-                                              {this.renderToggleCircle(task)}
-                                            </div>
-                                            {this.renderTaskText(task)}
-                                            <div className='options'>
-                                              {this.renderTimerButton(task)}
-                                              <EditTaskButton task={task} />
-                                            </div>
-                                          </Task>
-                                        )}
-                                      </Draggable>
-                                    );
-                                  }
-                                )
-                              : !provided.placeholder}
-                            {provided.placeholder}
-                          </Box>
-                        )}
+                                  )
+                                : !provided.placeholder}
+                              {provided.placeholder}
+                            </Box>
+                          );
+                        }}
                       </Droppable>
                     );
                   })
