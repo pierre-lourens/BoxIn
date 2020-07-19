@@ -168,6 +168,13 @@ const Task = styled.div`
       grid-columns: span 1;
       color: ${(props) => props.theme.colors.darkGray};
       font-size: ${(props) => props.theme.fontSizes.xsmall};
+
+      strong {
+        font-weight: 600;
+      }
+      .red {
+        color: red;
+      }
     }
   }
 
@@ -275,10 +282,8 @@ class TaskList extends React.Component {
     const milliSecondsElapsed = task.actualTime * 1000;
     let actualHours = Math.floor(task.actualTime / 3600);
     let actualMinutes = Math.floor(task.actualTime / 60 - actualHours * 60);
-    let actualSeconds = Math.floor(
-      task.actualTime - actualMinutes * 60 - actualHours * 3600
-    );
-
+    let actualSeconds =
+      task.actualTime - actualMinutes * 60 - actualHours * 3600;
     if (actualHours.toString().length < 2) {
       actualHours = "0" + actualHours;
     }
@@ -286,26 +291,28 @@ class TaskList extends React.Component {
       actualMinutes = "0" + actualMinutes;
     }
     if (actualSeconds.toString().length < 2) {
-      actualSeconds = "0" + actualMinutes;
+      actualSeconds = "0" + actualSeconds;
     }
 
-    if (task.status !== "complete") {
+    if (task.status) {
       return (
         <React.Fragment>
           <div className='text'>
             <div className='task-title'>{task.text}</div>
             <div className='time'>
-              Estimated Time: {task.estimatedTime} minutes.
+              Estimated: <strong>{task.estimatedTime} minutes</strong>
             </div>
             <div className='time'>
-              Actual Time:{" "}
-              {this.renderActualTime(
-                timeEntry,
-                actualHours,
-                actualMinutes,
-                actualSeconds,
-                milliSecondsElapsed
-              )}
+              Measured:{" "}
+              <strong>
+                {this.renderActualTime(
+                  timeEntry,
+                  actualHours,
+                  actualMinutes,
+                  actualSeconds,
+                  milliSecondsElapsed
+                )}
+              </strong>
             </div>
           </div>
         </React.Fragment>
@@ -324,17 +331,21 @@ class TaskList extends React.Component {
   ) => {
     if (timeEntry.active) {
       return (
-        <Timer
-          initialTime={milliSecondsElapsed}
-          formatValue={(value) => `${value < 10 ? `0${value}` : value}`}>
-          {({ start, resume, pause, stop, reset, timerState }) => (
-            <React.Fragment>
-              <Timer.Hours />:
-              <Timer.Minutes />:
-              <Timer.Seconds />
-            </React.Fragment>
-          )}
-        </Timer>
+        <strong>
+          <span class='red'>
+            <Timer
+              initialTime={milliSecondsElapsed}
+              formatValue={(value) => `${value < 10 ? `0${value}` : value}`}>
+              {({ start, resume, pause, stop, reset, timerState }) => (
+                <React.Fragment>
+                  <Timer.Hours />:
+                  <Timer.Minutes />:
+                  <Timer.Seconds />
+                </React.Fragment>
+              )}
+            </Timer>
+          </span>
+        </strong>
       );
     } else {
       return `${actualHours}:${actualMinutes}:${actualSeconds}`;
