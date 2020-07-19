@@ -20,7 +20,7 @@ export default function (state = {}, action) {
           taskIds: box.taskIds,
           time: box.time,
         };
-        return boxesObject;
+        return { ...state, ...boxesObject };
       }, {});
       console.log("boxes are", boxes);
       return boxes;
@@ -32,7 +32,7 @@ export default function (state = {}, action) {
           taskIds: box.taskIds,
           time: box.time,
         };
-        return boxesObject;
+        return { ...state, ...boxesObject };
       }, {});
       console.log("boxes are", boxes);
       return boxes;
@@ -45,7 +45,7 @@ export default function (state = {}, action) {
             taskIds: box.taskIds,
             time: box.time,
           };
-          return boxesObject;
+          return { ...state, ...boxesObject };
         }, {});
       }
 
@@ -60,7 +60,7 @@ export default function (state = {}, action) {
           taskIds: box.taskIds,
           time: box.time,
         };
-        return boxesObject;
+        return { ...state, ...boxesObject };
       }, {});
 
       return boxes;
@@ -73,7 +73,7 @@ export default function (state = {}, action) {
           taskIds: box.taskIds,
           time: box.time,
         };
-        return boxesObject;
+        return { ...state, ...boxesObject };
       }, {});
 
       return boxes;

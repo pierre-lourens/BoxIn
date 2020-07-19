@@ -334,7 +334,7 @@ class TaskList extends React.Component {
         <React.Fragment>
           <div className='text'>
             <div className='task-title'>
-              <div class='completed'>{task.text}</div>
+              <div className='completed'>{task.text}</div>
             </div>
             <div className='time'>
               Estimated: <strong>{task.estimatedTime} minutes</strong>

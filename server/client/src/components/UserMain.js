@@ -22,6 +22,12 @@ class UserMain extends React.Component {
     this.props.checkForUser();
   }
 
+  componentDidUpdate(prevProps) {
+    // if (!prevProps.user.hasOwnProperty("_id")) {
+    //   this.props.checkForUser();
+    // }
+  }
+
   render() {
     // render only if logged in
     if (this.props.user) {

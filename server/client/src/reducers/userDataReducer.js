@@ -5,8 +5,8 @@ import { SEND_TASK_BOXES, GET_TASKS } from "../actions/index";
 export default function (state = {}, action) {
   switch (action.type) {
     case GET_TASKS:
-      return action.payload.data;
+      return { ...state, ...action.payload.data };
     default:
-      return state;
+      return { ...state };
   }
 }

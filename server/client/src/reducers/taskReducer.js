@@ -6,10 +6,10 @@ export default function (state = {}, action) {
   switch (action.type) {
     case EDIT_TASK:
       console.log("action.payload for EDIT_TASK is", action.payload);
-      return action.payload.data;
+      return { ...state, ...action.payload.data };
     case ADD_TASK:
-      return action.payload.data;
+      return { ...state, ...action.payload.data };
     default:
-      return state;
+      return { ...state };
   }
 }
