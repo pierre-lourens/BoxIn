@@ -326,6 +326,8 @@ module.exports = function (router) {
     User.findById(req.params.userId).exec((err, user) => {
       if (err) return res.send(err);
 
+      console.log("AHH and user.boxes is", user.boxes);
+
       return res.send(user.boxes);
     });
   });
@@ -507,7 +509,10 @@ module.exports = function (router) {
           const allTasksIndex = user.boxes.findIndex(
             (box) => box.title == "allTasks"
           );
-          user.boxes[allTasksIndex].taskIds.push(task._id);
+          // only if not archived
+          if (task.visibility === "visible") {
+            user.boxes[allTasksIndex].taskIds.push(task._id);
+          }
 
           task.save();
         }
