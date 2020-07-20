@@ -19,16 +19,23 @@ const Wrapper = styled.div`
 class UserMain extends React.Component {
   constructor(props) {
     super(props);
-    this.props.checkForUser();
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidMount(prevProps) {
+    this.props.checkForUser();
     // if (!prevProps.user.hasOwnProperty("_id")) {
     //   this.props.checkForUser();
     // }
   }
 
+  componentDidUpdate(prevProps) {
+    // this.props.checkForUser();
+    // if (this.props.histo)
+  }
+
   render() {
+    console.log("props upon render of usermain is", this.props);
+
     // render only if logged in
     if (this.props.user) {
       return (

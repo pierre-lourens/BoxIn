@@ -7,6 +7,7 @@ import {
   stopTimer,
   sendTaskBoxes,
   getTaskBoxes,
+  checkForUser,
   addBox,
 } from "../actions";
 import { bindActionCreators } from "redux";
@@ -250,12 +251,15 @@ class TaskList extends React.Component {
     this.renderToggleCircle = this.renderToggleCircle.bind(this);
   }
 
+  componentDidMount() {
+    this.setState({ boxes: this.props.boxes });
+  }
   componentDidUpdate(prevProps) {
     // make our boxes from our data store
     console.log("this.props.task is", this.props.task);
     if (
       this.props.userId !== prevProps.userId ||
-      this.props.task !== prevProps.task ||
+      // this.prp
       this.props.timer !== prevProps.timer
       // this.props.userData.tasks !== prevProps.userData.tasks
     ) {
@@ -552,6 +556,7 @@ class TaskList extends React.Component {
 
   render() {
     console.log("Props upon render of taskList is", this.props);
+    console.log("State upon render of taskList is", this.state);
     return (
       <React.Fragment>
         <DragDropContext onDragEnd={this.onDragEnd}>
@@ -679,6 +684,7 @@ function mapDispatchToProps(dispatch) {
       stopTimer,
       sendTaskBoxes,
       getTaskBoxes,
+      checkForUser,
     },
     dispatch
   );
