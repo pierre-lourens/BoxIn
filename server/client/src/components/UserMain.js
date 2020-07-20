@@ -7,6 +7,7 @@ import styled from "styled-components";
 import Header from "./Header";
 import QuickTaskForm from "./QuickTaskForm";
 import TaskList from "./TaskList";
+import DemoButton from "./Buttons/DemoButton";
 
 const Wrapper = styled.div`
   display: grid;

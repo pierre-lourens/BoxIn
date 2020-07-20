@@ -3,9 +3,15 @@ const mongoose = require("mongoose");
 const Task = require("./models/taskSchema");
 const passport = require("passport");
 const User = require("./models/userSchema");
+const boxSchema = require("./models/boxSchema");
+const faker = require("faker");
 const TimeEntry = require("./models/timeEntrySchema");
 const differenceInSeconds = require("date-fns/differenceInSeconds");
 var parse = require("date-fns/parse");
+var subDays = require("date-fns/subDays");
+var addMinutes = require("date-fns/addMinutes");
+var addSeconds = require("date-fns/addSeconds");
+var addDays = require("date-fns/addDays");
 
 const googleAuth = passport.authenticate("google", {
   scope: ["profile", "email"],
@@ -114,7 +120,7 @@ module.exports = function (router) {
         console.log("since it's true, user boxes is", user.boxes);
 
         const allTasksIndex = user.boxes.findIndex(
-          (box) => box.title === "allTasks"
+          (box) => box.title == "allTasks"
         );
         user.boxes[allTasksIndex].taskIds.push(task._id);
         user.save();
@@ -388,4 +394,122 @@ module.exports = function (router) {
         return res.send(task);
       });
   });
+
+  router.get(
+    "/api/:userId/generate-fake-data",
+    ensureAuthenticated,
+    (req, res, next) => {
+      User.findById(req.params.userId).exec((err, user) => {
+        if (err) return res.send(err.message);
+
+        console.log("user is", user);
+        // check if the user already has "allBoxes"
+
+        console.log("user is", user);
+
+        for (let i = 0; i < 45; i++) {
+          let task = new Task();
+
+          task.text = faker.lorem.words();
+
+          let randomNumberForDate = getRandomIntInclusive(1, 28);
+          let day = subDays(new Date(), randomNumberForDate);
+          task.createdAt = day;
+
+          let randomNumForAddedDays = getRandomIntInclusive(0, 4);
+          let randomNumForAddedMins = getRandomIntInclusive(0, 25);
+          let randomNumForAddedSeconds = getRandomIntInclusive(0, 60);
+          let dayAdded = addDays(day, randomNumForAddedDays);
+          dayAdded = addMinutes(day, randomNumForAddedMins);
+          dayAdded = addSeconds(day, randomNumForAddedSeconds);
+          task.updatedAt = dayAdded;
+
+          let randomNumberForStatus = getRandomIntInclusive(0, 1);
+          const statusOptions = ["incomplete", "complete"];
+          task.status = statusOptions[randomNumberForStatus];
+
+          let randomNumberForTags = getRandomIntInclusive(0, 6);
+          const tagOptions = [
+            "email",
+            "code-review",
+            "coding",
+            "housework",
+            "professional development",
+            "investing",
+            "misc",
+          ];
+          task.tag = tagOptions[randomNumberForTags];
+
+          function getRandomIntInclusive(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive
+          }
+
+          let randomNumberForTimeEstimate = getRandomIntInclusive(0, 4);
+          const intervals = [30, 45, 60, 90, 120];
+          task.estimatedTime = intervals[randomNumberForTimeEstimate];
+
+          // time entries
+          for (let i = 0; i < 5; i++) {
+            let timeEntry = new TimeEntry();
+            timeEntry.active = false;
+
+            let day = task.updatedAt;
+            let dayStartAdd = addMinutes(day, getRandomIntInclusive(0, 25));
+            dayStartAdd = addSeconds(day, getRandomIntInclusive(0, 60));
+            timeEntry.startDate = dayStartAdd;
+
+            let dayEndAdded = addMinutes(
+              dayStartAdd,
+              getRandomIntInclusive(0, 25)
+            );
+            dayEndAdded = addSeconds(dayStartAdd, getRandomIntInclusive(0, 60));
+            timeEntry.endDate = dayEndAdded;
+
+            timeEntry.task = task._id;
+            user.timeEntries.push(timeEntry);
+
+            const elapsedTime = differenceInSeconds(
+              timeEntry.endDate,
+              timeEntry.startDate
+            );
+            task.actualTime += elapsedTime;
+
+            task.timeEntries.push(timeEntry._id);
+            user.timeEntries.push(timeEntry);
+            timeEntry.task = task._id;
+            timeEntry.save();
+          }
+
+          let randomNumberForVisibility = getRandomIntInclusive(0, 2);
+          const visibilityOptions = ["disabled", "visible", "archived"];
+          task.visibility = visibilityOptions[randomNumberForVisibility];
+
+          user.tasks.push(task);
+
+          const alreadyThere = user.boxes.findIndex(
+            (box) => box.title == "allTasks"
+          );
+
+          console.log("already there is", alreadyThere);
+          if (alreadyThere === -1) {
+            const allTasksBox = { title: "allTasks", taskIds: [] };
+            user.boxes.push(allTasksBox);
+            user.save();
+          }
+
+          const allTasksIndex = user.boxes.findIndex(
+            (box) => box.title == "allTasks"
+          );
+          user.boxes[allTasksIndex].taskIds.push(task._id);
+
+          task.save();
+        }
+
+        console.log("now user is", user);
+        return res.send(user);
+      });
+    }
+  );
 };

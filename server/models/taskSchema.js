@@ -10,16 +10,18 @@ const taskSchema = new Schema(
     scheduledDate: String,
     dueDate: String,
     status: { type: String, default: "incomplete" },
-    tags: [tagSchema],
+    tag: String,
     timeEntries: [{ type: Schema.Types.ObjectId, ref: "timeEntry" }],
     projects: [projectSchema],
     estimatedTime: { type: Number, default: 30 }, // number of minutes & seconds
-    actualTime: Number, // number of milliseconds
+    actualTime: { type: Number, default: 0 }, // number of milliseconds
     weight: String,
     user: { type: Schema.Types.ObjectId, ref: "user" },
     visibility: String,
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now },
   },
-  { timestamps: true }
+  { timestamps: false }
 );
 
 const Task = mongoose.model("task", taskSchema);

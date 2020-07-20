@@ -13,6 +13,7 @@ export const ADD_TASK_TO_BOX = "ADD_TASK_TO_BOX";
 export const GET_TASK_BOXES = "GET_TASK_BOXES";
 export const ADD_BOX = "ADD_BOX";
 export const REMOVE_TASK_FROM_BOX = "REMOVE_TASK_FROM_BOX";
+export const GENERATE_FAKE_DATA = "GENERATE_FAKE_DATA";
 
 const ROOT_URL = "http://localhost:5000";
 
@@ -215,6 +216,23 @@ export function removeTaskFromBox(userId, boxTitle, taskId) {
 
   return {
     type: REMOVE_TASK_FROM_BOX,
+    payload: request,
+  };
+}
+
+export function generateFakeData(userId) {
+  const url = `${ROOT_URL}/api/${userId}/generate-fake-data`;
+
+  console.log("request being made for fake data with user", userId);
+
+  const request = axios({
+    method: "get",
+    url: url,
+    withCredentials: true,
+  });
+
+  return {
+    type: GENERATE_FAKE_DATA,
     payload: request,
   };
 }
