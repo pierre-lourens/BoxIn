@@ -72,7 +72,7 @@ class Reports extends Component {
           <StyledReportSwitcherContainer>
             <StyledBackgroundWrapper>
               <ReportsNav setCurrentGraph={this.setCurrentGraph} />
-              <ReportDescription />
+              <ReportDescription currentGraph={this.state.currentGraph} />
             </StyledBackgroundWrapper>
           </StyledReportSwitcherContainer>
         </StyledBodyContainer>

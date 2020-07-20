@@ -138,14 +138,14 @@ class LineGraph extends React.Component {
           {
             label: "Tasks created",
             data: createdArray,
-            fill: false,
-            borderColor: "#6610f2",
+            fill: true,
+            borderColor: "#4F3A0D",
           },
           {
             label: "Tasks completed",
             data: completedArray,
-            fill: false,
-            borderColor: "#E0E0E0",
+            fill: true,
+            borderColor: "#3A5D9C",
           },
         ],
       },
