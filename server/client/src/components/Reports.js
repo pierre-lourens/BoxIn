@@ -18,9 +18,8 @@ class Reports extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: managerData,
       labels: fourteenDayLabels,
-      average: nationalAverageData,
+      currentGraph: "",
     };
     this.props.checkForUser();
   }
@@ -51,10 +50,13 @@ class Reports extends Component {
               {/* <img src={chartIcon} alt='bar chart icon' /> */}
               <h1>Tasks Over Time</h1>
             </header>
-            <LineGraph data={this.props.userData} labels={this.state.labels} />
           </React.Fragment>
         );
     }
+  };
+
+  setCurrentGraph = (input) => {
+    this.setState({ currentGraph: input });
   };
 
   render() {
@@ -65,11 +67,11 @@ class Reports extends Component {
         <Header />
         <StyledBodyContainer>
           <StyledGraphContainer>
-            {this.showChosenGraph("LineGraph")}
+            {this.showChosenGraph(this.state.currentGraph)}
           </StyledGraphContainer>
           <StyledReportSwitcherContainer>
             <StyledBackgroundWrapper>
-              <ReportsNav />
+              <ReportsNav setCurrentGraph={this.setCurrentGraph} />
               <ReportDescription />
             </StyledBackgroundWrapper>
           </StyledReportSwitcherContainer>
