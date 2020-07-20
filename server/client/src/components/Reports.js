@@ -14,6 +14,8 @@ import {
 import Header from "./Header";
 import ReportsNav from "./ReportsNav";
 import ReportDescription from "./ReportDescription";
+import TypesOfTasks from "./Charts/TypesOfTasks";
+import BoxScore from "./Charts/BoxScore";
 
 class Reports extends Component {
   constructor(props) {
@@ -26,7 +28,7 @@ class Reports extends Component {
   }
 
   componentDidMount() {
-    this.setState({ currentGraph: "AverageTimesPerDay" });
+    this.setState({ currentGraph: "BoxScore" });
   }
 
   componentDidUpdate(prevProps) {
@@ -56,6 +58,26 @@ class Reports extends Component {
               <h1>Daily Time Trends</h1>
             </header>
             <AverageTimesPerDay />
+          </React.Fragment>
+        );
+      case "TypesOfTasks":
+        return (
+          <React.Fragment>
+            <header>
+              {/* <img src={chartIcon} alt='bar chart icon' /> */}
+              <h1>Types of Tasks</h1>
+            </header>
+            <TypesOfTasks />
+          </React.Fragment>
+        );
+      case "BoxScore":
+        return (
+          <React.Fragment>
+            <header>
+              {/* <img src={chartIcon} alt='bar chart icon' /> */}
+              <h1>Box Score</h1>
+            </header>
+            <BoxScore />
           </React.Fragment>
         );
       default:

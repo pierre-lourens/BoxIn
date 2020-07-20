@@ -11,7 +11,7 @@ let myLineChart;
 //--Chart Style Options--//
 Chart.defaults.global.defaultFontFamily = "'PT Sans', sans-serif";
 Chart.defaults.global.legend.display = true;
-Chart.defaults.global.elements.line.tension = 0;
+Chart.defaults.global.elements.line.lineTension = 0;
 //--Chart Style Options--//
 
 class LineGraph extends React.Component {
@@ -146,6 +146,7 @@ class LineGraph extends React.Component {
             data: completedArray,
             fill: true,
             borderColor: "#3A5D9C",
+            backgroundColor: "rgba(83, 156, 42, 0.4)",
           },
         ],
       },

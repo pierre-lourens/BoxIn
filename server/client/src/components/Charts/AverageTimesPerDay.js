@@ -213,6 +213,7 @@ class AverageTimesPerDay extends React.Component {
             label: "Number of tasks started",
             data: startedTasksArray,
             fill: true,
+
             backgroundColor: "#3A5D9C",
           },
           {
@@ -228,6 +229,7 @@ class AverageTimesPerDay extends React.Component {
             fill: true,
             type: "line",
             yAxisID: "right-y-axis",
+            bezierCurve: true,
             borderColor: "#9C7C3A",
           },
         ],
