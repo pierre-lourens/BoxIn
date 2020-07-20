@@ -14,7 +14,9 @@ const ReportsNav = ({ setCurrentGraph }) => {
         <li onClick={() => handleClick("LineGraph")}>
           Tasks Made & Completed (Last 14 Days)
         </li>
-        <li>Time Trends</li>
+        <li onClick={() => handleClick("AverageTimesPerDay")}>
+          Daily Time Trends
+        </li>
         <li>Types of Tasks</li>
       </ul>
     </React.Fragment>

@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { getTasks, checkForUser, getTaskBoxes } from "../actions";
 
 import LineGraph from "./Charts/LineGraph";
+import AverageTimesPerDay from "./Charts/AverageTimesPerDay";
 import {
   managerData,
   fourteenDayLabels,
@@ -19,7 +20,7 @@ class Reports extends Component {
     super(props);
     this.state = {
       labels: fourteenDayLabels,
-      currentGraph: "",
+      currentGraph: "AverageTimesPerDay",
     };
     this.props.checkForUser();
   }
@@ -41,6 +42,16 @@ class Reports extends Component {
               <h1>Tasks Over Time</h1>
             </header>
             <LineGraph data={this.props.userData} labels={this.state.labels} />
+          </React.Fragment>
+        );
+      case "AverageTimesPerDay":
+        return (
+          <React.Fragment>
+            <header>
+              {/* <img src={chartIcon} alt='bar chart icon' /> */}
+              <h1>Daily Time Trends</h1>
+            </header>
+            <AverageTimesPerDay />
           </React.Fragment>
         );
       default:
