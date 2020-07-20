@@ -18,8 +18,14 @@ class DemoButton extends React.Component {
     console.log("props on render of DemoButton are", this.props);
     return (
       <StyledDemoButton>
+        <h3>Welcome!</h3>
+        <p>Feel free to demo!</p>
         <a href='#' onClick={this.handleGenerateFakeDataClick}>
-          Generate Fake Data
+          Generate fake data
+        </a>
+        <br />
+        <a href='#' onClick={this.props.changeDemoBox}>
+          Hide this box
         </a>
       </StyledDemoButton>
     );
@@ -35,9 +41,16 @@ function mapDispatchToProps(dispatch) {
 }
 
 const StyledDemoButton = styled.div`
-  background-color: ${(props) => props.theme.colors.lightBlue};
-  color: white;
+  background-color: ${(props) => props.theme.colors.offWhite};
+  border-radius: 4px;
+  color: ${(props) => props.theme.colors.darkGray};
   font-size: ${(props) => props.theme.fontSizes.small};
+  position: absolute;
+  border: 0;
+  box-shadow: 0 4px 6px 0 rgba(100, 100, 100, 0.2);
+  // bottom: 50px;
+  padding: 10px;
+  right: 0;
 `;
 
 export default connect(mapStateToProps, mapDispatchToProps)(DemoButton);

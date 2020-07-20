@@ -1,6 +1,24 @@
 import React from "react";
 import styled from "styled-components";
 import NavLinks from "./NavLinks.js";
+import { withRouter } from "react-router-dom";
+
+const Header = (props) => {
+  return (
+    <React.Fragment>
+      <AppBar>
+        <StyledHeader>
+          <Logo onClick={() => props.history.push("/me")}>
+            <span>Box</span>In
+          </Logo>
+        </StyledHeader>
+        <NavLinks />
+      </AppBar>
+    </React.Fragment>
+  );
+};
+
+export default withRouter(Header);
 
 const AppBar = styled.div`
   display: grid;
@@ -30,6 +48,7 @@ const StyledHeader = styled.header`
 const Logo = styled.h1`
   font-family: ${(props) => props.theme.headingFonts.toString()};
   padding: 0;
+  cursor: pointer;
 
   margin: 0px;
   color: white;
@@ -42,20 +61,3 @@ const Logo = styled.h1`
     font-size: ${(props) => props.theme.fontSizes.small};
   }
 `;
-
-const Header = () => {
-  return (
-    <React.Fragment>
-      <AppBar>
-        <StyledHeader>
-          <Logo>
-            <span>Box</span>In
-          </Logo>
-        </StyledHeader>
-        <NavLinks />
-      </AppBar>
-    </React.Fragment>
-  );
-};
-
-export default Header;

@@ -9,17 +9,11 @@ import QuickTaskForm from "./QuickTaskForm";
 import TaskList from "./TaskList";
 import DemoButton from "./Buttons/DemoButton";
 
-const Wrapper = styled.div`
-  display: grid;
-  grid-gap: 1rem;
-  grid-template-columns: repeat(12, 1fr);
-  grid-template-rows: 30px;
-  margin-bottom: 30px;
-`;
-
 class UserMain extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = { showDemoBox: true };
   }
 
   componentDidMount(prevProps) {
@@ -34,23 +28,23 @@ class UserMain extends React.Component {
     // if (this.props.histo)
   }
 
-  render() {
-    console.log("props upon render of usermain is", this.props);
+  changeDemoBox = () => {
+    this.setState({ showDemoBox: false });
+  };
 
-    // render only if logged in
-    if (this.props.user) {
-      return (
-        <React.Fragment>
-          <Header />
-          <QuickTaskForm />
-          <Wrapper>
-            <TaskList />
-          </Wrapper>
-        </React.Fragment>
-      );
-    } else {
-      this.props.history.push("/");
-    }
+  render() {
+    return (
+      <RelativeWrapper>
+        <Header />
+        <QuickTaskForm />
+        <Wrapper>
+          <TaskList />
+        </Wrapper>
+        {this.state.showDemoBox ? (
+          <DemoButton changeDemoBox={this.changeDemoBox} />
+        ) : null}
+      </RelativeWrapper>
+    );
   }
 }
 
@@ -63,3 +57,16 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserMain);
+
+const Wrapper = styled.div`
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: repeat(12, 1fr);
+  max-width: 2000px;
+  margin: 0 auto;
+  // grid-template-rows: 30px;
+`;
+
+const RelativeWrapper = styled.div`
+  position: relative;
+`;
