@@ -6,7 +6,15 @@ import { connect } from "react-redux";
 // style
 import styled from "styled-components";
 import googleButton from "../assets/googleButton.png";
+import Header from "./Header";
 
+const Wrapper = styled.div`
+  display: grid;
+  grid-column-template: 3;
+  grid-column-rows: 300px;
+  align-items: center;
+  justify-items: center;
+`;
 const AuthButton = styled.button`
   background: inherit;
   width: 200px;
@@ -31,14 +39,22 @@ class LoginPage extends React.Component {
 
   render() {
     return (
-      <div>
-        {/* react will replace hardcoded value here */}
-        <a href='http://localhost:5000/api/auth/google/'>
-          <AuthButton>
-            <img src={googleButton} alt='login button for Google authentication' />
-          </AuthButton>
-        </a>
-      </div>
+      <React.Fragment>
+        <Header />
+        <Wrapper>
+          <div>
+            {/* react will replace hardcoded value here */}
+            <a href='http://localhost:5000/api/auth/google/'>
+              <AuthButton>
+                <img
+                  src={googleButton}
+                  alt='login button for Google authentication'
+                />
+              </AuthButton>
+            </a>
+          </div>
+        </Wrapper>
+      </React.Fragment>
     );
   }
 }

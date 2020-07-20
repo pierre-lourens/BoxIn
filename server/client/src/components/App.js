@@ -13,7 +13,7 @@ function App() {
       <Switch>
         <Route exact path={"/login"} component={LoginPage} />
         <Route exact path={"/me"} component={UserMain} />
-        <Route exact path={"/samplechart"} component={SampleChart} />
+        <Route exact path={"/"} component={UserMain} />
         <Route exact path={"/reports"} component={Reports} />
       </Switch>
     </React.Fragment>

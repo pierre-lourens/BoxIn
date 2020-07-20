@@ -19,6 +19,11 @@ const googleAuth = passport.authenticate("google", {
 
 module.exports = function (router) {
   // AUTHENTICATION
+  router.get("/logout", function (req, res) {
+    console.log("logged out!");
+    req.logout();
+    res.redirect("http://localhost:3000");
+  });
 
   // will be used as middleware so that I can use multiple strategies
   function ensureAuthenticated(req, res, next) {

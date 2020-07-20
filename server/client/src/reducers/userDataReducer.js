@@ -9,9 +9,9 @@ import {
 export default function (state = {}, action) {
   switch (action.type) {
     case GET_TASKS:
-      return { ...state, ...action.payload.data };
+      return action.payload.data;
     case GENERATE_FAKE_DATA:
-      return { ...state, ...action.payload.data };
+      return action.payload.data;
     default:
       return state;
   }

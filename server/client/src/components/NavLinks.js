@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { withRouter } from "react-router";
+import { connect } from "react-redux";
 
 const NavBar = styled.div`
   grid-column: 8 / span 4;
@@ -55,6 +56,23 @@ const NavLinks = (props) => {
     }
   };
 
+  const determineIfAuth = () => {
+    console.log("props in nav are", props);
+    if (!props.userId) {
+      return (
+        <Link to={"/login"}>
+          <span className={determineIfCurrentPage("/login")}>Sign In</span>
+        </Link>
+      );
+    } else {
+      return (
+        <a href='http://localhost:5000/logout'>
+          <span className={determineIfCurrentPage("/login")}>Sign Out</span>
+        </a>
+      );
+    }
+  };
+
   return (
     <NavBar>
       <StyledButton>
@@ -69,13 +87,13 @@ const NavLinks = (props) => {
         </Link>
       </StyledButton>
 
-      <StyledButton>
-        <Link to={"/login"}>
-          <span className={determineIfCurrentPage("/login")}>Sign Out</span>
-        </Link>
-      </StyledButton>
+      <StyledButton>{determineIfAuth()}</StyledButton>
     </NavBar>
   );
 };
 
-export default withRouter(NavLinks);
+function mapStateToProps(state) {
+  return { userId: state.user._id };
+}
+
+export default withRouter(connect(mapStateToProps)(NavLinks));
