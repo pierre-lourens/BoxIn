@@ -107,11 +107,13 @@ class BoxScore extends React.Component {
 
     const getSum = (array, endIndex) => {
       let sum = 0;
-      for (let i = 0; i < endIndex; i++) {
+      for (let i = 0; i <= endIndex; i++) {
         sum += array[i];
       }
       return sum;
     };
+    daysArray.reverse();
+    scoreArray.reverse();
 
     // take every prior element of scoreArray and add
     const totalsArray = scoreArray.map((score, index) => {
@@ -121,9 +123,6 @@ class BoxScore extends React.Component {
         return score;
       }
     });
-
-    daysArray.reverse();
-    scoreArray.reverse();
 
     console.log("taskData is", taskData);
     console.log("daysArray is", daysArray);
