@@ -8,11 +8,9 @@ import {
   sendTaskBoxes,
   getTaskBoxes,
   checkForUser,
-  addBox,
 } from "../actions";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import uuid from "react-uuid";
 
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import _ from "lodash";
@@ -28,216 +26,6 @@ import NewFormButton from "./Buttons/NewFormButton";
 import Timer from "react-compound-timer";
 
 // import { Overlay } from "react-portal-overlay";
-
-const Box = styled.div`
-  background: #fff;
-  grid-row: 2;
-  padding: 10px;
-  margin-bottom: 15px;
-  margin-right: 10px;
-  border-radius: 4px;
-  background-color: ${(props) => props.theme.colors.offWhite};
-  box-shadow: 0 4px 5px 0 rgba(100, 100, 100, 0.15);
-  height: ${(props) => {
-    if (props.height) {
-      let str = props.height.toString();
-      str += "px";
-      return str;
-    }
-    return null;
-  }};
-  overflow: ${(props) => {
-    if (props.height) {
-      return "auto";
-    }
-    return null;
-  }};
-  h3 {
-    padding: 0;
-    margin: 0 5px 10px 0;
-    color: ${(props) => props.theme.colors.darkBlue};
-    font-size: ${(props) => props.theme.fontSizes.small};
-  }
-`;
-
-const NewFormButtonStyle = styled.div`
-  display: flex;
-  justify-content: center;
-  align-content: center;
-`;
-
-const AllTasksBox = styled.div`
-  padding: 10px;
-  grid-row: 2;
-  margin-bottom: 15px;
-  border-radius: 4px;
-  
-  // background-color: ${(props) => props.theme.colors.offWhite};
-  background-color: inherit;
-  // box-shadow: 0 4px 6px 0 rgba(100, 100, 100, 0.15);
-
-  h2 {
-    padding: 0;
-    margin: 0 5px 10px 0;
-    text-align: center;
-    color: ${(props) => props.theme.colors.mediumGray};
-  }
-`;
-
-const StyledAgendaContainer = styled.div`
-  grid-column: 2 / span 5;
-  grid-row: 1;
-  padding: 10px;
-  @media (max-width: 900px) {
-    grid-column: 1 / span 12;
-    grid-row: 3;
-    border: 0;
-  }
-  h2 {
-    padding: 0;
-    margin: 0 5px 10px 0;
-    text-align: center;
-    color: ${(props) => props.theme.colors.mediumGray};
-  }
-`;
-
-const StyledTaskContainer = styled.div`
-  grid-column: 7 / span 5;
-  grid-row: 1;
-  min-height: 600px;
-  @media (max-width: 900px) {
-    grid-column: 1 / span 12;
-    grid-row: 2;
-    min-height: 50px;
-  }
-`;
-
-const Task = styled.div`
-  display: grid;
-  grid-gap: 10px;
-
-  grid-template-columns: repeat(8, 1fr);
-  grid-template-rows: 40px auto;
-  margin-bottom: 10px;
-  border: 0;
-  border-radius: 4px;
-  background: ${(props) => {
-    if (props.status === "complete") {
-      return props.theme.colors.offWhiteComplete;
-    }
-    if (props.unscheduled) {
-      return "#FCFEFF";
-    } else {
-      return "#FCFEFF";
-    }
-  }};
-  // box-shadow: 1px 4px 6px 0 rgba(100, 100, 100, 0.12);
-  box-shadow: ${(props) => {
-    if (props.status === "complete") {
-      return "0 2px 5px 0 rgba(100, 100, 100, 0.15) inset;";
-    } else {
-      return "0 4px 5px 0 rgba(100, 100, 100, 0.15);";
-    }
-  }};
-  padding: 10px;
-  height: ${(props) => {
-    if (props.height) {
-      let str = props.height.toString();
-      str += "px";
-      return str;
-    }
-    return "55px";
-  }};
-
-  .text {
-    grid-column: 2 / span 6;
-    display: grid;
-    grid-template-columns: repeat (3, 1fr);
-    margin-left: -10px;
-    padding: 10px 0;
-    align-self: center;
-    .task-title {
-      grid-row: 1;
-      grid-column: 1 / span 2;
-      margin: 5px 0;
-      color: ${(props) => props.theme.colors.darkGray};
-      font-size: ${(props) => props.theme.fontSizes.small};
-      overflow: hidden;
-      height: 18px;
-    }
-
-    .time {
-      grid-row: 2;
-      grid-columns: span 1;
-      padding-top: 10px;
-      color: ${(props) => props.theme.colors.darkGray};
-      font-size: ${(props) => props.theme.fontSizes.xsmall};
-      justify-self: center;
-
-      strong {
-        font-weight: 600;
-      }
-
-      .red {
-        color: red;
-      }
-    }
-  }
-
-  .completed {
-    text-decoration: line-through;
-  }
-
-  .toggleButtonWrapper {
-    grid-column: span 1;
-    height: 25px;
-    justify-self: center;
-    align-self: center;
-  }
-
-  .options {
-    grid-column: 8 / span 1;
-    display: grid;
-    grid-template-columns: 1;
-    grid-template-rows: 30px;
-
-    justify-items: end;
-
-    button {
-      grid-column: span 1;
-      padding: 0;
-      margin: 0;
-      background-color: inherit;
-      border: 0;
-      outline: none;
-      cursor: pointer;
-      height: 25px;
-
-      svg {
-        height: 25px;
-        width: 100%;
-        color: ${(props) => {
-          if (props.status === "complete") {
-            return props.theme.colors.mediumGray;
-          } else {
-            return props.theme.colors.mediumGray;
-          }
-        }};
-        &: hover {
-          color: ${(props) => props.theme.colors.primaryBlue};
-        }
-      }
-    }
-    .running {
-      svg {
-        color: ${(props) => "red"};
-        &: hover {
-          color: ${(props) => props.theme.colors.darkBlue};
-        }
-      }
-    }
-  }
-`;
 
 class TaskList extends React.Component {
   constructor(props) {
@@ -694,3 +482,213 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(TaskList);
+
+const Box = styled.div`
+  background: #fff;
+  grid-row: 2;
+  padding: 10px;
+  margin-bottom: 15px;
+  margin-right: 10px;
+  border-radius: 4px;
+  background-color: ${(props) => props.theme.colors.offWhite};
+  box-shadow: 0 4px 5px 0 rgba(100, 100, 100, 0.15);
+  height: ${(props) => {
+    if (props.height) {
+      let str = props.height.toString();
+      str += "px";
+      return str;
+    }
+    return null;
+  }};
+  overflow: ${(props) => {
+    if (props.height) {
+      return "auto";
+    }
+    return null;
+  }};
+  h3 {
+    padding: 0;
+    margin: 0 5px 10px 0;
+    color: ${(props) => props.theme.colors.darkBlue};
+    font-size: ${(props) => props.theme.fontSizes.small};
+  }
+`;
+
+const NewFormButtonStyle = styled.div`
+  display: flex;
+  justify-content: center;
+  align-content: center;
+`;
+
+const AllTasksBox = styled.div`
+  padding: 10px;
+  grid-row: 2;
+  margin-bottom: 15px;
+  border-radius: 4px;
+  
+  // background-color: ${(props) => props.theme.colors.offWhite};
+  background-color: inherit;
+  // box-shadow: 0 4px 6px 0 rgba(100, 100, 100, 0.15);
+
+  h2 {
+    padding: 0;
+    margin: 0 5px 10px 0;
+    text-align: center;
+    color: ${(props) => props.theme.colors.mediumGray};
+  }
+`;
+
+const StyledAgendaContainer = styled.div`
+  grid-column: 2 / span 5;
+  grid-row: 1;
+  padding: 10px;
+  @media (max-width: 900px) {
+    grid-column: 1 / span 12;
+    grid-row: 3;
+    border: 0;
+  }
+  h2 {
+    padding: 0;
+    margin: 0 5px 10px 0;
+    text-align: center;
+    color: ${(props) => props.theme.colors.mediumGray};
+  }
+`;
+
+const StyledTaskContainer = styled.div`
+  grid-column: 7 / span 5;
+  grid-row: 1;
+  min-height: 600px;
+  @media (max-width: 900px) {
+    grid-column: 1 / span 12;
+    grid-row: 2;
+    min-height: 50px;
+  }
+`;
+
+const Task = styled.div`
+  display: grid;
+  grid-gap: 10px;
+
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: 40px auto;
+  margin-bottom: 10px;
+  border: 0;
+  border-radius: 4px;
+  background: ${(props) => {
+    if (props.status === "complete") {
+      return props.theme.colors.offWhiteComplete;
+    }
+    if (props.unscheduled) {
+      return "#FCFEFF";
+    } else {
+      return "#FCFEFF";
+    }
+  }};
+  // box-shadow: 1px 4px 6px 0 rgba(100, 100, 100, 0.12);
+  box-shadow: ${(props) => {
+    if (props.status === "complete") {
+      return "0 2px 5px 0 rgba(100, 100, 100, 0.15) inset;";
+    } else {
+      return "0 4px 5px 0 rgba(100, 100, 100, 0.15);";
+    }
+  }};
+  padding: 10px;
+  height: ${(props) => {
+    if (props.height) {
+      let str = props.height.toString();
+      str += "px";
+      return str;
+    }
+    return "55px";
+  }};
+
+  .text {
+    grid-column: 2 / span 6;
+    display: grid;
+    grid-template-columns: repeat (3, 1fr);
+    margin-left: -10px;
+    padding: 10px 0;
+    align-self: center;
+    .task-title {
+      grid-row: 1;
+      grid-column: 1 / span 2;
+      margin: 5px 0;
+      color: ${(props) => props.theme.colors.darkGray};
+      font-size: ${(props) => props.theme.fontSizes.small};
+      overflow: hidden;
+      height: 18px;
+    }
+
+    .time {
+      grid-row: 2;
+      grid-columns: span 1;
+      padding-top: 10px;
+      color: ${(props) => props.theme.colors.darkGray};
+      font-size: ${(props) => props.theme.fontSizes.xsmall};
+      justify-self: center;
+
+      strong {
+        font-weight: 600;
+      }
+
+      .red {
+        color: red;
+      }
+    }
+  }
+
+  .completed {
+    text-decoration: line-through;
+  }
+
+  .toggleButtonWrapper {
+    grid-column: span 1;
+    height: 25px;
+    justify-self: center;
+    align-self: center;
+  }
+
+  .options {
+    grid-column: 8 / span 1;
+    display: grid;
+    grid-template-columns: 1;
+    grid-template-rows: 30px;
+
+    justify-items: end;
+
+    button {
+      grid-column: span 1;
+      padding: 0;
+      margin: 0;
+      background-color: inherit;
+      border: 0;
+      outline: none;
+      cursor: pointer;
+      height: 25px;
+
+      svg {
+        height: 25px;
+        width: 100%;
+        color: ${(props) => {
+          if (props.status === "complete") {
+            return props.theme.colors.mediumGray;
+          } else {
+            return props.theme.colors.mediumGray;
+          }
+        }};
+        &: hover {
+          color: ${(props) => props.theme.colors.primaryBlue};
+        }
+      }
+    }
+    .running {
+      svg {
+        color: ${(props) => "red"};
+        &: hover {
+          color: ${(props) => props.theme.colors.darkBlue};
+        }
+      }
+    }
+  }
+`;

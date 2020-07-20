@@ -342,6 +342,7 @@ module.exports = function (router) {
       };
 
       user.boxes.push(newBox);
+      user.boxOrder.push(newBox.title);
       user.save();
 
       return res.send(user.boxes);
