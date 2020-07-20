@@ -13,6 +13,6 @@ export default function (state = {}, action) {
     case GENERATE_FAKE_DATA:
       return { ...state, ...action.payload.data };
     default:
-      return { ...state };
+      return state;
   }
 }

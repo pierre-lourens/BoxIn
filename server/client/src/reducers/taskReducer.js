@@ -10,6 +10,6 @@ export default function (state = {}, action) {
     case ADD_TASK:
       return { ...state, ...action.payload.data };
     default:
-      return { ...state };
+      return state;
   }
 }

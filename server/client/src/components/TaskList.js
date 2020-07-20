@@ -255,14 +255,13 @@ class TaskList extends React.Component {
   componentDidMount() {
     this.setState({ boxes: this.props.boxes });
   }
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     // make our boxes from our data store
     console.log("this.props.task is", this.props.task);
     if (
       this.props.userId !== prevProps.userId ||
-      // this.prp
-      this.props.timer !== prevProps.timer
-      // this.props.userData.tasks !== prevProps.userData.tasks
+      this.props.timer !== prevProps.timer ||
+      this.props.task !== prevProps.task
     ) {
       this.props.getTasks(this.props.userId);
       this.props.getTaskBoxes(this.props.userId);

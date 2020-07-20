@@ -23,11 +23,6 @@ class UserMain extends React.Component {
     // }
   }
 
-  componentDidUpdate(prevProps) {
-    // this.props.checkForUser();
-    // if (this.props.histo)
-  }
-
   changeDemoBox = () => {
     this.setState({ showDemoBox: false });
   };
