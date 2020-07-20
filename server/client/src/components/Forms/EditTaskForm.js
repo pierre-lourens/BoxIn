@@ -107,13 +107,14 @@ class EditTaskForm extends React.Component {
     super(props);
 
     // get the initial values from props
-    const { estimatedTime, text, visibility } = this.props.task;
+    const { estimatedTime, text, visibility, tag } = this.props.task;
 
     this.state = {
       task: {
         estimatedTime,
         text,
         visibility,
+        tag,
       },
       session: {
         startDate: null,
@@ -170,6 +171,22 @@ class EditTaskForm extends React.Component {
           maxLength='80'
           onChange={(event) => {
             this.handleInputChange("text", event);
+          }}></input>
+      </React.Fragment>
+    );
+  };
+
+  renderTaskTagInput = () => {
+    return (
+      <React.Fragment>
+        <label>Add a tag:</label>
+        <input
+          type='text'
+          className='wide'
+          placeholder={`${this.props.task.tag}`}
+          maxLength='80'
+          onChange={(event) => {
+            this.handleInputChange("tag", event);
           }}></input>
       </React.Fragment>
     );
@@ -270,6 +287,7 @@ class EditTaskForm extends React.Component {
               Edit <span>"{this.props.task.text}"</span>
             </h1>
             <StyledInputDiv>{this.renderTaskTitleInput()}</StyledInputDiv>
+            <StyledInputDiv>{this.renderTaskTagInput()}</StyledInputDiv>
             <StyledInputDiv>{this.renderEstimatedTimeInput()}</StyledInputDiv>
             <ManualSessionDiv>
               {this.renderManualSessionInput()}
