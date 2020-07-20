@@ -6,9 +6,6 @@ import PauseIcon from "../../assets/PauseIcon";
 import styled from "styled-components";
 
 class ActiveTimerButton extends React.Component {
-  constructor(props) {
-    super(props);
-  }
   render() {
     return (
       <StyledDiv>

@@ -5,10 +5,6 @@ import googleButton from "../assets/googleButton.png";
 import Header from "./Header";
 
 class LoginPage extends React.Component {
-  constructor() {
-    super();
-  }
-
   render() {
     return (
       <React.Fragment>

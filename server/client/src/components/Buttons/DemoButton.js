@@ -5,10 +5,6 @@ import { generateFakeData, getTasks, getTaskBoxes } from "../../actions";
 import styled from "styled-components";
 
 class DemoButton extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   handleGenerateFakeDataClick = async () => {
     console.log("click and", this.props.userId);
 
@@ -29,13 +25,11 @@ class DemoButton extends React.Component {
       <StyledDemoButton>
         <h3>Welcome!</h3>
         <p>Feel free to demo!</p>
-        <a href='#' onClick={this.handleGenerateFakeDataClick}>
+        <button onClick={this.handleGenerateFakeDataClick}>
           Generate fake data
-        </a>
+        </button>
         <br />
-        <a href='#' onClick={this.props.changeDemoBox}>
-          Hide this box
-        </a>
+        <button onClick={this.props.changeDemoBox}>Hide this box</button>
       </StyledDemoButton>
     );
   }

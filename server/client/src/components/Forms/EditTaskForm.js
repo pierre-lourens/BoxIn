@@ -229,7 +229,7 @@ class EditTaskForm extends React.Component {
     const event = { target: { value: "disabled" } };
 
     await new Promise((resolve) => {
-      // this.handleInputChange("visibility", event);
+      this.handleInputChange("visibility", event);
 
       // we also need to update our boxes so that it doesn't try to render it
       // find which box the task is in

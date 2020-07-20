@@ -2,13 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Chart from "chart.js";
 
-import {
-  getDay,
-  parseISO,
-  addBusinessDays,
-  differenceInDays,
-  differenceInSeconds,
-} from "date-fns";
+import { getDay, parseISO, differenceInSeconds } from "date-fns";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 

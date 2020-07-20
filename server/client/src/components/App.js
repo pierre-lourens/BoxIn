@@ -5,7 +5,6 @@ import { Switch, Route } from "react-router-dom";
 import LoginPage from "./LoginPage";
 import UserMain from "./UserMain";
 import Reports from "./Reports";
-import SampleChart from "./Charts/LineGraph";
 
 function App() {
   return (
