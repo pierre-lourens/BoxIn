@@ -271,7 +271,7 @@ function mapStateToProps(state) {
 export default withRouter(connect(mapStateToProps)(AverageTimesPerDay));
 
 const GraphContainer = styled.div`
-  height: 450px;
+  height: 90%;
   @media (max-width: 900px) {
     height: 300px;
   }

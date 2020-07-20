@@ -455,7 +455,7 @@ module.exports = function (router) {
           task.estimatedTime = intervals[randomNumberForTimeEstimate];
 
           // time entries
-          for (let i = 0; i < 5; i++) {
+          for (let i = 0; i < 3; i++) {
             let timeEntry = new TimeEntry();
             timeEntry.active = false;
 

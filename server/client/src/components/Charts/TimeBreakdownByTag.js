@@ -87,13 +87,13 @@ class TimeBreakdownByTag extends React.Component {
         labels: labels,
         datasets: [
           {
-            label: "Average Completion Time",
+            label: "Average completion time",
             data: actualTimeAverage,
             fill: true,
             backgroundColor: "#3A5D9C",
           },
           {
-            label: "Estimated Completion Time",
+            label: "Average time estimation",
             data: estimatedTimeAverage,
             fill: true,
             backgroundColor: "rgba(83, 156, 42, 0.4)",

@@ -23,7 +23,7 @@ class ReportDescription extends React.Component {
       case "BoxScore":
         newTitle = "Box Score";
         newDescription =
-          "Watch your box score go up the more that you box in and complete tasks! Each time you track and a finish a task five minutes before the estimated time, earn 100 points. If you are five minutes over or less, you earn 50 points. Any new task earns 10 points and any completed task earns 20 points.";
+          "Watch your score go up! Each time you track and finish a task five minutes before the estimated time, earn 100 points. If you are five minutes over or less, you earn 50 points. New tasks earns 10 points and completed task earns 20 points.";
         break;
       case "LineGraph":
         newTitle = "Tasks Made & Completed";
