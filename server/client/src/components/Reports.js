@@ -83,6 +83,8 @@ class Reports extends Component {
           <StyledReportSwitcherContainer>
             <StyledBackgroundWrapper>
               <ReportsNav setCurrentGraph={this.setCurrentGraph} />
+            </StyledBackgroundWrapper>
+            <StyledBackgroundWrapper>
               <ReportDescription currentGraph={this.state.currentGraph} />
             </StyledBackgroundWrapper>
           </StyledReportSwitcherContainer>
@@ -150,6 +152,7 @@ const StyledReportSwitcherContainer = styled.div`
   ul {
     list-style: none;
     padding: 0;
+    margin: 0;
     border-top: 1px solid ${(props) => props.theme.colors.lightGray};
   }
 
@@ -171,7 +174,7 @@ const StyledReportSwitcherContainer = styled.div`
   }
 `;
 
-const StyledBackgroundWrapper = styled.div`
+const StyledBackgroundWrapperAbsolute = styled.div`
   background-color: ${(props) => props.theme.colors.evenWhiterThanOffWhite};
   box-shadow: 0 4px 5px 0 rgba(100, 100, 100, 0.15);
   border-radius: 4px;
@@ -184,6 +187,14 @@ const StyledBackgroundWrapper = styled.div`
     width: 100%;
     z-index: 22;
   }
+`;
+
+const StyledBackgroundWrapper = styled.div`
+  background-color: ${(props) => props.theme.colors.evenWhiterThanOffWhite};
+  box-shadow: 0 4px 5px 0 rgba(100, 100, 100, 0.15);
+  border-radius: 4px;
+  margin-bottom: 10px;
+  // padding-bottom: 15px;
 `;
 
 function mapStateToProps(state) {

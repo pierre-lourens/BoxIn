@@ -10,6 +10,10 @@ const ReportDescription = (props) => {
         title = "Tasks Made & Completed";
         description =
           "This report plots how many tasks you have added and completed over the past 14 days, including today.";
+      case "AverageTimesPerDay":
+        title = "Daily Time Trends";
+        description =
+          "This report shows the average tracked time per day and how it relates to completed and started tasks. All historical data is averaged.";
     }
 
     return (
