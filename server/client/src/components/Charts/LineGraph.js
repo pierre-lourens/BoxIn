@@ -24,7 +24,7 @@ class LineGraph extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.userData !== this.props.userData) {
+    if (this.props.userData.hasOwnProperty("tasks")) {
       this.buildChart();
     }
   }

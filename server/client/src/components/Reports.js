@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import styled from "styled-components";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import { getTasks, checkForUser } from "../actions";
+import { getTasks, checkForUser, getTaskBoxes } from "../actions";
 
 import LineGraph from "./Charts/LineGraph";
 import {
@@ -28,6 +28,7 @@ class Reports extends Component {
   componentDidUpdate(prevProps) {
     if (this.props.userId !== prevProps.userId) {
       this.props.getTasks(this.props.userId);
+      this.props.getTaskBoxes(this.props.userId); // in case we start on this page and navigate to the others
     }
   }
 
@@ -177,7 +178,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ getTasks, checkForUser }, dispatch);
+  return bindActionCreators({ getTasks, checkForUser, getTaskBoxes }, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Reports);
