@@ -20,9 +20,13 @@ class Reports extends Component {
     super(props);
     this.state = {
       labels: fourteenDayLabels,
-      currentGraph: "AverageTimesPerDay",
+      currentGraph: null,
     };
     this.props.checkForUser();
+  }
+
+  componentDidMount() {
+    this.setState({ currentGraph: "AverageTimesPerDay" });
   }
 
   componentDidUpdate(prevProps) {

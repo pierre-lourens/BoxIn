@@ -92,6 +92,7 @@ module.exports = function (router) {
     const task = new Task();
     task.text = req.body.task.text;
     task.user = req.body.userId;
+    task.visibility = "visible";
     task.save();
 
     // need to save it to the right user
@@ -482,9 +483,12 @@ module.exports = function (router) {
             timeEntry.save();
           }
 
-          let randomNumberForVisibility = getRandomIntInclusive(0, 2);
-          const visibilityOptions = ["disabled", "visible", "archived"];
-          task.visibility = visibilityOptions[randomNumberForVisibility];
+          let randomNumberForVisibility = getRandomIntInclusive(0, 10);
+          if (randomNumberForVisibility > 9) {
+            task.visibility = "visible";
+          } else {
+            task.visibility = "archived";
+          }
 
           user.tasks.push(task);
 

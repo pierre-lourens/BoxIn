@@ -260,7 +260,7 @@ class TaskList extends React.Component {
     console.log("this.props.task is", this.props.task);
     if (
       this.props.userId !== prevProps.userId ||
-      // this.prp
+      this.props.task._id !== prevProps.task._id ||
       this.props.timer !== prevProps.timer
       // this.props.userData.tasks !== prevProps.userData.tasks
     ) {
@@ -440,7 +440,7 @@ class TaskList extends React.Component {
     ) {
       return this.state.boxes.allTasks.taskIds.map((taskIdFromBox, index) => {
         const task = this.props.userData.tasks.find(
-          (task) => taskIdFromBox === task._id && task.visibility !== "archived"
+          (task) => taskIdFromBox == task._id && task.visibility !== "archived"
         );
 
         if (!task) {

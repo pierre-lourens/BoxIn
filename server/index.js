@@ -70,6 +70,26 @@ app.get("/api/auth/google", googleAuth);
 
 app.get("/api/auth/google/callback", googleAuth, (req, res) => {
   console.log("Input validated via Google");
+  console.log("req.user", req.user);
+
+  User.findById(req.user._id).exec((err, user) => {
+    // check to see if they have no boxes other than allTasks
+    console.log(user.boxes.length);
+
+    // if ((user.boxes.length = 1)) {
+    //   const defaultBox = {
+    //     title: "Default 1 hour box (Edit or Delete!)",
+    //     taskIds: [],
+    //     time: 60,
+    //   };
+    //   user.boxes.push(defaultBox);
+    //   user.boxOrder.push(defaultBox.title);
+    // }
+
+    user.save();
+  });
+
+  // add a default box for them to use
 
   res.redirect("http://localhost:3000/me");
 });
