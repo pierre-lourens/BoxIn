@@ -440,7 +440,7 @@ class TaskList extends React.Component {
     ) {
       return this.state.boxes.allTasks.taskIds.map((taskIdFromBox, index) => {
         const task = this.props.userData.tasks.find(
-          (task) => taskIdFromBox === task._id
+          (task) => taskIdFromBox === task._id && task.visibility !== "archived"
         );
 
         if (!task) {
@@ -588,7 +588,9 @@ class TaskList extends React.Component {
                                 ? this.state.boxes[boxTitle].taskIds.map(
                                     (taskIdFromBox, index) => {
                                       const task = this.props.userData.tasks.find(
-                                        (task) => taskIdFromBox === task._id
+                                        (task) =>
+                                          taskIdFromBox === task._id &&
+                                          task.visibility !== "archived"
                                       );
                                       let pixels = 55;
                                       if (task.estimatedTime) {
