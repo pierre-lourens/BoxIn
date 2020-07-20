@@ -16,6 +16,8 @@ import ReportsNav from "./ReportsNav";
 import ReportDescription from "./ReportDescription";
 import TypesOfTasks from "./Charts/TypesOfTasks";
 import BoxScore from "./Charts/BoxScore";
+import TypicalTimePerTag from "./Charts/TotalTimeByTag";
+import TimeBreakdownByTag from "./Charts/TimeBreakdownByTag";
 
 class Reports extends Component {
   constructor(props) {
@@ -48,6 +50,26 @@ class Reports extends Component {
               <h1>Tasks Over Time</h1>
             </header>
             <LineGraph data={this.props.userData} labels={this.state.labels} />
+          </React.Fragment>
+        );
+      case "TimeBreakdownByTag":
+        return (
+          <React.Fragment>
+            <header>
+              {/* <img src={chartIcon} alt='bar chart icon' /> */}
+              <h1>Average Times (Estimated vs. Atual) By Tag</h1>
+            </header>
+            <TimeBreakdownByTag />
+          </React.Fragment>
+        );
+      case "TimesByTag":
+        return (
+          <React.Fragment>
+            <header>
+              {/* <img src={chartIcon} alt='bar chart icon' /> */}
+              <h1>Total Times Per Tag</h1>
+            </header>
+            <TypicalTimePerTag />
           </React.Fragment>
         );
       case "AverageTimesPerDay":
