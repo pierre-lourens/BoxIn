@@ -6,11 +6,7 @@ import { getTasks, checkForUser, getTaskBoxes } from "../actions";
 
 import LineGraph from "./Charts/LineGraph";
 import AverageTimesPerDay from "./Charts/AverageTimesPerDay";
-import {
-  managerData,
-  fourteenDayLabels,
-  nationalAverageData,
-} from "./MockData";
+import { fourteenDayLabels } from "./MockData";
 import Header from "./Header";
 import ReportsNav from "./ReportsNav";
 import ReportDescription from "./ReportDescription";
@@ -120,7 +116,7 @@ class Reports extends Component {
 
   render() {
     console.log("props on render of reports is", this.props);
-    const { data, labels } = this.state;
+
     return (
       <React.Fragment>
         <Header />
@@ -219,21 +215,6 @@ const StyledReportSwitcherContainer = styled.div`
       color: ${(props) => props.theme.colors.primaryBlue};
       font-weight: 600;
     }
-  }
-`;
-
-const StyledBackgroundWrapperAbsolute = styled.div`
-  background-color: ${(props) => props.theme.colors.evenWhiterThanOffWhite};
-  box-shadow: 0 4px 5px 0 rgba(100, 100, 100, 0.15);
-  border-radius: 4px;
-  // padding-bottom: 15px;
-
-  position: relative;
-  &: inner {
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    z-index: 22;
   }
 `;
 

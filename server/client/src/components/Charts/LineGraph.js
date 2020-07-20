@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Chart from "chart.js";
 
-import { toDate, differenceInDays, parseISO, isDate } from "date-fns";
+import { differenceInDays, parseISO } from "date-fns";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
@@ -104,7 +104,7 @@ class LineGraph extends React.Component {
 
   buildChart = () => {
     const myChartRef = this.chartRef.current.getContext("2d");
-    const { data, average, labels } = this.props;
+    const { labels } = this.props;
 
     const chartData = this.calculateTasksCompleted();
     console.log("chartData is", chartData);

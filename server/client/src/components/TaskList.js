@@ -8,18 +8,15 @@ import {
   sendTaskBoxes,
   getTaskBoxes,
   checkForUser,
-  addBox,
 } from "../actions";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import uuid from "react-uuid";
 
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import _ from "lodash";
-import { parseISO, differenceInSeconds } from "date-fns";
 
 import ActiveTimerButton from "./Buttons/ActiveTimerButton";
-import DemoButton from "./Buttons/DemoButton";
+
 import InactiveTimerButton from "./Buttons/InactiveTimerButton";
 import EmptyCircle from "./Buttons/EmptyCircleButton";
 import CheckCircle from "./Buttons/CheckCircle";

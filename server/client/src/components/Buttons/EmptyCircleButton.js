@@ -36,7 +36,7 @@ const EmptyCircle = (props) => {
 
       // check if last is actively running
       const foundTimer = props.userData.timeEntries.find(
-        (timeEntry) => timeEntry._id == last
+        (timeEntry) => timeEntry._id === last
       );
 
       if (foundTimer && foundTimer.active) {
@@ -52,7 +52,7 @@ const EmptyCircle = (props) => {
   };
   return (
     <Button onClick={handleCompleteTask}>
-      <img src={EmptyCircleIcon} />
+      <img src={EmptyCircleIcon} alt='empty circle icon' />
     </Button>
   );
 };

@@ -1,7 +1,7 @@
 import React from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import { generateFakeData } from "../../actions";
+import { generateFakeData, getTasks, getTaskBoxes } from "../../actions";
 import styled from "styled-components";
 
 class DemoButton extends React.Component {
@@ -9,13 +9,22 @@ class DemoButton extends React.Component {
     super(props);
   }
 
-  handleGenerateFakeDataClick = () => {
+  handleGenerateFakeDataClick = async () => {
     console.log("click and", this.props.userId);
-    this.props.generateFakeData(this.props.userId);
+
+    console.log("start waiting");
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        this.props.generateFakeData(this.props.userId);
+        resolve();
+      }, 1000);
+    });
+    console.log("done waiting");
   };
 
   render() {
     console.log("props on render of DemoButton are", this.props);
+
     return (
       <StyledDemoButton>
         <h3>Welcome!</h3>
@@ -33,11 +42,14 @@ class DemoButton extends React.Component {
 }
 
 function mapStateToProps(state) {
-  return { userId: state.user._id };
+  return { userId: state.user._id, userData: state.userData };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({ generateFakeData }, dispatch);
+  return bindActionCreators(
+    { generateFakeData, getTasks, getTaskBoxes },
+    dispatch
+  );
 }
 
 const StyledDemoButton = styled.div`

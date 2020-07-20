@@ -10,6 +10,10 @@ export default function (state = {}, action) {
     case ADD_TASK:
       return action.payload.data;
     case GENERATE_FAKE_DATA:
+      console.log(
+        "action payload for generate fake data in task reducer is",
+        action.payload
+      );
       return action.payload.data.tasks[0];
     default:
       return state;

@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Chart from "chart.js";
 
-import { parseISO, differenceInDays, differenceInMinutes } from "date-fns";
+import { parseISO, differenceInDays } from "date-fns";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 

@@ -1,8 +1,4 @@
-import {
-  SEND_TASK_BOXES,
-  GET_TASKS,
-  GENERATE_FAKE_DATA,
-} from "../actions/index";
+import { GET_TASKS, GENERATE_FAKE_DATA } from "../actions/index";
 
 // by default, state is an array of tasks
 
@@ -11,7 +7,7 @@ export default function (state = {}, action) {
     case GET_TASKS:
       return action.payload.data;
     case GENERATE_FAKE_DATA:
-      return action.payload.data;
+      return action.payload.data || state;
     default:
       return state;
   }

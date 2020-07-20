@@ -4,7 +4,6 @@ import { editTask, removeTaskFromBox, sendSession } from "../../actions";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import DateTimePicker from "react-datetime-picker";
-import { parseISO } from "date-fns";
 
 const EditTaskFormContainer = styled.div`
   display: block;
@@ -297,7 +296,7 @@ class EditTaskForm extends React.Component {
           <StyledButtonGroup>
             <button
               type='button'
-              class='delete'
+              className='delete'
               onClick={(event) => {
                 this.handleDeleteTask(event);
               }}>

@@ -50,6 +50,10 @@ class ReportDescription extends React.Component {
         newDescription =
           "This report shows the proportion of tasks that you have created per tag";
         break;
+      default:
+        newTitle = "chart found";
+        newDescription = "This should not show up";
+        break;
     }
 
     this.setState({ title: newTitle });

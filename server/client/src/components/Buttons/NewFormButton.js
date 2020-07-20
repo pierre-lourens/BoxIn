@@ -38,10 +38,6 @@ const Button = styled.button`
   }
 `;
 
-const ButtonText = styled.div`
-  margin: 0 1rem;
-`;
-
 const Backdrop = styled("div")`
   position: fixed;
   z-index: 1040;

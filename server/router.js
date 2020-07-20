@@ -153,7 +153,7 @@ module.exports = function (router) {
         text,
         visibility,
         weight,
-        tags,
+        tag,
         dueDate,
       } = req.body.task;
 
@@ -162,7 +162,7 @@ module.exports = function (router) {
       task.text = text;
       task.visibility = visibility;
       task.weight = weight;
-      task.tags = tags;
+      task.tags = tag;
       task.dueDate = dueDate;
 
       task.save();
