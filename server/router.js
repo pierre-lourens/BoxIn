@@ -460,7 +460,7 @@ module.exports = function (router) {
             timeEntry.active = false;
 
             let day = task.updatedAt;
-            let dayStartAdd = addMinutes(day, getRandomIntInclusive(0, 25));
+            let dayStartAdd = addMinutes(day, getRandomIntInclusive(0, 15));
             dayStartAdd = addSeconds(day, getRandomIntInclusive(0, 60));
             timeEntry.startDate = dayStartAdd;
 

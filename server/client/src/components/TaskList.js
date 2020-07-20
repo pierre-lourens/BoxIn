@@ -652,7 +652,6 @@ class TaskList extends React.Component {
                   {this.renderTaskCards()}
                   {/* {provided.placeholder} */}
                 </AllTasksBox>
-                <DemoButton />
               </StyledTaskContainer>
             )}
           </Droppable>
