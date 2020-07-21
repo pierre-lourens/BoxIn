@@ -204,35 +204,63 @@ class AverageTimesPerDay extends React.Component {
         labels: daysArray,
         datasets: [
           {
-            label: "Number of tasks started",
-            data: startedTasksArray,
-            fill: true,
-
-            backgroundColor: "#3A5D9C",
-          },
-          {
-            label: "Number of tasks completed",
-            data: completedTasksArray,
-            fill: true,
-            backgroundColor: "#9C7C3A",
-            yAxisID: "left-y-axis",
-          },
-          {
             label: "Average tracked time per day",
             data: averageTimeArray,
             fill: true,
             type: "line",
+            lineTension: 0.3,
             yAxisID: "right-y-axis",
-            bezierCurve: true,
-            borderColor: "#9C7C3A",
+            borderColor: "#3A404D",
+            backgroundColor: "rgba(0, 0, 0, 0.1)",
+          },
+          {
+            label: "Tasks started",
+            data: startedTasksArray,
+            fill: true,
+            backgroundColor: "#E8D53F",
+          },
+          {
+            label: "Tasks completed",
+            data: completedTasksArray,
+            fill: true,
+            backgroundColor: "#3A5D9C",
+            yAxisID: "left-y-axis",
           },
         ],
       },
       options: {
         scales: {
+          xAxes: [
+            {
+              scaleLabel: {
+                display: true,
+                labelString: "Day of the week",
+                fontSize: 16,
+              },
+            },
+          ],
           yAxes: [
-            { id: "left-y-axis", type: "linear", position: "left" },
-            { id: "right-y-axis", type: "linear", position: "right" },
+            {
+              id: "left-y-axis",
+              type: "linear",
+              position: "left",
+              scaleLabel: {
+                display: true,
+                labelString: "Average Number of tasks",
+                fontSize: 16,
+              },
+            },
+            {
+              id: "right-y-axis",
+              type: "linear",
+              position: "right",
+              gridLines: { display: false },
+              scaleLabel: {
+                display: true,
+                labelString: "Average tracked time per day",
+                fontSize: 16,
+              },
+            },
           ],
         },
         responsive: true,
@@ -265,7 +293,7 @@ function mapStateToProps(state) {
 export default withRouter(connect(mapStateToProps)(AverageTimesPerDay));
 
 const GraphContainer = styled.div`
-  height: 500px;
+  height: 540px;
   @media (max-width: 900px) {
     height: 300px;
   }

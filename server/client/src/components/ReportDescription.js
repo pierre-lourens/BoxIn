@@ -23,10 +23,10 @@ class ReportDescription extends React.Component {
       case "BoxScore":
         newTitle = "Box Score";
         newDescription =
-          "Watch your score go up! Each time you track and finish a task five minutes before the estimated time, earn 100 points. If you are five minutes over or less, you earn 50 points. New tasks earns 10 points and completed task earns 20 points.";
+          "If you track and finish a task 5 minutes before the estimated time, you earn 100 points. If you are 5 minutes over or less, you earn 50 points. If your actual time is 20 minutes or more different than your estimate, you LOSE 50 points. New tasks earns 10 points and completed task earns 20 points.";
         break;
       case "TimeBreakdownByTag":
-        newTitle = "Average Times (Est. vs Annual) by tag";
+        newTitle = "Average Times (Estimated vs Actual)";
         newDescription =
           "To help you review and plan better, check out which types of tasks you under or overestimate.";
         break;
@@ -46,9 +46,9 @@ class ReportDescription extends React.Component {
           "This report shows the average tracked time per day and how it relates to completed and started tasks. All historical data is averaged.";
         break;
       case "TypesOfTasks":
-        newTitle = "Types of Tasks";
+        newTitle = "Types of Task You Do";
         newDescription =
-          "This report shows the proportion of tasks that you have created per tag";
+          "This report shows the respective proportion of tasks in your database that match a given tag. This reflects the pure number of tasks, not the time spent.";
         break;
       default:
         newTitle = "chart found";

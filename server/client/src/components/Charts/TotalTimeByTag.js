@@ -9,7 +9,7 @@ let myLineChart;
 
 //--Chart Style Options--//
 Chart.defaults.global.defaultFontFamily = "'PT Sans', sans-serif";
-Chart.defaults.global.legend.display = true;
+
 Chart.defaults.global.elements.line.tension = 0;
 //--Chart Style Options--//
 
@@ -86,6 +86,18 @@ class TotalTimeByTag extends React.Component {
         ],
       },
       options: {
+        legend: { display: false },
+        scales: {
+          xAxes: [
+            {
+              scaleLabel: {
+                display: true,
+                labelString: "Time tracked (minutes)",
+                fontSize: 16,
+              },
+            },
+          ],
+        },
         responsive: true,
         maintainAspectRatio: false,
         layout: {
@@ -116,7 +128,7 @@ function mapStateToProps(state) {
 export default withRouter(connect(mapStateToProps)(TotalTimeByTag));
 
 const GraphContainer = styled.div`
-  height: 450px;
+  height: 540px;
   @media (max-width: 900px) {
     height: 300px;
   }

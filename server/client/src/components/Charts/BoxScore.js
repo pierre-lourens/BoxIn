@@ -9,9 +9,11 @@ import { withRouter } from "react-router-dom";
 let myLineChart;
 
 //--Chart Style Options--//
-Chart.defaults.global.defaultFontFamily = "'PT Sans', sans-serif";
+Chart.defaults.global.defaultFontFamily = `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif`;
 Chart.defaults.global.legend.display = true;
 Chart.defaults.global.elements.line.tension = 0;
+
 //--Chart Style Options--//
 
 // this graph will show the average cumulative average estimated time and
@@ -71,6 +73,8 @@ class BoxScore extends React.Component {
           } else if (Math.abs(diff) <= 5) {
             console.log("yep!!");
             chartData.earnedOnDay[daysAgo] += 50;
+          } else if (Math.abs(diff) >= 20) {
+            chartData.earnedOnDay[daysAgo] -= 50;
           }
         }
 
@@ -138,29 +142,72 @@ class BoxScore extends React.Component {
         labels: daysArray,
         datasets: [
           {
+            label: "Total Score",
+            data: totalsArray,
+            lineTension: 0.3,
+            type: "line",
+            fill: false,
+            backgroundColor: "rgba(0, 0, 0, 0.1)",
+            borderColor: "rgba(83, 156, 42, 1)",
+            yAxisID: "right-y-axis",
+          },
+          {
             label: "Daily Score",
             data: scoreArray,
             fill: true,
             backgroundColor: "#3A5D9C",
             yAxisID: "left-y-axis",
-          },
-          {
-            label: "Total Score",
-            data: totalsArray,
-            fill: true,
-            type: "line",
-            backgroundColor: "rgba(83, 156, 42, 0.4)",
-            borderColor: "rgba(83, 156, 42, 1)",
-            // backgroundColor: "539C2A",
-            yAxisID: "right-y-axis",
+            barPercentage: 1,
           },
         ],
       },
       options: {
         scales: {
+          xAxes: [
+            {
+              gridLines: { display: true },
+              ticks: {
+                beginAtZero: true,
+              },
+              scaleLabel: {
+                display: true,
+                labelString: "Number of Days Ago",
+                fontSize: 16,
+              },
+            },
+          ],
           yAxes: [
-            { id: "left-y-axis", type: "linear", position: "left" },
-            { id: "right-y-axis", type: "linear", position: "right" },
+            {
+              scaleLabel: {
+                display: true,
+                labelString: "Daily Points",
+                fontSize: 16,
+              },
+              id: "left-y-axis",
+              type: "linear",
+              position: "left",
+              gridLines: {
+                zeroLineWidth: 2,
+                zeroLineColor: "#2C292E",
+                color: "transparent",
+                display: true,
+                drawBorder: false,
+              },
+            },
+            {
+              ticks: {
+                beginAtZero: true,
+              },
+              gridLines: { display: false },
+              scaleLabel: {
+                display: true,
+                labelString: "Total Points",
+                fontSize: 16,
+              },
+              id: "right-y-axis",
+              type: "linear",
+              position: "right",
+            },
           ],
         },
         responsive: true,
@@ -193,7 +240,7 @@ function mapStateToProps(state) {
 export default withRouter(connect(mapStateToProps)(BoxScore));
 
 const GraphContainer = styled.div`
-  height: 600px;
+  height: 540px;
   @media (max-width: 900px) {
     height: 300px;
   }

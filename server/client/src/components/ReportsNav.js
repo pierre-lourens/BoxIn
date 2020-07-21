@@ -12,14 +12,14 @@ const ReportsNav = ({ setCurrentGraph }) => {
       <ul>
         <li onClick={() => handleClick("BoxScore")}>Box Score</li>
         <li onClick={() => handleClick("TimeBreakdownByTag")}>
-          Average Times (Est. vs Atual) By Tag
+          Average Times By Tag
         </li>
         <li onClick={() => handleClick("TimesByTag")}>Total Times By Tag</li>
         <li onClick={() => handleClick("LineGraph")}>
-          Tasks Made & Completed (Last 14 Days)
+          Task Busyness (Last 14 days)
         </li>
         <li onClick={() => handleClick("AverageTimesPerDay")}>
-          Daily Time Trends
+          Trends Over Time per Day of the Week
         </li>
         <li onClick={() => handleClick("TypesOfTasks")}>Types of Tasks</li>
       </ul>

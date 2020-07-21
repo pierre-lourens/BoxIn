@@ -508,7 +508,6 @@ module.exports = function (router) {
           if (alreadyThere === -1) {
             const allTasksBox = { title: "allTasks", taskIds: [] };
             user.boxes.push(allTasksBox);
-            user.save();
           }
 
           const allTasksIndex = user.boxes.findIndex(
@@ -521,7 +520,7 @@ module.exports = function (router) {
 
           task.save();
         }
-
+        user.save();
         console.log("now user is", user);
         return res.send(user);
       });

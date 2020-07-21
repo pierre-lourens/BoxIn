@@ -8,9 +8,11 @@ import { withRouter } from "react-router-dom";
 let myLineChart;
 
 //--Chart Style Options--//
-Chart.defaults.global.defaultFontFamily = "'PT Sans', sans-serif";
+Chart.defaults.global.defaultFontFamily = `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif`;
 Chart.defaults.global.legend.display = true;
 Chart.defaults.global.elements.line.tension = 0;
+Chart.defaults.global.elements.showLines = false;
 //--Chart Style Options--//
 
 // this graph will show the average cumulative average estimated time and
@@ -100,6 +102,17 @@ class TimeBreakdownByTag extends React.Component {
         ],
       },
       options: {
+        scales: {
+          xAxes: [
+            {
+              scaleLabel: {
+                display: true,
+                labelString: "Average time (minutes)",
+                fontSize: 16,
+              },
+            },
+          ],
+        },
         responsive: true,
         maintainAspectRatio: false,
         layout: {
@@ -130,7 +143,7 @@ function mapStateToProps(state) {
 export default withRouter(connect(mapStateToProps)(TimeBreakdownByTag));
 
 const GraphContainer = styled.div`
-  height: 450px;
+  height: 540px;
   @media (max-width: 900px) {
     height: 300px;
   }

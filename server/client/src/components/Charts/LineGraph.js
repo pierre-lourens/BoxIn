@@ -124,7 +124,13 @@ class LineGraph extends React.Component {
     createdArray.reverse();
     completedArray.reverse();
 
+    const average = [];
+    for (let i = 0; i < createdArray.length; i++) {
+      average[i] = (createdArray[i] + completedArray[i]) / 2;
+    }
+
     console.log("created array is", createdArray);
+    console.log("average array is", average);
     console.log("completedArray  is", completedArray);
 
     if (typeof myLineChart !== "undefined") myLineChart.destroy();
@@ -136,22 +142,54 @@ class LineGraph extends React.Component {
         labels: labels,
         datasets: [
           {
-            label: "Tasks created",
+            label: "Average of completed & created",
+            data: average,
+            fill: true,
+            type: "line",
+            lineTension: 0.3,
+            borderColor: "#3A404D",
+            backgroundColor: "rgba(0, 0, 0, 0.1)",
+          },
+          {
+            label: "Tasks started",
             data: createdArray,
             fill: true,
-            borderColor: "#4F3A0D",
+            type: "bar",
+            borderColor: "#E8D53F",
+            backgroundColor: "#E8D53F",
           },
           {
             label: "Tasks completed",
             data: completedArray,
             fill: true,
+            type: "bar",
             borderColor: "#3A5D9C",
-            backgroundColor: "rgba(83, 156, 42, 0.4)",
+            backgroundColor: "#3A5D9C",
           },
         ],
       },
       options: {
         responsive: true,
+        scales: {
+          xAxes: [
+            {
+              scaleLabel: {
+                display: true,
+                labelString: "Number of days ago",
+                fontSize: 16,
+              },
+            },
+          ],
+          yAxes: [
+            {
+              scaleLabel: {
+                display: true,
+                labelString: "Number of tasks",
+                fontSize: 16,
+              },
+            },
+          ],
+        },
         maintainAspectRatio: false,
         layout: {
           padding: {
@@ -181,7 +219,7 @@ function mapStateToProps(state) {
 export default withRouter(connect(mapStateToProps)(LineGraph));
 
 const GraphContainer = styled.div`
-  height: 90%;
+  height: 540px;
   @media (max-width: 900px) {
     height: 300px;
   }

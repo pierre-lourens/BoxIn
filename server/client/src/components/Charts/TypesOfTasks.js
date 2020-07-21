@@ -67,7 +67,7 @@ class TypesOfTasks extends React.Component {
     if (typeof myLineChart !== "undefined") myLineChart.destroy();
 
     myLineChart = new Chart(myChartRef, {
-      type: "pie",
+      type: "polarArea",
       data: {
         //Bring in data
         labels: tags,
@@ -85,6 +85,9 @@ class TypesOfTasks extends React.Component {
               "#3F4F19",
               "#4F3A0D",
               "#E8D53F",
+              "#E8D53F",
+              "#E8D53F",
+              "#E8D53F",
             ],
           },
         ],
@@ -92,6 +95,13 @@ class TypesOfTasks extends React.Component {
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        legend: {
+          labels: {
+            usePointStyle: true,
+            labelString: "Total Points",
+            fontSize: 14,
+          },
+        },
         layout: {
           padding: {
             top: 5,
@@ -120,7 +130,7 @@ function mapStateToProps(state) {
 export default withRouter(connect(mapStateToProps)(TypesOfTasks));
 
 const GraphContainer = styled.div`
-  height: 90%;
+  height: 540px;
   @media (max-width: 900px) {
     height: 300px;
   }

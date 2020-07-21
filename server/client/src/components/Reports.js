@@ -43,7 +43,7 @@ class Reports extends Component {
           <React.Fragment>
             <header>
               {/* <img src={chartIcon} alt='bar chart icon' /> */}
-              <h1>Tasks Over Time</h1>
+              <h1>Task Busyness (Last 14 days)</h1>
             </header>
             <LineGraph data={this.props.userData} labels={this.state.labels} />
           </React.Fragment>
@@ -53,7 +53,7 @@ class Reports extends Component {
           <React.Fragment>
             <header>
               {/* <img src={chartIcon} alt='bar chart icon' /> */}
-              <h1>Average Times (Estimated vs. Atual) By Tag</h1>
+              <h1>Average Times By Tag</h1>
             </header>
             <TimeBreakdownByTag />
           </React.Fragment>
@@ -73,7 +73,7 @@ class Reports extends Component {
           <React.Fragment>
             <header>
               {/* <img src={chartIcon} alt='bar chart icon' /> */}
-              <h1>Daily Time Trends</h1>
+              <h1>Trends Over Time: Typical Days</h1>
             </header>
             <AverageTimesPerDay />
           </React.Fragment>
@@ -103,7 +103,7 @@ class Reports extends Component {
           <React.Fragment>
             <header>
               {/* <img src={chartIcon} alt='bar chart icon' /> */}
-              <h1>Tasks Over Time</h1>
+              <h1>Tasks Over the Past Two Weeks</h1>
             </header>
           </React.Fragment>
         );
@@ -148,9 +148,10 @@ const StyledBodyContainer = styled.div`
 const StyledGraphContainer = styled.div`
   background-color: ${(props) => props.theme.colors.evenWhiterThanOffWhite};
   padding: 10px 20px;
+  margin-bottom: 20px;
   border-radius: 4px;
   box-shadow: 0 4px 5px 0 rgba(100, 100, 100, 0.15);
-  grid-column: 2 / span 8;
+  grid-column: 2 / span 7;
   @media (max-width: 900px) {
     grid-column: 1 / span 12;
     grid-row: 1;
@@ -164,7 +165,7 @@ const StyledGraphContainer = styled.div`
 `;
 
 const StyledReportSwitcherContainer = styled.div`
-  grid-column: 10 / span 2;
+  grid-column: 9 / span 3;
   display: grid;
   align-items: start;
   grid-template-columns: 1;
