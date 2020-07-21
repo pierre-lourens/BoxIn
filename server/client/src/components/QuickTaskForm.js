@@ -88,7 +88,9 @@ class QuickTaskForm extends React.Component {
     this.props.addTask(this.state.task, this.props.userId);
     // this.props.getTasks(this.props.userId);
     // this.props.getTaskBoxes(this.props.userId);
-    this.setState({ task: { text: "", box: "allTasks" } });
+    this.setState({
+      task: { text: "", box: "allTasks", tag: "uncategorized" },
+    });
   }
 
   handleFormChange(event) {
@@ -96,7 +98,9 @@ class QuickTaskForm extends React.Component {
       this.handleTaskSubmit();
     }
 
-    this.setState({ task: { text: event.target.value, box: "allTasks" } });
+    this.setState({
+      task: { text: event.target.value, box: "allTasks", tag: "uncategorized" },
+    });
   }
 
   render() {

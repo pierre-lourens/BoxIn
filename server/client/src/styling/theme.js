@@ -12,6 +12,7 @@ const theme = {
     darkestGray: "#3A404D",
     darkGray: "#545C6E",
     mediumGray: "#919499",
+    yellow: "#E8DF97",
     offWhiteComplete: "#E6EAF2",
     offWhite: "#E9EDF5",
     evenWhiterThanOffWhite: "#F6FBFF",

@@ -16,6 +16,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import _ from "lodash";
 
 import ActiveTimerButton from "./Buttons/ActiveTimerButton";
+import Tag from "../assets/Tag";
 
 import InactiveTimerButton from "./Buttons/InactiveTimerButton";
 import EmptyCircle from "./Buttons/EmptyCircleButton";
@@ -49,6 +50,30 @@ const Box = styled.div`
     }
     return null;
   }};
+
+  .box-title {
+    display: grid;
+    grid-template-columns: 90px auto;
+    .box-title-text {
+      grid-column: 2;
+      grid-row: 1;
+    }
+    .box-title-icon {
+      grid-column: 1;
+      grid-row: 1;
+
+      align-self: end;
+    }
+    svg {
+      justify-self: end;
+      height: 25px;
+      width: 100%;
+      color: ${(props) => props.theme.colors.yellow} !important;
+    }
+  }
+  .box-status {
+    color: ${(props) => props.theme.colors.mediumGray};
+  }
   h3 {
     padding: 0;
     margin: 0 5px 10px 0;
@@ -111,10 +136,10 @@ const StyledTaskContainer = styled.div`
 
 const Task = styled.div`
   display: grid;
-  grid-gap: 10px;
-
+  grid-gap: 5px;
   grid-template-columns: repeat(8, 1fr);
-  grid-template-rows: 40px auto;
+  grid-template-rows: 30px 20px 20px;
+  align-items: top;
   margin-bottom: 10px;
   border: 0;
   border-radius: 4px;
@@ -146,38 +171,81 @@ const Task = styled.div`
     return "55px";
   }};
 
+  .colfill {
+    grid-column: 1 / span 1;
+    grid-row: 3;
+  }
+
+  .tag {
+    grid-row: 2;
+    grid-column: 2 / span 6;
+    margin-left: -10px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 30px auto;
+    align-items: start;
+    color: ${(props) => props.theme.colors.darkGray};
+    font-size: ${(props) => props.theme.fontSizes.xsmall};
+    justify-self: center;
+
+    .icon {
+      grid-column: 1 / span 1;
+    }
+    .tag-text {
+      grid-column: 2;
+      margin-top: 2px;
+      justify-self: start;
+      margin-left: -5px;
+      color: ${(props) => props.theme.colors.mediumGray};
+    }
+
+    strong {
+      font-weight: 600;
+    }
+
+    svg {
+      height: 20px;
+
+      color: ${(props) => props.theme.colors.yellow};
+    }
+  }
+  .time {
+    grid-row: 3;
+    grid-column: span 3;
+    // text-align: center;
+    color: ${(props) => props.theme.colors.mediumGray};
+    font-size: ${(props) => props.theme.fontSizes.xsmall};
+    justify-items: center;
+
+    strong {
+      font-weight: 600;
+      color: ${(props) => props.theme.colors.darkGray};
+    }
+
+    svg {
+      height: 25px;
+      width: 100%;
+      color: ${(props) => props.theme.colors.yellow};
+    }
+
+    .red {
+      color: #cf7a38;
+    }
+  }
+
   .text {
+    grid-row: 1;
     grid-column: 2 / span 6;
     display: grid;
-    grid-template-columns: repeat (3, 1fr);
     margin-left: -10px;
-    padding: 10px 0;
-    align-self: center;
+    // padding: 10px 0;
+
     .task-title {
-      grid-row: 1;
-      grid-column: 1 / span 2;
       margin: 5px 0;
       color: ${(props) => props.theme.colors.darkGray};
       font-size: ${(props) => props.theme.fontSizes.small};
       overflow: hidden;
       height: 18px;
-    }
-
-    .time {
-      grid-row: 2;
-      grid-columns: span 1;
-      padding-top: 10px;
-      color: ${(props) => props.theme.colors.darkGray};
-      font-size: ${(props) => props.theme.fontSizes.xsmall};
-      justify-self: center;
-
-      strong {
-        font-weight: 600;
-      }
-
-      .red {
-        color: red;
-      }
     }
   }
 
@@ -186,7 +254,8 @@ const Task = styled.div`
   }
 
   .toggleButtonWrapper {
-    grid-column: span 1;
+    grid-column: 1 / span 1;
+    grid-row: 1;
     height: 25px;
     justify-self: center;
     align-self: center;
@@ -194,6 +263,7 @@ const Task = styled.div`
 
   .options {
     grid-column: 8 / span 1;
+    grid-row: 1;
     display: grid;
     grid-template-columns: 1;
     grid-template-rows: 30px;
@@ -227,7 +297,7 @@ const Task = styled.div`
     }
     .running {
       svg {
-        color: ${(props) => "red"};
+        color: ${(props) => "darkred"};
         &: hover {
           color: ${(props) => props.theme.colors.darkBlue};
         }
@@ -312,21 +382,28 @@ class TaskList extends React.Component {
         <React.Fragment>
           <div className='text'>
             <div className='task-title'>{task.text}</div>
-            <div className='time'>
-              Estimated: <strong>{task.estimatedTime} minutes</strong>
+          </div>
+          <div className='tag'>
+            <div className='icon'>
+              <Tag />
             </div>
-            <div className='time'>
-              Measured:{" "}
-              <strong>
-                {this.renderActualTime(
-                  timeEntry,
-                  actualHours,
-                  actualMinutes,
-                  actualSeconds,
-                  milliSecondsElapsed
-                )}
-              </strong>
-            </div>
+            <div className='tag-text'>{task.tag}</div>
+          </div>
+          <div className='colfill'></div>
+          <div className='time'>
+            Estimated: <strong>{task.estimatedTime} minutes</strong>
+          </div>
+          <div className='time'>
+            Measured:{" "}
+            <strong>
+              {this.renderActualTime(
+                timeEntry,
+                actualHours,
+                actualMinutes,
+                actualSeconds,
+                milliSecondsElapsed
+              )}
+            </strong>
           </div>
         </React.Fragment>
       );
@@ -336,6 +413,10 @@ class TaskList extends React.Component {
           <div className='text'>
             <div className='task-title'>
               <div className='completed'>{task.text}</div>
+            </div>
+            <div className='tag'>
+              <Tag />
+              <strong>{task.tag}</strong>
             </div>
             <div className='time'>
               Estimated: <strong>{task.estimatedTime} minutes</strong>
@@ -449,9 +530,10 @@ class TaskList extends React.Component {
           // the design calls for 2 pixels per minute
           console.log(
             "I FOUND A TASK WITH ESTIMATED TIME AND ITS NAME IS",
-            task
+            task.text
           );
-          pixels = Math.ceil(task.estimatedTime * 2);
+          console.log(task.estimatedTime);
+          pixels = Math.ceil(task.estimatedTime * 2.7);
         }
 
         return (
@@ -480,6 +562,18 @@ class TaskList extends React.Component {
       });
     }
   }
+
+  checkIfClockIcon = (boxTitle) => {
+    if (this.props.boxes[boxTitle].time) {
+      return (
+        <React.Fragment>
+          <h3 className='box-status'>Time Box:</h3>
+        </React.Fragment>
+      );
+    } else {
+      return <h3 className='box-status'>Flex Box:</h3>;
+    }
+  };
 
   onDragEnd = async (result) => {
     const { destination, source, draggableId } = result;
@@ -573,12 +667,19 @@ class TaskList extends React.Component {
                           if (this.props.boxes[boxTitle].time) {
                             // the design calls for 2 pixels per minute
                             pixels = Math.ceil(
-                              this.props.boxes[boxTitle].time * 3.25
+                              this.props.boxes[boxTitle].time * 3.95
                             );
                           }
                           return (
                             <Box height={pixels} ref={provided.innerRef}>
-                              <h3>{boxTitle}</h3>
+                              <div className='box-title'>
+                                <div className='box-title-task'>
+                                  <h3>{boxTitle}</h3>
+                                </div>
+                                <div className='box-title-icon'>
+                                  {this.checkIfClockIcon(boxTitle)}
+                                </div>
+                              </div>
                               {this.props.boxes[boxTitle].taskIds.length &&
                               this.props.userData.hasOwnProperty("tasks")
                                 ? this.state.boxes[boxTitle].taskIds.map(
@@ -596,7 +697,7 @@ class TaskList extends React.Component {
                                           task
                                         );
                                         pixels = Math.ceil(
-                                          task.estimatedTime * 2
+                                          task.estimatedTime * 2.7
                                         );
                                       }
                                       return (

@@ -67,7 +67,7 @@ class TypesOfTasks extends React.Component {
     if (typeof myLineChart !== "undefined") myLineChart.destroy();
 
     myLineChart = new Chart(myChartRef, {
-      type: "polarArea",
+      type: "pie",
       data: {
         //Bring in data
         labels: tags,

@@ -97,6 +97,7 @@ module.exports = function (router) {
     const task = new Task();
     task.text = req.body.task.text;
     task.user = req.body.userId;
+    task.tag = req.body.task.tag;
     task.visibility = "visible";
     task.save();
 
@@ -162,7 +163,7 @@ module.exports = function (router) {
       task.text = text;
       task.visibility = visibility;
       task.weight = weight;
-      task.tags = tag;
+      task.tag = tag;
       task.dueDate = dueDate;
 
       task.save();

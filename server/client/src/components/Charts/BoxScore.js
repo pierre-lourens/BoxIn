@@ -189,6 +189,7 @@ class BoxScore extends React.Component {
               gridLines: {
                 zeroLineWidth: 2,
                 zeroLineColor: "#2C292E",
+
                 color: "transparent",
                 display: true,
                 drawBorder: false,
@@ -198,7 +199,7 @@ class BoxScore extends React.Component {
               ticks: {
                 beginAtZero: true,
               },
-              gridLines: { display: false },
+              gridLines: { display: true, color: "rgba(83, 156, 42, .5)" },
               scaleLabel: {
                 display: true,
                 labelString: "Total Points",
