@@ -26,14 +26,14 @@ class ReportDescription extends React.Component {
           "If you track and finish a task 5 minutes before the estimated time, you earn 100 points. If you are 5 minutes over or less, you earn 50 points. If your actual time is 20 minutes or more different than your estimate, you LOSE 50 points. New tasks earns 10 points and completed task earns 20 points.";
         break;
       case "TimeBreakdownByTag":
-        newTitle = "Average Times (Estimated vs Actual)";
+        newTitle = "Average Times (Estimated vs Actual) for Completed Tasks";
         newDescription =
           "To help you review and plan better, check out which types of tasks you under or overestimate.";
         break;
       case "TimesByTag":
-        newTitle = "Total Times By Tag";
+        newTitle = "Total Times By Tag for Completed Tasks";
         newDescription =
-          "This graph shows where all your time has gone (by tag). Consider if there are areas you'd like to decrease or increase.";
+          "This graph shows where all your time has gone (by tag). This uses  Consider if there are areas you'd like to decrease or increase.";
         break;
       case "LineGraph":
         newTitle = "Tasks Made & Completed";
