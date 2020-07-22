@@ -321,6 +321,9 @@ class TaskList extends React.Component {
 
   componentDidMount() {
     this.setState({ boxes: this.props.boxes });
+    this.props.getTasks(this.props.userId);
+    this.props.getTasks(this.props.userId);
+    this.props.getTaskBoxes(this.props.userId);
   }
   componentDidUpdate(prevProps, prevState) {
     // make our boxes from our data store
