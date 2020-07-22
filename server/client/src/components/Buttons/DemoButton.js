@@ -6,20 +6,20 @@ import styled from "styled-components";
 
 class DemoButton extends React.Component {
   handleGenerateFakeDataClick = async () => {
-    console.log("click and", this.props.userId);
+    // console.log("click and", this.props.userId);
 
-    console.log("start waiting");
+    // console.log("start waiting");
     await new Promise((resolve) => {
       setTimeout(() => {
         this.props.generateFakeData(this.props.userId);
         resolve();
       }, 1000);
     });
-    console.log("done waiting");
+    // console.log("done waiting");
   };
 
   render() {
-    console.log("props on render of DemoButton are", this.props);
+    // console.log("props on render of DemoButton are", this.props);
 
     return (
       <StyledDemoButton>

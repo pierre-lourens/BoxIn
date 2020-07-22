@@ -28,7 +28,7 @@ const Button = styled.button`
 
 const EmptyCircle = (props) => {
   const handleCompleteTask = (event) => {
-    console.log("props when completing a task are", props);
+    // console.log("props when completing a task are", props);
     // check if there is a time entry running
     if (props.task.timeEntries) {
       // grab the last one

@@ -30,12 +30,12 @@ class LineGraph extends React.Component {
   }
 
   calculateTasksCompleted = () => {
-    console.log("Props for line graph are", this.props);
+    // console.log("Props for line graph are", this.props);
     // creates two objects, each object having fourteen objects, one for each of the last 14 days
     return this.props.userData.tasks.reduce(
       (chartData, task) => {
         // only operate on non "deleted tasks"
-        console.log("task is yah ", task);
+        // console.log("task is yah ", task);
 
         // find the difference in days betweeen creation date and today
         const daysSinceCreated = differenceInDays(
@@ -43,7 +43,7 @@ class LineGraph extends React.Component {
           parseISO(task.createdAt)
         );
 
-        console.log("daysSinceCreated is", daysSinceCreated);
+        // console.log("daysSinceCreated is", daysSinceCreated);
 
         // if the difference is less than 14, increase the count for the day in the chartData obj
         if (daysSinceCreated < 14) {
@@ -107,7 +107,7 @@ class LineGraph extends React.Component {
     const { labels } = this.props;
 
     const chartData = this.calculateTasksCompleted();
-    console.log("chartData is", chartData);
+    // console.log("chartData is", chartData);
 
     // transform each object in chartData for our chart
     const createdArray = [];
@@ -129,9 +129,9 @@ class LineGraph extends React.Component {
       average[i] = (createdArray[i] + completedArray[i]) / 2;
     }
 
-    console.log("created array is", createdArray);
-    console.log("average array is", average);
-    console.log("completedArray  is", completedArray);
+    // console.log("created array is", createdArray);
+    // console.log("average array is", average);
+    // console.log("completedArray  is", completedArray);
 
     if (typeof myLineChart !== "undefined") myLineChart.destroy();
 

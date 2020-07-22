@@ -12,7 +12,7 @@ export default function (state = {}, action) {
   let boxes = {};
   switch (action.type) {
     case ADD_TASK_TO_BOX:
-      console.log("action.payload for ADD_TASK is", action.payload);
+      // console.log("action.payload for ADD_TASK is", action.payload);
       //it comes back as an array, so we need to name space it
       boxes = action.payload.data.reduce((boxesObject, box) => {
         boxesObject[box.title] = {
@@ -22,10 +22,10 @@ export default function (state = {}, action) {
         };
         return boxesObject;
       }, {});
-      console.log("boxes are", boxes);
+      // console.log("boxes are", boxes);
       return boxes;
     case SEND_TASK_BOXES:
-      console.log("action.payload for SEND_TASK_BOXES is", action.payload);
+      // console.log("action.payload for SEND_TASK_BOXES is", action.payload);
       boxes = action.payload.data.reduce((boxesObject, box) => {
         boxesObject[box.title] = {
           title: box.title,
@@ -34,10 +34,10 @@ export default function (state = {}, action) {
         };
         return boxesObject;
       }, {});
-      console.log("boxes are", boxes);
+      // console.log("boxes are", boxes);
       return boxes;
     case GET_TASK_BOXES:
-      console.log("action.payload for GET_TASK_BOXES is", action.payload.data);
+      // console.log("action.payload for GET_TASK_BOXES is", action.payload.data);
       if (action.payload.data) {
         boxes = action.payload.data.reduce((boxesObject, box) => {
           boxesObject[box.title] = {
@@ -49,10 +49,10 @@ export default function (state = {}, action) {
         }, {});
       }
 
-      console.log("boxes are", boxes);
+      // console.log("boxes are", boxes);
       return boxes;
     case ADD_BOX:
-      console.log("action.payload for ADD_BOX is", action.payload);
+      // console.log("action.payload for ADD_BOX is", action.payload);
       //it comes back as an array, so we need to name space it
       boxes = action.payload.data.reduce((boxesObject, box) => {
         boxesObject[box.title] = {
@@ -65,7 +65,7 @@ export default function (state = {}, action) {
 
       return boxes;
     case REMOVE_TASK_FROM_BOX:
-      console.log("action.payload for ADD_BOX is", action.payload);
+      // console.log("action.payload for ADD_BOX is", action.payload);
       //it comes back as an array, so we need to name space it
       boxes = action.payload.data.reduce((boxesObject, box) => {
         boxesObject[box.title] = {

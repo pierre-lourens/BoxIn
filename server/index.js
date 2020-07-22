@@ -69,12 +69,12 @@ const googleAuth = passport.authenticate("google", {
 app.get("/api/auth/google", googleAuth);
 
 app.get("/api/auth/google/callback", googleAuth, (req, res) => {
-  console.log("Input validated via Google");
-  console.log("req.user", req.user);
+  // console.log("Input validated via Google");
+  // console.log("req.user", req.user);
 
   User.findById(req.user._id).exec((err, user) => {
     // check to see if they have no boxes other than allTasks
-    console.log(user.boxes.length);
+    // console.log(user.boxes.length);
 
     // if ((user.boxes.length = 1)) {
     //   const defaultBox = {

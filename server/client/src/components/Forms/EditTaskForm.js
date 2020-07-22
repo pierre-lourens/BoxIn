@@ -138,7 +138,7 @@ class EditTaskForm extends React.Component {
         task: { ...this.state.task, [attributeOfTask]: event.target.value },
       },
       () => {
-        console.log("in task form, state is now", this.state);
+        // console.log("in task form, state is now", this.state);
       }
     );
   }
@@ -259,11 +259,8 @@ class EditTaskForm extends React.Component {
       this.props.editTask(this.props.task._id, this.state.task);
 
       if (this.state.session.startDate && this.state.session.endDate) {
-        console.log("SENDING SESSION", this.state.session);
-        console.log(
-          "type of startDate is",
-          typeof this.state.session.startDate
-        );
+        // console.log("SENDING SESSION", this.state.session);
+
         this.props.sendSession(
           this.props.task._id,
           this.props.userId,

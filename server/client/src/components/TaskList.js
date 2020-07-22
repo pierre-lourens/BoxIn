@@ -327,7 +327,7 @@ class TaskList extends React.Component {
   }
   componentDidUpdate(prevProps, prevState) {
     // make our boxes from our data store
-    console.log("this.props.task is", this.props.task);
+    // console.log("this.props.task is", this.props.task);
     if (
       this.props.userId !== prevProps.userId ||
       this.props.timer !== prevProps.timer ||
@@ -450,7 +450,7 @@ class TaskList extends React.Component {
     actualSeconds,
     milliSecondsElapsed
   ) => {
-    console.log("milliSecondsElapsed is", milliSecondsElapsed);
+    // console.log("milliSecondsElapsed is", milliSecondsElapsed);
     if (timeEntry && timeEntry.active && milliSecondsElapsed === 0) {
       return (
         <strong>
@@ -532,11 +532,7 @@ class TaskList extends React.Component {
 
         if (task.estimatedTime) {
           // the design calls for 2 pixels per minute
-          console.log(
-            "I FOUND A TASK WITH ESTIMATED TIME AND ITS NAME IS",
-            task.text
-          );
-          console.log(task.estimatedTime);
+
           pixels = Math.ceil(task.estimatedTime * 2.7);
         }
 
@@ -637,21 +633,18 @@ class TaskList extends React.Component {
       this.setState(newState);
     }
 
-    console.log(
-      "starting 2s wait, the local state should render the drag and drop correctly"
-    );
     await new Promise((resolve) => {
       setTimeout(() => resolve(), 500);
     });
-    console.log("done waiting");
+
     this.props.sendTaskBoxes(this.props.userId, this.state.boxes);
 
     // we need to call an endpoint to update the server that a reorder has occurred
   };
 
   render() {
-    console.log("Props upon render of taskList is", this.props);
-    console.log("State upon render of taskList is", this.state);
+    // console.log("Props upon render of taskList is", this.props);
+    // console.log("State upon render of taskList is", this.state);
     return (
       <React.Fragment>
         <DragDropContext onDragEnd={this.onDragEnd}>
@@ -696,10 +689,7 @@ class TaskList extends React.Component {
                                       let pixels = 55;
                                       if (task.estimatedTime) {
                                         // the design calls for 2.5 pixels per minute
-                                        console.log(
-                                          "I FOUND A TASK WITH ESTIMATED TIME AND ITS NAME IS",
-                                          task
-                                        );
+
                                         pixels = Math.ceil(
                                           task.estimatedTime * 2.7
                                         );
@@ -739,7 +729,7 @@ class TaskList extends React.Component {
                       </Droppable>
                     );
                   })
-              : console.log("hi")}
+              : null}
             <NewFormButtonStyle>
               <NewFormButton />
             </NewFormButtonStyle>
@@ -769,7 +759,7 @@ function determineMostRecentTimeEntry(task) {
 }
 
 function mapStateToProps(state) {
-  console.log("state being mapped to props in tasklist is is", state);
+  // console.log("state being mapped to props in tasklist is is", state);
   return {
     userId: state.user._id,
     userData: state.userData,

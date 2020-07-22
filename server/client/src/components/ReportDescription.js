@@ -15,7 +15,7 @@ class ReportDescription extends React.Component {
     }
   }
   renderCurrentGraph = () => {
-    console.log("currentGraph is", this.props.currentGraph);
+    // console.log("currentGraph is", this.props.currentGraph);
     let newTitle;
     let newDescription;
 

@@ -17,7 +17,7 @@ const reorder = (list, startIndex, endIndex) => {
  * Moves an item from one list to another list.
  */
 const copy = (source, destination, droppableSource, droppableDestination) => {
-  console.log("==> dest", destination);
+  // console.log("==> dest", destination);
 
   const sourceClone = Array.from(source);
   const destClone = Array.from(destination);
@@ -161,7 +161,7 @@ class App extends Component {
   onDragEnd = (result) => {
     const { source, destination } = result;
 
-    console.log("==> result", result);
+    // console.log("==> result", result);
 
     // dropped outside the list
     if (!destination) {

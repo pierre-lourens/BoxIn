@@ -34,7 +34,7 @@ class TimeBreakdownByTag extends React.Component {
   }
 
   reduceTaskData = () => {
-    console.log("Props for bar graph are", this.props);
+    // console.log("Props for bar graph are", this.props);
     // create two objects, one for estimated time and one for completed time
     // taskNumbers will be used to divide to get average
     return this.props.userData.tasks.reduce((chartData, task) => {
@@ -74,10 +74,10 @@ class TimeBreakdownByTag extends React.Component {
       );
     }
 
-    console.log("taskData is", taskData);
-    console.log("labels is", labels);
-    console.log("estimatedTimeAverage is", estimatedTimeAverage);
-    console.log("actualTimeAverage is", actualTimeAverage);
+    // console.log("taskData is", taskData);
+    // console.log("labels is", labels);
+    // console.log("estimatedTimeAverage is", estimatedTimeAverage);
+    // console.log("actualTimeAverage is", actualTimeAverage);
 
     if (typeof myLineChart !== "undefined") myLineChart.destroy();
 

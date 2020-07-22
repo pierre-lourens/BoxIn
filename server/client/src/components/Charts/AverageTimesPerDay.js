@@ -33,7 +33,7 @@ class AverageTimesPerDay extends React.Component {
   }
 
   reduceTaskData = () => {
-    console.log("Props for bar graph are", this.props);
+    // console.log("Props for bar graph are", this.props);
     // create two objects, one for estimated time and one for completed time
     // taskNumbers will be used to divide to get average
     return this.props.userData.tasks.reduce(
@@ -80,7 +80,7 @@ class AverageTimesPerDay extends React.Component {
   };
 
   reduceTimeData = () => {
-    console.log("Props for bar graph are", this.props);
+    // console.log("Props for bar graph are", this.props);
     // would like to return the average measured time per day of the week
     // need to have the number of entries per day and the total time per day, to divide
     let reducedTimeData = this.props.userData.timeEntries.reduce(
@@ -161,8 +161,8 @@ class AverageTimesPerDay extends React.Component {
 
     const taskData = this.reduceTaskData();
     const timeData = this.reduceTimeData();
-    console.log("taskData is", taskData);
-    console.log("timeData is", timeData);
+    // console.log("taskData is", taskData);
+    // console.log("timeData is", timeData);
 
     const startedTasksArray = [];
     const completedTasksArray = [];
@@ -189,11 +189,11 @@ class AverageTimesPerDay extends React.Component {
       }
     });
 
-    console.log("taskData is", taskData);
-    console.log("startedTasksArray is", startedTasksArray);
-    console.log("completedTasksArray is", completedTasksArray);
-    console.log("averageTimeArray is", averageTimeArray);
-    console.log("timeData is", timeData);
+    // console.log("taskData is", taskData);
+    // console.log("startedTasksArray is", startedTasksArray);
+    // console.log("completedTasksArray is", completedTasksArray);
+    // console.log("averageTimeArray is", averageTimeArray);
+    // console.log("timeData is", timeData);
 
     if (typeof myLineChart !== "undefined") myLineChart.destroy();
 

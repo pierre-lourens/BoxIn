@@ -20,14 +20,14 @@ const googleAuth = passport.authenticate("google", {
 module.exports = function (router) {
   // AUTHENTICATION
   router.get("/logout", function (req, res) {
-    console.log("logged out!");
+    // console.log("logged out!");
     req.logout();
     res.redirect("/");
   });
 
   // will be used as middleware so that I can use multiple strategies
   function ensureAuthenticated(req, res, next) {
-    console.log("req in ensureauthenticated is", req);
+    // console.log("req in ensureauthenticated is", req);
 
     if (req.isAuthenticated()) {
       return next(null);
@@ -36,7 +36,7 @@ module.exports = function (router) {
   }
 
   router.get("/api/current_user", ensureAuthenticated, (req, res) => {
-    console.log(req);
+    // console.log(req);
     return res.send(req.user);
   });
 
@@ -114,7 +114,7 @@ module.exports = function (router) {
         // by default, new tasks can be added to the 'allTasks' box
         // find the 'alltasks' one
 
-        console.log("user is", user);
+        // console.log("user is", user);
 
         allTasksboxCheck = user.boxes.find((box) => (box.title = "allTasks"));
         console.log("boxes check is is", allTasksboxCheck);
@@ -124,10 +124,10 @@ module.exports = function (router) {
           // new default box to add
           const allTasksBox = { title: "allTasks", taskIds: [] };
           user.boxes.push(allTasksBox);
-          console.log("now user is", user);
+          // console.log("now user is", user);
         }
 
-        console.log("since it's true, user boxes is", user.boxes);
+        // console.log("since it's true, user boxes is", user.boxes);
 
         const allTasksIndex = user.boxes.findIndex(
           (box) => box.title == "allTasks"
@@ -208,7 +208,7 @@ module.exports = function (router) {
       user.save();
     });
 
-    console.log("HIIII");
+    // console.log("HIIII");
     timeEntry.save();
 
     // send back the added task
@@ -227,7 +227,7 @@ module.exports = function (router) {
         return res.end();
       }
 
-      console.log("req.body is", req.body);
+      // console.log("req.body is", req.body);
 
       const { startDate, endDate, taskId } = req.body;
 
@@ -237,7 +237,7 @@ module.exports = function (router) {
       timeEntry.endDate = endDate;
       timeEntry.task = taskId;
 
-      console.log("timeEntry is", timeEntry);
+      // console.log("timeEntry is", timeEntry);
 
       timeEntry.save();
 

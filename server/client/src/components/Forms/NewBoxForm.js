@@ -199,7 +199,7 @@ class NewBoxForm extends React.Component {
         box: { ...this.state.box, [attributeOfTask]: event.target.value },
       },
       () => {
-        console.log("in new box form, state is now", this.state);
+        // console.log("in new box form, state is now", this.state);
       }
     );
   }

@@ -28,7 +28,7 @@ export function checkForUser() {
 export function addTask(task, userId) {
   const url = `/api/me/task`;
 
-  console.log("taskToAdd is", task);
+  // console.log("taskToAdd is", task);
 
   const request = axios({
     method: "post",
@@ -49,7 +49,7 @@ export function addTask(task, userId) {
 export function editTask(taskId, changesObject) {
   const url = `/api/tasks/${taskId}`;
 
-  console.log("CHANGES OBJECT IS", changesObject);
+  // console.log("CHANGES OBJECT IS", changesObject);
 
   const request = axios({
     method: "put",
@@ -120,7 +120,7 @@ export function sendSession(taskId, userId, startDate, endDate) {
 export function getTasks(userId) {
   const url = `/api/${userId}/tasks`;
 
-  console.log("userid being sent is", userId);
+  // console.log("userid being sent is", userId);
 
   const request = axios({
     method: "get",
@@ -137,7 +137,7 @@ export function getTasks(userId) {
 export function sendTaskBoxes(userId, boxes) {
   const url = `/api/me/boxes`;
 
-  console.log("BOXES BEING SENT ARE", boxes);
+  // console.log("BOXES BEING SENT ARE", boxes);
 
   // let's get it back in the format that we store in the db
   const boxesObject = Object.values(boxes);
@@ -187,7 +187,7 @@ export function getTaskBoxes(userId) {
 export function addBox(userId, boxTitle, time) {
   const url = `/api/${userId}/boxes`;
 
-  console.log("ADD BOX", userId, boxTitle, time);
+  // console.log("ADD BOX", userId, boxTitle, time);
 
   const request = axios({
     method: "post",
@@ -221,7 +221,7 @@ export function removeTaskFromBox(userId, boxTitle, taskId) {
 export function generateFakeData(userId) {
   const url = `/api/${userId}/generate-fake-data`;
 
-  console.log("request being made for fake data with user", userId);
+  // console.log("request being made for fake data with user", userId);
 
   const request = axios({
     method: "get",

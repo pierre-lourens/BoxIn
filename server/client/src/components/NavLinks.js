@@ -57,7 +57,7 @@ const NavLinks = (props) => {
   };
 
   const determineIfAuth = () => {
-    console.log("props in nav are", props);
+    // console.log("props in nav are", props);
     if (!props.userId) {
       return (
         <Link to={"/login"}>

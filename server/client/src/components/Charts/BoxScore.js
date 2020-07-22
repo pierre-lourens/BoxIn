@@ -35,7 +35,7 @@ class BoxScore extends React.Component {
   }
 
   reduceTaskData = () => {
-    console.log("Props for bar graph are", this.props);
+    // console.log("Props for bar graph are", this.props);
     // create two objects, one for estimated time and one for completed time
     // taskNumbers will be used to divide to get average
     return this.props.userData.tasks.reduce(
@@ -63,15 +63,15 @@ class BoxScore extends React.Component {
           chartData.earnedOnDay[daysAgo] += 20;
 
           // measure if it was five minutes before estimated time
-          console.log(task.estimatedTime);
-          console.log(task.actualTime);
+          // console.log(task.estimatedTime);
+          // console.log(task.actualTime);
           const diff = task.estimatedTime - task.actualTime;
           console.log("diff is", diff);
 
           if (diff <= 5 && diff >= 0) {
             chartData.earnedOnDay[daysAgo] += 100;
           } else if (Math.abs(diff) <= 5) {
-            console.log("yep!!");
+            // console.log("yep!!");
             chartData.earnedOnDay[daysAgo] += 50;
           } else if (Math.abs(diff) >= 20) {
             chartData.earnedOnDay[daysAgo] -= 50;
@@ -96,7 +96,7 @@ class BoxScore extends React.Component {
     const sortedDaysArray = Object.keys(taskData.earnedOnDay).sort(
       (a, b) => a - b
     );
-    console.log(sortedDaysArray);
+    // console.log(sortedDaysArray);
     const earliestDay = sortedDaysArray[sortedDaysArray.length - 1];
 
     for (let i = 0; i <= earliestDay; i++) {
@@ -128,10 +128,10 @@ class BoxScore extends React.Component {
       }
     });
 
-    console.log("taskData is", taskData);
-    console.log("daysArray is", daysArray);
-    console.log("scoreArray is", scoreArray);
-    console.log("totalsArray is", totalsArray);
+    // console.log("taskData is", taskData);
+    // console.log("daysArray is", daysArray);
+    // console.log("scoreArray is", scoreArray);
+    // console.log("totalsArray is", totalsArray);
 
     if (typeof myLineChart !== "undefined") myLineChart.destroy();
 

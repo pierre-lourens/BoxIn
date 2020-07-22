@@ -32,7 +32,7 @@ class TypesOfTasks extends React.Component {
   }
 
   reduceTaskData = () => {
-    console.log("Props for pie graph are", this.props);
+    // console.log("Props for pie graph are", this.props);
     // create two objects, one for estimated time and one for completed time
     // taskNumbers will be used to divide to get average
     return this.props.userData.tasks.reduce((chartData, task) => {
@@ -50,7 +50,7 @@ class TypesOfTasks extends React.Component {
 
     const reducedTaskData = this.reduceTaskData();
 
-    console.log("taskData is", reducedTaskData);
+    // console.log("taskData is", reducedTaskData);
 
     const pairedData = Object.entries(reducedTaskData);
     const tags = [];
@@ -61,8 +61,8 @@ class TypesOfTasks extends React.Component {
       counts.push(pair[1]);
     });
 
-    console.log("tags are", tags);
-    console.log("tags are", counts);
+    // console.log("tags are", tags);
+    // console.log("tags are", counts);
 
     if (typeof myLineChart !== "undefined") myLineChart.destroy();
 

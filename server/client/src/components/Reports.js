@@ -115,7 +115,7 @@ class Reports extends Component {
   };
 
   render() {
-    console.log("props on render of reports is", this.props);
+    // console.log("props on render of reports is", this.props);
 
     return (
       <React.Fragment>
