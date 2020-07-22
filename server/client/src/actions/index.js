@@ -15,10 +15,8 @@ export const ADD_BOX = "ADD_BOX";
 export const REMOVE_TASK_FROM_BOX = "REMOVE_TASK_FROM_BOX";
 export const GENERATE_FAKE_DATA = "GENERATE_FAKE_DATA";
 
-const ROOT_URL = "http://localhost:5000";
-
 export function checkForUser() {
-  const url = `${ROOT_URL}/api/current_user`;
+  const url = `/api/current_user`;
   const request = axios.get(url, { withCredentials: true });
 
   return {
@@ -28,7 +26,7 @@ export function checkForUser() {
 }
 
 export function addTask(task, userId) {
-  const url = `${ROOT_URL}/api/me/task`;
+  const url = `/api/me/task`;
 
   console.log("taskToAdd is", task);
 
@@ -49,7 +47,7 @@ export function addTask(task, userId) {
 }
 
 export function editTask(taskId, changesObject) {
-  const url = `${ROOT_URL}/api/tasks/${taskId}`;
+  const url = `/api/tasks/${taskId}`;
 
   console.log("CHANGES OBJECT IS", changesObject);
 
@@ -69,7 +67,7 @@ export function editTask(taskId, changesObject) {
 }
 
 export function startTimer(taskId, userId) {
-  const url = `${ROOT_URL}/api/me/timeEntry`;
+  const url = `/api/me/timeEntry`;
 
   const request = axios({
     method: "post",
@@ -88,7 +86,7 @@ export function startTimer(taskId, userId) {
 }
 
 export function stopTimer(timeEntryId, userId, taskId) {
-  const url = `${ROOT_URL}/api/me/timeEntry`;
+  const url = `/api/me/timeEntry`;
 
   const request = axios({
     method: "put",
@@ -104,7 +102,7 @@ export function stopTimer(timeEntryId, userId, taskId) {
 }
 
 export function sendSession(taskId, userId, startDate, endDate) {
-  const url = `${ROOT_URL}/api/me/timeEntrySession`;
+  const url = `/api/me/timeEntrySession`;
 
   const request = axios({
     method: "post",
@@ -120,7 +118,7 @@ export function sendSession(taskId, userId, startDate, endDate) {
 }
 
 export function getTasks(userId) {
-  const url = `${ROOT_URL}/api/${userId}/tasks`;
+  const url = `/api/${userId}/tasks`;
 
   console.log("userid being sent is", userId);
 
@@ -137,7 +135,7 @@ export function getTasks(userId) {
 }
 
 export function sendTaskBoxes(userId, boxes) {
-  const url = `${ROOT_URL}/api/me/boxes`;
+  const url = `/api/me/boxes`;
 
   console.log("BOXES BEING SENT ARE", boxes);
 
@@ -172,7 +170,7 @@ export function addTaskToBox(task, boxName, userId) {
 }
 
 export function getTaskBoxes(userId) {
-  const url = `${ROOT_URL}/api/${userId}/boxes`;
+  const url = `/api/${userId}/boxes`;
 
   const request = axios({
     method: "get",
@@ -187,7 +185,7 @@ export function getTaskBoxes(userId) {
 }
 
 export function addBox(userId, boxTitle, time) {
-  const url = `${ROOT_URL}/api/${userId}/boxes`;
+  const url = `/api/${userId}/boxes`;
 
   console.log("ADD BOX", userId, boxTitle, time);
 
@@ -205,7 +203,7 @@ export function addBox(userId, boxTitle, time) {
 }
 
 export function removeTaskFromBox(userId, boxTitle, taskId) {
-  const url = `${ROOT_URL}/api/${userId}/boxes`;
+  const url = `/api/${userId}/boxes`;
 
   const request = axios({
     method: "delete",
@@ -221,7 +219,7 @@ export function removeTaskFromBox(userId, boxTitle, taskId) {
 }
 
 export function generateFakeData(userId) {
-  const url = `${ROOT_URL}/api/${userId}/generate-fake-data`;
+  const url = `/api/${userId}/generate-fake-data`;
 
   console.log("request being made for fake data with user", userId);
 
