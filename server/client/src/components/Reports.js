@@ -27,6 +27,7 @@ class Reports extends Component {
 
   componentDidMount() {
     this.setState({ currentGraph: "BoxScore" });
+    this.props.getTasks(this.props.userId);
   }
 
   componentDidUpdate(prevProps) {

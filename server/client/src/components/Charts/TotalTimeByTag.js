@@ -20,6 +20,8 @@ class TotalTimeByTag extends React.Component {
   chartRef = React.createRef();
 
   componentDidMount() {
+    this.props.get;
+
     if (this.props.userData.hasOwnProperty("tasks")) {
       this.buildChart();
     }
