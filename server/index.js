@@ -90,7 +90,6 @@ app.get("/api/auth/google/callback", googleAuth, (req, res) => {
   });
 
   // add a default box for them to use
-  res.send(user);
   res.redirect("/me");
 });
 
