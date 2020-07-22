@@ -22,7 +22,7 @@ module.exports = function (router) {
   router.get("/logout", function (req, res) {
     console.log("logged out!");
     req.logout();
-    res.redirect("http://localhost:3000");
+    res.redirect("/");
   });
 
   // will be used as middleware so that I can use multiple strategies
