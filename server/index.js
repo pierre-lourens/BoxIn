@@ -90,7 +90,7 @@ app.get("/api/auth/google/callback", googleAuth, (req, res) => {
   });
 
   // add a default box for them to use
-  res.redirect("/me");
+  res.redirect("/");
 });
 
 passport.serializeUser((user, done) => {
