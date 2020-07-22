@@ -9,7 +9,7 @@ export default function (state = {}, action) {
       // } else {
       //   return state;
       // }
-      return { ...state, ...action.payload.data };
+      return action.payload.data;
     default:
       return state;
   }
