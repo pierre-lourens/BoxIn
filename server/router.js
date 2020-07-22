@@ -34,6 +34,7 @@ module.exports = function (router) {
   }
 
   router.get("/api/current_user", ensureAuthenticated, (req, res) => {
+    console.log(req);
     res.send(req.user);
   });
 
