@@ -411,28 +411,29 @@ class TaskList extends React.Component {
       return (
         <React.Fragment>
           <div className='text'>
-            <div className='task-title'>
-              <div className='completed'>{task.text}</div>
-            </div>
-            <div className='tag'>
+            <div className='task-title completed'>{task.text}</div>
+          </div>
+          <div className='tag'>
+            <div className='icon'>
               <Tag />
-              <strong>{task.tag}</strong>
             </div>
-            <div className='time'>
-              Estimated: <strong>{task.estimatedTime} minutes</strong>
-            </div>
-            <div className='time'>
-              Measured:{" "}
-              <strong>
-                {this.renderActualTime(
-                  timeEntry,
-                  actualHours,
-                  actualMinutes,
-                  actualSeconds,
-                  milliSecondsElapsed
-                )}
-              </strong>
-            </div>
+            <div className='tag-text'>{task.tag}</div>
+          </div>
+          <div className='colfill'></div>
+          <div className='time'>
+            Estimated: <strong>{task.estimatedTime} minutes</strong>
+          </div>
+          <div className='time'>
+            Measured:{" "}
+            <strong>
+              {this.renderActualTime(
+                timeEntry,
+                actualHours,
+                actualMinutes,
+                actualSeconds,
+                milliSecondsElapsed
+              )}
+            </strong>
           </div>
         </React.Fragment>
       );
