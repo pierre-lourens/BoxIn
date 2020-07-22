@@ -91,7 +91,7 @@ app.get("/api/auth/google/callback", googleAuth, (req, res) => {
 
   // add a default box for them to use
 
-  res.redirect("http://localhost:3000/me");
+  res.redirect("/me");
 });
 
 passport.serializeUser((user, done) => {
