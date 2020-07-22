@@ -27,14 +27,24 @@ class UserMain extends React.Component {
     this.setState({ showDemoBox: false });
   };
 
+  renderIfLoggedIn = () => {
+    if (this.props.user.hasOwnProperty("_id")) {
+      return (
+        <React.Fragment>
+          <QuickTaskForm />
+          <Wrapper>
+            <TaskList />
+          </Wrapper>
+        </React.Fragment>
+      );
+    }
+  };
+
   render() {
     return (
       <RelativeWrapper>
         <Header />
-        <QuickTaskForm />
-        <Wrapper>
-          <TaskList />
-        </Wrapper>
+        {this.renderIfLoggedIn()}
         {/* {this.state.showDemoBox ? (
           <DemoButton changeDemoBox={this.changeDemoBox} />
         ) : null} */}

@@ -151,14 +151,6 @@ class BoxScore extends React.Component {
             borderColor: "rgba(83, 156, 42, 1)",
             yAxisID: "right-y-axis",
           },
-          {
-            label: "Daily Score",
-            data: scoreArray,
-            fill: true,
-            backgroundColor: "#3A5D9C",
-            yAxisID: "left-y-axis",
-            barPercentage: 1,
-          },
         ],
       },
       options: {
