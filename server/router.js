@@ -27,6 +27,8 @@ module.exports = function (router) {
 
   // will be used as middleware so that I can use multiple strategies
   function ensureAuthenticated(req, res, next) {
+    console.log("req in ensureauthenticated is", req);
+
     if (req.isAuthenticated()) {
       return next(null);
     }
