@@ -66,7 +66,7 @@ const NavLinks = (props) => {
       );
     } else {
       return (
-        <a href='http://localhost:5000/logout'>
+        <a href='/logout'>
           <span className={determineIfCurrentPage("/login")}>Sign Out</span>
         </a>
       );

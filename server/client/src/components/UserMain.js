@@ -35,9 +35,9 @@ class UserMain extends React.Component {
         <Wrapper>
           <TaskList />
         </Wrapper>
-        {this.state.showDemoBox ? (
+        {/* {this.state.showDemoBox ? (
           <DemoButton changeDemoBox={this.changeDemoBox} />
-        ) : null}
+        ) : null} */}
       </RelativeWrapper>
     );
   }

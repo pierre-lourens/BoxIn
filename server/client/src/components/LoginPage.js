@@ -12,7 +12,7 @@ class LoginPage extends React.Component {
         <Wrapper>
           <div>
             {/* react will replace hardcoded value here */}
-            <a href='http://localhost:5000/api/auth/google/'>
+            <a href='/api/auth/google/'>
               <AuthButton>
                 <img
                   src={googleButton}
