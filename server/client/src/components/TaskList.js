@@ -394,7 +394,7 @@ class TaskList extends React.Component {
           </div>
           <div className='colfill'></div>
           <div className='time'>
-            Estimated: <strong>{task.estimatedTime} minutes</strong>
+            Estimate: <strong>{task.estimatedTime} mins</strong>
           </div>
           <div className='time'>
             Measured:{" "}
@@ -424,7 +424,7 @@ class TaskList extends React.Component {
           </div>
           <div className='colfill'></div>
           <div className='time'>
-            Estimated: <strong>{task.estimatedTime} minutes</strong>
+            Estimate: <strong>{task.estimatedTime} mins</strong>
           </div>
           <div className='time'>
             Measured:{" "}
