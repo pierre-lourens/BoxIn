@@ -13,8 +13,8 @@ With it, you can easily drag and drop tasks into boxes of time that you create. 
 [Online demo](http://boxin.herokuapp.com/).
 
 ##Roadmap:
-- []Build a landing page for new users/signed-out users
-- []Further extract components from task list
-- []Refactor tasklist component, especially react-beautiful-dnd
-- []Add ability to edit time boxes
-- []Integrate Google Calendar API
+- Build a landing page for new users/signed-out users
+- Further extract components from task list
+- Refactor tasklist component, especially react-beautiful-dnd
+- Add ability to edit time boxes
+- Integrate Google Calendar API
