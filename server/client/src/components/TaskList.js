@@ -26,8 +26,6 @@ import EditTaskButton from "./Buttons/EditTaskButton";
 import NewFormButton from "./Buttons/NewFormButton";
 import Timer from "react-compound-timer";
 
-// import { Overlay } from "react-portal-overlay";
-
 const Box = styled.div`
   background: #fff;
   grid-row: 2;
@@ -52,29 +50,6 @@ const Box = styled.div`
     return null;
   }};
 
-  .box-title {
-    display: grid;
-    grid-template-columns: 90px auto;
-    .box-title-text {
-      grid-column: 2;
-      grid-row: 1;
-    }
-    .box-title-icon {
-      grid-column: 1;
-      grid-row: 1;
-
-      align-self: end;
-    }
-    svg {
-      justify-self: end;
-      height: 25px;
-      width: 100%;
-      color: ${(props) => props.theme.colors.yellow} !important;
-    }
-  }
-  .box-status {
-    color: ${(props) => props.theme.colors.mediumGray};
-  }
   h3 {
     padding: 0;
     margin: 0 5px 10px 0;
@@ -147,9 +122,6 @@ const Task = styled.div`
   background: ${(props) => {
     if (props.status === "complete") {
       return props.theme.colors.offWhiteComplete;
-    }
-    if (props.unscheduled) {
-      return "#FCFEFF";
     } else {
       return "#FCFEFF";
     }
@@ -316,7 +288,7 @@ class TaskList extends React.Component {
       boxes: { allTasks: { taskIds: [] } },
     };
 
-    this.renderTaskCards = this.renderTaskCards.bind(this);
+    this.renderTaskCard = this.renderTaskCard.bind(this);
     this.renderToggleCircle = this.renderToggleCircle.bind(this);
   }
 
@@ -514,67 +486,33 @@ class TaskList extends React.Component {
     }
   }
 
-  renderTaskCards() {
-    if (
-      this.state.boxes.hasOwnProperty("allTasks") &&
-      this.props.userData.hasOwnProperty("tasks")
-    ) {
-      return this.state.boxes.allTasks.taskIds.map((taskIdFromBox, index) => {
-        const task = this.props.userData.tasks.find(
-          (task) => taskIdFromBox === task._id && task.visibility !== "archived"
-        );
+  renderTaskCard(task, index) {
+    let pixels = this.determineTaskHeight(task);
+    console.log("task is", task);
 
-        if (!task) {
-          return null;
-        }
-
-        let pixels = 60;
-
-        if (task.estimatedTime) {
-          // the design calls for 2 pixels per minute
-
-          pixels = Math.ceil(task.estimatedTime * 2.7);
-        }
-
-        return (
-          <Draggable draggableId={task._id} key={task._id} index={index}>
-            {(provided) => (
-              <Task
-                key={task._id}
-                ref={provided.innerRef}
-                unscheduled
-                status={task.status}
-                height={pixels}
-                {...provided.draggableProps}
-                {...provided.dragHandleProps}>
-                <div className='toggleButtonWrapper'>
-                  {this.renderToggleCircle(task)}
-                </div>
-                {this.renderTaskText(task)}
-                <div className='options'>
-                  {this.renderTimerButton(task)}
-                  <EditTaskButton task={task} />
-                </div>
-              </Task>
-            )}
-          </Draggable>
-        );
-      });
-    }
+    return (
+      <Draggable draggableId={task._id} key={task._id} index={index}>
+        {(provided) => (
+          <Task
+            key={task._id}
+            ref={provided.innerRef}
+            status={task.status}
+            height={pixels}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}>
+            <div className='toggleButtonWrapper'>
+              {this.renderToggleCircle(task)}
+            </div>
+            {this.renderTaskText(task)}
+            <div className='options'>
+              {this.renderTimerButton(task)}
+              <EditTaskButton task={task} />
+            </div>
+          </Task>
+        )}
+      </Draggable>
+    );
   }
-
-  //remove
-  checkIfClockIcon = (boxTitle) => {
-    if (this.props.boxes[boxTitle].time) {
-      return (
-        <React.Fragment>
-          <h3 className='box-status'>Time Box:</h3>
-        </React.Fragment>
-      );
-    } else {
-      return <h3 className='box-status'>Flex Box:</h3>;
-    }
-  };
 
   onDragEnd = async (result) => {
     const { destination, source, draggableId } = result;
@@ -644,8 +582,8 @@ class TaskList extends React.Component {
   };
 
   render() {
-    // console.log("Props upon render of taskList is", this.props);
-    // console.log("State upon render of taskList is", this.state);
+    console.log("Props upon render of taskList is", this.props);
+    console.log("State upon render of taskList is", this.state);
     return (
       <React.Fragment>
         <DragDropContext onDragEnd={this.onDragEnd}>
@@ -659,35 +597,28 @@ class TaskList extends React.Component {
                     return (
                       <Droppable key={boxTitle} droppableId={boxTitle}>
                         {(provided) => {
-                          // check for estimated time in box to calculate height
+                          let pixels = this.determineBoxHeight(boxTitle);
 
-                          let pixels = null;
-                          if (this.props.boxes[boxTitle].time) {
-                            // the design calls for 2 pixels per minute
-                            pixels = Math.ceil(
-                              this.props.boxes[boxTitle].time * 3.95
-                            );
-                          }
                           return (
                             <Box height={pixels} ref={provided.innerRef}>
                               <BoxTitle boxTitle={boxTitle} />
                               {this.props.boxes[boxTitle].taskIds.length &&
                               this.props.userData.hasOwnProperty("tasks")
                                 ? this.state.boxes[boxTitle].taskIds.map(
+                                    // find the task based on the taskId in the Box
+                                    // ordered this way because the Box keeps the order of the tasks
                                     (taskIdFromBox, index) => {
                                       const task = this.props.userData.tasks.find(
                                         (task) =>
                                           taskIdFromBox === task._id &&
                                           task.visibility !== "archived"
                                       );
-                                      let pixels = 55;
-                                      if (task.estimatedTime) {
-                                        // the design calls for 2.5 pixels per minute
 
-                                        pixels = Math.ceil(
-                                          task.estimatedTime * 2.7
-                                        );
-                                      }
+                                      // now that we have the task, determine its height
+                                      const pixels = this.determineTaskHeight(
+                                        task
+                                      );
+
                                       return (
                                         <Draggable
                                           key={task._id}
@@ -733,8 +664,24 @@ class TaskList extends React.Component {
               <StyledTaskContainer ref={provided.innerRef}>
                 <AllTasksBox>
                   <h2>Tasks to Box</h2>
+                  {this.state.boxes.hasOwnProperty("allTasks") &&
+                  this.props.userData.hasOwnProperty("tasks")
+                    ? this.props.boxes.allTasks.taskIds.map(
+                        (taskIdFromBox, index) => {
+                          // find the right task with all its data
+                          const task = this.props.userData.tasks.find(
+                            (task) =>
+                              taskIdFromBox === task._id &&
+                              task.visibility !== "archived"
+                          );
+                          if (!task) {
+                            return null;
+                          }
+                          return this.renderTaskCard(task, index);
+                        }
+                      )
+                    : null}
 
-                  {this.renderTaskCards()}
                   {/* {provided.placeholder} */}
                 </AllTasksBox>
               </StyledTaskContainer>
@@ -745,6 +692,22 @@ class TaskList extends React.Component {
         </DragDropContext>
       </React.Fragment>
     );
+  }
+
+  determineBoxHeight(boxTitle) {
+    let pixels = null;
+    if (this.props.boxes[boxTitle].time) {
+      pixels = Math.ceil(this.props.boxes[boxTitle].time * 3.95);
+    }
+    return pixels;
+  }
+
+  determineTaskHeight(task) {
+    let pixels = 55; // default
+    if (task.estimatedTime) {
+      pixels = Math.ceil(task.estimatedTime * 2.7);
+    }
+    return pixels;
   }
 }
 
