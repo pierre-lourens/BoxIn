@@ -9,6 +9,7 @@
     "axios": "^0.19.2",
     "chart.js": "^2.9.3",
     "date-fns": "^2.15.0",
+    "http-proxy-middleware": "^1.0.5",
     "lodash": "^4.17.19",
     "react": "^16.13.1",
     "react-beautiful-dnd": "^13.0.0",

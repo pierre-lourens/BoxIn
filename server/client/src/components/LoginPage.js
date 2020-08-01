@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import styled from "styled-components";
 import googleButton from "../assets/googleButton.png";
 import Header from "./Header";
+import proxyMiddleWare from "../setupProxy";
 
 class LoginPage extends React.Component {
   render() {
@@ -11,7 +12,7 @@ class LoginPage extends React.Component {
         <Header />
         <Wrapper>
           <div>
-            <a href='/api/auth/google/'>
+            <a href={'/api' + '/auth/google'}>
               <AuthButton>
                 <img
                   src={googleButton}

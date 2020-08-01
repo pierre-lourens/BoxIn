@@ -19,10 +19,11 @@ const googleAuth = passport.authenticate("google", {
 
 module.exports = function (router) {
   // AUTHENTICATION
+
   router.get("/logout", function (req, res) {
     // console.log("logged out!");
     req.logout();
-    res.redirect("/");
+    res.redirect("http://localhost:3000");
   });
 
   // will be used as middleware so that I can use multiple strategies
@@ -42,6 +43,7 @@ module.exports = function (router) {
 
   router.get("/api/logout", (req, res) => {
     req.logout();
+    res.redirect("/");
     res.send(req.user);
   });
 

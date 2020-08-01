@@ -23,6 +23,19 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
+if (process.env.NODE_ENV === "production") {
+  // Express will serve up production assets
+  // like our main.js file, or main.css file!
+  app.use(express.static("client/build"));
+
+  // Express will serve up the index.html file
+  // if it doesn't recognize the route
+  const path = require("path");
+  app.get("/", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+  });
+}
+
 app.use(
   cookieSession({
     maxAge: 30 * 24 * 60 * 60 * 1000,
@@ -69,28 +82,15 @@ const googleAuth = passport.authenticate("google", {
 app.get("/api/auth/google", googleAuth);
 
 app.get("/api/auth/google/callback", googleAuth, (req, res) => {
-  // console.log("Input validated via Google");
-  // console.log("req.user", req.user);
+  console.log("Input validated via Google");
 
-  User.findById(req.user._id).exec((err, user) => {
-    // check to see if they have no boxes other than allTasks
-    // console.log(user.boxes.length);
-
-    // if ((user.boxes.length = 1)) {
-    //   const defaultBox = {
-    //     title: "Default 1 hour box (Edit or Delete!)",
-    //     taskIds: [],
-    //     time: 60,
-    //   };
-    //   user.boxes.push(defaultBox);
-    //   user.boxOrder.push(defaultBox.title);
-    // }
-
-    user.save();
-  });
-
-  // add a default box for them to use
-  res.redirect("/");
+  if (process.env.NODE_ENV !== "production") {
+    // Express will serve up the index.html file
+    // if it doesn't recognize the route
+    res.redirect("http://localhost:3000");
+  } else {
+    res.redirect("/");
+  }
 });
 
 passport.serializeUser((user, done) => {
@@ -109,19 +109,6 @@ app.use(
     extended: true,
   })
 );
-
-if (process.env.NODE_ENV === "production") {
-  // Express will serve up production assets
-  // like our main.js file, or main.css file!
-  app.use(express.static("client/build"));
-
-  // Express will serve up the index.html file
-  // if it doesn't recognize the route
-  const path = require("path");
-  app.get("/", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
-  });
-}
 
 router(app);
 
