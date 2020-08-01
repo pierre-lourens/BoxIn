@@ -488,7 +488,6 @@ class TaskList extends React.Component {
 
   renderTaskCard(task, index) {
     let pixels = this.determineTaskHeight(task);
-    console.log("task is", task);
 
     return (
       <Draggable draggableId={task._id} key={task._id} index={index}>
@@ -582,8 +581,8 @@ class TaskList extends React.Component {
   };
 
   render() {
-    console.log("Props upon render of taskList is", this.props);
-    console.log("State upon render of taskList is", this.state);
+    // console.log("Props upon render of taskList is", this.props);
+    // console.log("State upon render of taskList is", this.state);
     return (
       <React.Fragment>
         <DragDropContext onDragEnd={this.onDragEnd}>
@@ -614,36 +613,7 @@ class TaskList extends React.Component {
                                           task.visibility !== "archived"
                                       );
 
-                                      // now that we have the task, determine its height
-                                      const pixels = this.determineTaskHeight(
-                                        task
-                                      );
-
-                                      return (
-                                        <Draggable
-                                          key={task._id}
-                                          draggableId={task._id}
-                                          index={index}>
-                                          {(provided) => (
-                                            <Task
-                                              key={task._id}
-                                              ref={provided.innerRef}
-                                              height={pixels}
-                                              status={task.status}
-                                              {...provided.draggableProps}
-                                              {...provided.dragHandleProps}>
-                                              <div className='toggleButtonWrapper'>
-                                                {this.renderToggleCircle(task)}
-                                              </div>
-                                              {this.renderTaskText(task)}
-                                              <div className='options'>
-                                                {this.renderTimerButton(task)}
-                                                <EditTaskButton task={task} />
-                                              </div>
-                                            </Task>
-                                          )}
-                                        </Draggable>
-                                      );
+                                      return this.renderTaskCard(task, index);
                                     }
                                   )
                                 : !provided.placeholder}
