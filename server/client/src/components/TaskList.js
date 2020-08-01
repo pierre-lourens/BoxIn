@@ -20,6 +20,7 @@ import Tag from "../assets/Tag";
 
 import InactiveTimerButton from "./Buttons/InactiveTimerButton";
 import EmptyCircle from "./Buttons/EmptyCircleButton";
+import BoxTitle from "./BoxTitle";
 import CheckCircle from "./Buttons/CheckCircle";
 import EditTaskButton from "./Buttons/EditTaskButton";
 import NewFormButton from "./Buttons/NewFormButton";
@@ -322,7 +323,6 @@ class TaskList extends React.Component {
   componentDidMount() {
     this.setState({ boxes: this.props.boxes });
     this.props.getTasks(this.props.userId);
-    this.props.getTasks(this.props.userId);
     this.props.getTaskBoxes(this.props.userId);
   }
   componentDidUpdate(prevProps, prevState) {
@@ -563,6 +563,7 @@ class TaskList extends React.Component {
     }
   }
 
+  //remove
   checkIfClockIcon = (boxTitle) => {
     if (this.props.boxes[boxTitle].time) {
       return (
@@ -669,14 +670,7 @@ class TaskList extends React.Component {
                           }
                           return (
                             <Box height={pixels} ref={provided.innerRef}>
-                              <div className='box-title'>
-                                <div className='box-title-task'>
-                                  <h3>{boxTitle}</h3>
-                                </div>
-                                <div className='box-title-icon'>
-                                  {this.checkIfClockIcon(boxTitle)}
-                                </div>
-                              </div>
+                              <BoxTitle boxTitle={boxTitle} />
                               {this.props.boxes[boxTitle].taskIds.length &&
                               this.props.userData.hasOwnProperty("tasks")
                                 ? this.state.boxes[boxTitle].taskIds.map(
